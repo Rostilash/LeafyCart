@@ -1,21 +1,20 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
-import { Footer } from "../components/Footer";
+import { useState } from "react";
 
 const Layout = () => {
+  const [isNavOpend, setIsNavOpend] = useState(false);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-
-      <div className="flex flex-1 bg-gray-800">
-        <Sidebar />
-        <main className="flex-1 p-4 bg-gray-100">
-          <Outlet />
-        </main>
+    <div className="min-h-screen flex bg-[var(--leafy-light)]">
+      <div className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${isNavOpend ? "w-64" : "w-0"} overflow-hidden`}>
+        <Sidebar isVisible={isNavOpend} />
       </div>
-
-      <Footer />
+      <main className="flex-1 bg-[var(--leafy-white)] overflow-auto">
+        <Header setIsNavOpend={setIsNavOpend} isNavOpend={isNavOpend} />
+        <Outlet />
+      </main>
     </div>
   );
 };

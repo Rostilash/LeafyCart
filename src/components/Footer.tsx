@@ -1,3 +1,5 @@
 export const Footer = () => {
-  return <footer className="row-start-3 row-end-4 col-span-2 bg-gray-800 text-white p-4">Футер</footer>;
+  return (
+    <footer className="text-sm text-[var(--leafy-gray)] opacity-60 py-8 pl-8">© {new Date().getFullYear()} LeafyCart. Всі права захищено.</footer>
+  );
 };
