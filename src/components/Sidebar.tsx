@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
 import { Footer } from "./Footer";
+import { NavigationLinks } from "./NavigationLinks";
 
 type SidebarProps = {
   isVisible: boolean;
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
-  const linkClass = "block w-full hover:text-white hover:bg-[var(--leafy-sage)] font-medium px-4 py-4 pl-8";
   return (
     <aside
       className={`
@@ -15,26 +14,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
         ${isVisible ? "translate-x-0" : "-translate-x-full"}
       `}
     >
-      <div className="space-y-8">
-        <div className="flex items-center gap-2 px-8 text-xl font-bold text-[var(--leafy-gray)]">
+      <div className="space-y-4">
+        <div className="flex items-center px-8 text-xl font-bold text-[var(--leafy-gray)]">
           <img src="/natural-leaf2.png" alt="Leaf" className="w-6 h-6" />
           LeafyCart
         </div>
 
-        <nav className="space-y-4 text-[var(--leafy-gray)] font-medium">
-          <Link to="/" className={linkClass}>
-            Головна
-          </Link>
-          <Link to="/catalog" className={linkClass}>
-            Каталог
-          </Link>
-          <Link to="/login" className={linkClass}>
-            Увійти
-          </Link>
-          <Link to="/cart" className={linkClass}>
-            Кошик
-          </Link>
-        </nav>
+        <NavigationLinks />
       </div>
 
       {/* Footer */}

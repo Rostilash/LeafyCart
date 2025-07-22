@@ -68,18 +68,18 @@ export const HomePage = () => {
           </h3>
           <span className="text-gray-700" itemProp="offers" itemScope itemType="https://schema.org/Offer">
             <meta itemProp="priceCurrency" content="USD" />
-            <span itemProp="price">{(product.price / 100).toFixed(2)} $</span>
+            <span itemProp="price">{(product.price / 100).toFixed(2)} ₴</span>
           </span>
         </div>
 
-        <button className="p-2 bg-[var(--leafy-green)] text-white rounded btn_hover transition cursor-pointer mt-4 ml-auto">Додати до кошику</button>
+        <button className="btn-primary-sm  btn_hover transition cursor-pointer mt-4 ml-auto">Додати до кошику</button>
       </div>
     </article>
   ));
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-around items-center bg-[var(--leafy-sage)] p-10">
+      <div className="flex flex-col md:flex-row justify-around items-center bg-[var(--leafy-light)] p-10">
         <div className="max-w-md text-left space-y-12">
           <h1 className="text-6xl font-bold leading-tight">
             Свіжі,
@@ -92,7 +92,7 @@ export const HomePage = () => {
             <br />
             до ваших дверей
           </h1>
-          <button className="bg-[var(--leafy-green)] text-white px-6 py-3 rounded shadow btn_hover transition cursor-pointer">В магазин зараз</button>
+          <button className="btn-primary btn_hover transition cursor-pointer">В магазин зараз</button>
         </div>
 
         <div className="mt-8 md:mt-0 md:ml-12 ">
@@ -101,7 +101,7 @@ export const HomePage = () => {
       </div>
 
       <div className="bg-[var(--leafy-light)] min-h-140">
-        <h1 className="title-xl p-4 pl-10 ">Рекомендовані продукти</h1>
+        <h1 className="title-xl p-4 text-center ">Рекомендовані продукти</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-10 justify-items-center">{ourProducts}</div>
       </div>
     </>
