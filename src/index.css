@@ -40,6 +40,11 @@
   color: var(--leafy-black);
 }
 
+.title-l {
+  @apply text-2xl mb-4 font-medium;
+  color: var(--leafy-black);
+}
+
 /* cart images */
 .icon_images {
   @apply w-10 h-10 object-cover rounded-full
@@ -49,4 +54,10 @@
 .icon_images_l {
   @apply w-20 h-20 object-cover rounded-full
   cursor-pointer;
+}
+
+.btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

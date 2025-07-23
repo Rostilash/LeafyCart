@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
               setIsCartOpen((prev) => !prev);
             }}
           />
-          {quantity && quantity > 0 && (
+          {quantity !== undefined && quantity > 0 && (
             <span className="absolute -bottom-2 right-10 bg-[var(--leafy-green)] text-white text-xs rounded-full px-1.5 py-0.5 leading-none shadow-md">
               {quantity}
             </span>

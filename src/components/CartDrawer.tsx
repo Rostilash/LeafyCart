@@ -1,18 +1,27 @@
 import { Footer } from "./Footer";
-import type { CartItem } from "../types/cartTypes";
+import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
+import { updateQuantity } from "../redux/slices/cartSlice";
 
 type CartDrawerProps = {
   isCartVisible: boolean;
-  cartItems: CartItem[];
+  setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
-  onUpdateQuantity: (id: number, action: "increment" | "decrement") => void;
 };
+
+type UpdateAction = "increment" | "decrement";
 
 const matchItemPrice = (price: number, quantity: number): string => {
   return ((price / 100) * quantity).toFixed(2);
 };
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, cartItems, onUpdateQuantity, onClose }) => {
+export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen }) => {
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  const onUpdateQuantity = (id: number, type: UpdateAction) => {
+    dispatch(updateQuantity({ id, type }));
+  };
+
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const ourItems = cartItems.map((item) => (
@@ -21,7 +30,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, cartItems
 
       <div className="flex flex-col">
         <span className="pl-4">{item.name}</span>
-        <span className="pl-6"> {matchItemPrice(item.price, item.quantity)}$</span>
+        <span className="pl-6"> {matchItemPrice(item.price, item.quantity)} грн</span>
       </div>
 
       <div>
@@ -50,12 +59,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, cartItems
       <div className="p-4 border-b border-[var(--leafy-moss)] font-semibold text-lg flex justify-between">
         У кошику🛒: {totalQuantity} продуктів{" "}
         <span className="text-2xl cursor-pointer items-start" onClick={onClose}>
-          x
+          ✕
         </span>
       </div>
       <div className="p-4 space-y-4 overflow-auto">{matchedItems}</div>
       <div className="p-4 border-t border-[var(--leafy-moss)]">
-        <button className="btn-primary w-full btn_hover">Оформити замовлення</button>
+        <button className="btn-primary w-full btn_hover" disabled={cartItems.length < 1} onClick={() => setCheckoutModalOpen(true)}>
+          Оформити замовлення
+        </button>
       </div>
 
       <Footer />

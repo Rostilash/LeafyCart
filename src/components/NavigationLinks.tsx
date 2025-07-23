@@ -15,9 +15,6 @@ export const NavigationLinks = () => {
       <Link to="/login" className={linkClass}>
         Увійти
       </Link>
-      <Link to="/cart" className={linkClass}>
-        Кошик
-      </Link>
     </>
   );
 };
