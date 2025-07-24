@@ -1,6 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export type Category = "Овочі" | "Крупи" | "Фрукти" | "Молочні продукти" | "Готові страви" | "Заморожені" | "Напої" | "Соуси" | "М’ясо" | "Зернові";
+export const categories = [
+  "Овочі",
+  "Крупи",
+  "Фрукти",
+  "Молочні продукти",
+  "М'ясо та риба",
+  "Заморожені",
+  "Напої",
+  "Соуси, приправи",
+  "М’ясо",
+  "Зернові",
+  "Готові страви",
+] as const;
+
+export type Category = (typeof categories)[number];
 
 export interface FoodProduct {
   id: number;
@@ -70,7 +84,7 @@ const initialState: ProductState = {
     },
     {
       id: 5,
-      name: "Гречка 1 кг",
+      name: "Гречка",
       category: "Крупи",
       description: "Органічна гречана крупа, вирощена без пестицидів.",
       price: 3999,
@@ -95,6 +109,16 @@ const initialState: ProductState = {
       price: 2099,
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK1PF2-XgCmlQvcAbL0hJIezdctrxJjKNjDA&s",
       weight: "1 л",
+      available: true,
+    },
+    {
+      id: 7,
+      name: "Картопля",
+      category: "Овочі",
+      description: "Свіжа фермерська картопля.",
+      price: 2599,
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYgnwr53FSfM_L9MeRYpB-7AMz4-8IAq_ulA&s",
+      weight: "1 кг",
       available: true,
     },
   ],

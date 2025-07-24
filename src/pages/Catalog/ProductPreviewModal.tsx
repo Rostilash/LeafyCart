@@ -1,0 +1,72 @@
+import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
+import { useAppSelector } from "../../redux/reduxTypeHook";
+import type { FoodProduct } from "../../redux/slices/productSlice";
+import { ProductItem } from "./ProductItem";
+
+export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
+  const allProducts = useAppSelector((state) => state.products.products);
+
+  return (
+    <div className="grid grid-cols-2 grid-rows-2 gap-4 max-w-xl mx-auto p-2 ">
+      {/* img */}
+      <div className="relative">
+        <img src={product.img} alt={product.name} className="w-60 h-60 object-cover rounded-xl " />
+        {product.isNew ? <span className="absolute top-0 left-0 bg-red-400 p-2 rounded-xl text-white">NEW</span> : ""}
+      </div>
+      {/*Product name */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
+        <span>{product.available ? "В наявності" : "Товару немає"}</span>
+        <p className="mt-2">{product.description}</p>
+        <p className="text-lg font-semibold mt-4">
+          {(product.price / 100).toFixed(2)} ₴ / за {product.weight}
+        </p>
+        <AddToCartButton product={product} />
+      </div>
+      {/* about item */}
+      <div className="flex flex-col p-4 ">
+        <h3 className="text-2xl mb-2">Про товар</h3>
+        <span className="flex justify-between">
+          <span>Калорійність:</span> <span>{product.nutritionFacts?.calories}г</span>
+        </span>
+        <span className="flex justify-between">
+          <span>Протеїн:</span> <span>{product.nutritionFacts?.protein}г</span>
+        </span>
+        <span className="flex justify-between">
+          <span>Жири:</span> <span>{product.nutritionFacts?.fat}г</span>
+        </span>
+        <span className="flex justify-between">
+          <span>Вуглеводи:</span> <span>{product.nutritionFacts?.carbs}г</span>
+        </span>
+      </div>
+      {/* all info */}
+      <div className=" p-4">
+        <h3 className="text-2xl mb-2">Загальна інформація</h3>
+        <span>
+          {product.tags?.map((tag) => (
+            <p>{tag}</p>
+          ))}
+        </span>
+      </div>
+      {/* same products */}
+      <div className="overflow-x-auto p-3 text-xs col-span-2 flex justify-start">
+        <div className="flex gap-4 ">
+          {allProducts.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+
+      <div className="p-4 text-xs text-center col-span-2 flex justify-center">
+        <div>
+          <p>
+            Незважаючи на те, що ми докладаємо всіх зусиль, щоб вся інформація про продукти була актуальною і правильною, фото товару і опис товару,
+            представлені на сайті, можуть відрізнятися від товару в торговому залі. Для отримання більш точної інформації завжди звертайте увагу на
+            реальний товар, читайте етикетку на продукті і не покладайтеся лише на інформацію, представлену на нашому сайті. Якщо необхідна більш
+            детальна інформація про товар, будь ласка, зв'яжіться з виробником.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

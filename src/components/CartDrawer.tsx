@@ -53,7 +53,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
 
   return (
     <aside
-      className={` fixed top-0 right-0 h-full w-100 bg-[var(--leafy-light)]  border-l border-[var(--leafy-moss)] 
+      className={` fixed top-0 right-0 h-full w-100 bg-[var(--leafy-bg)]  border-l border-[var(--leafy-moss)] 
     transform transition-transform duration-300 ease-in-out z-50 ${isCartVisible ? "translate-x-0" : "translate-x-full"} `}
     >
       <div className="p-4 border-b border-[var(--leafy-moss)] font-semibold text-lg flex justify-between">
