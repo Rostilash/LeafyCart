@@ -1,17 +1,22 @@
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
-import { useAppSelector } from "../../redux/reduxTypeHook";
-import type { FoodProduct } from "../../redux/slices/productSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
+import { setSelectedProduct, type FoodProduct } from "../../redux/slices/productSlice";
 import { ProductItem } from "./ProductItem";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
+  const dispatch = useAppDispatch();
   const allProducts = useAppSelector((state) => state.products.products);
 
+  const openModal = (product: FoodProduct) => {
+    dispatch(setSelectedProduct(product));
+  };
+
   return (
-    <div className="grid grid-cols-2 grid-rows-2 gap-4 max-w-xl mx-auto p-2 ">
+    <div className="grid grid-cols-2 grid-rows-2 gap-4 max-w-5xl mx-auto p-4 ">
       {/* img */}
-      <div className="relative">
-        <img src={product.img} alt={product.name} className="w-60 h-60 object-cover rounded-xl " />
-        {product.isNew ? <span className="absolute top-0 left-0 bg-red-400 p-2 rounded-xl text-white">NEW</span> : ""}
+      <div className="relative overflow-hidden w-80 h-60">
+        <img src={product.img} alt={product.name} className="w-full h-full object-cover rounded-xl " />
+        {product.isNew && <span className="absolute top-2 -left-2 bg-red-400 py-1 px-4 rounded-xl text-white whitespace-nowrap">NEW</span>}
       </div>
       {/*Product name */}
       <div>
@@ -44,15 +49,16 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         <h3 className="text-2xl mb-2">Загальна інформація</h3>
         <span>
           {product.tags?.map((tag) => (
-            <p>{tag}</p>
+            <p key={tag}>{tag}</p>
           ))}
         </span>
       </div>
       {/* same products */}
+      <h3 className="text-2xl mb-2 pl-4">Схожі товари</h3>
       <div className="overflow-x-auto p-3 text-xs col-span-2 flex justify-start">
         <div className="flex gap-4 ">
           {allProducts.map((product) => (
-            <ProductItem key={product.id} product={product} />
+            <ProductItem key={product.id} product={product} onClick={() => openModal(product)} />
           ))}
         </div>
       </div>

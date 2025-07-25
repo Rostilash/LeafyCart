@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../redux/reduxTypeHook";
 import { addToCart } from "../../redux/slices/cartSlice";
 import type { FoodProduct } from "../../redux/slices/productSlice";
@@ -6,6 +7,7 @@ import { mapFoodProductToCartItem } from "../../utils/mapFoodToCartItem";
 
 export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
+  const [added, setAdded] = useState(false);
 
   const handleAddToCart = (product: CartItem) => {
     dispatch(
@@ -14,13 +16,23 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
         quantity: 1,
       })
     );
+    setAdded(true);
   };
+
+  useEffect(() => {
+    if (added) {
+      const timer = setTimeout(() => setAdded(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [added]);
+
   return (
     <button
-      className="btn-primary-sm  btn_hover transition cursor-pointer mt-4 ml-auto"
+      className={`btn-primary-sm btn_hover transition cursor-pointer mt-4 ml-auto 
+        ${added ? "bg-green-500 text-white" : ""}`}
       onClick={() => handleAddToCart(mapFoodProductToCartItem(product))}
     >
-      Додати до кошику
+      {added ? "✔ Додано" : "Додати до кошику"}
     </button>
   );
 };

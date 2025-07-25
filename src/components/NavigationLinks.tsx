@@ -1,4 +1,3 @@
-// components/NavigationLinks.tsx
 import { Link } from "react-router-dom";
 
 const linkClass = "block w-full hover:text-white hover:bg-[var(--leafy-sage)] font-medium px-4 py-4 pl-8";

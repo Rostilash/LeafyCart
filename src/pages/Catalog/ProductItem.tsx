@@ -1,19 +1,10 @@
-import { useState } from "react";
 import type { FoodProduct } from "../../redux/slices/productSlice";
-import { Modal } from "../../components/Modal";
-import { ProductPreviewModal } from "./ProductPreviewModal";
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 
-export const ProductItem = ({ product }: { product: FoodProduct }) => {
-  const [isCartOpened, setIsCartOpened] = useState(false);
-
-  const handleOpenModel = () => {
-    setIsCartOpened(true);
-  };
-
+export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
   return (
     <article key={product.id} className="flex flex-col items-center justify-center w-55 bg-[var(--leafy-sage)] shadow-2xl rounded-2xl btn_hover">
-      <img src={product.img} alt={product.name} className="w-50 h-50 object-cover rounded-[50%] p-2 cursor-pointer" onClick={handleOpenModel} />
+      <img src={product.img} alt={product.name} className="w-50 h-50 object-cover rounded-[50%] p-2 cursor-pointer" onClick={onClick} />
 
       <div className="w-full bg-[var(--leafy-white)] p-4 rounded-md flex flex-col">
         <div className="flex flex-col">
@@ -29,9 +20,6 @@ export const ProductItem = ({ product }: { product: FoodProduct }) => {
 
         <AddToCartButton product={product} />
       </div>
-      <Modal isOpen={isCartOpened} onClose={() => setIsCartOpened(false)}>
-        <ProductPreviewModal product={product} />
-      </Modal>
     </article>
   );
 };

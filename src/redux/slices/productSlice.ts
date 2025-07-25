@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export const categories = [
   "Овочі",
@@ -38,6 +38,7 @@ export interface FoodProduct {
 
 export interface ProductState {
   products: FoodProduct[];
+  selectedProduct: FoodProduct | null;
 }
 
 const initialState: ProductState = {
@@ -107,6 +108,7 @@ const initialState: ProductState = {
       category: "Молочні продукти",
       description: "Свіже фермерське молоко, пастеризоване.",
       price: 2099,
+      isNew: true,
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK1PF2-XgCmlQvcAbL0hJIezdctrxJjKNjDA&s",
       weight: "1 л",
       available: true,
@@ -117,17 +119,24 @@ const initialState: ProductState = {
       category: "Овочі",
       description: "Свіжа фермерська картопля.",
       price: 2599,
+      isNew: true,
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYgnwr53FSfM_L9MeRYpB-7AMz4-8IAq_ulA&s",
       weight: "1 кг",
       available: true,
     },
   ],
+  selectedProduct: null,
 };
 
 export const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedProduct: (state, action: PayloadAction<FoodProduct | null>) => {
+      state.selectedProduct = action.payload;
+    },
+  },
 });
 
+export const { setSelectedProduct } = productSlice.actions;
 export default productSlice.reducer;

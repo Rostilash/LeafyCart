@@ -9,8 +9,8 @@ export const Catalog = () => {
   ));
   return (
     <>
-      <h1 className="text-4xl text-center font-bold bg-[var(--leafy-light)] ">Каталог продуктів</h1>
-      <section className="grid grid-cols-4 justify-items-center p-10 bg-[var(--leafy-light)] h-screen">
+      <h1 className="text-4xl text-center font-bold bg-[var(--leafy-bg)] ">Каталог продуктів</h1>
+      <section className="grid grid-cols-4 justify-items-center p-10 bg-[var(--leafy-bg)] h-screen">
         <div>
           <h3 className="title-l">Продукти харчування</h3>
           <ul className="space-y-2 [&>li]:text-[var(--leafy-gray)] [&>li]:cursor-pointer [&>li]:mb-2 list-disc">{catProducts}</ul>

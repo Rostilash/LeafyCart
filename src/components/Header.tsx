@@ -16,13 +16,13 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
   const userName = user?.email?.split("@")[0].toLocaleUpperCase();
 
   return (
-    <header className="row-start-1 row-end-2 col-span-2 bg-[var(--leafy-sage)] p-2 shadow-md items-center justify-center ">
+    <header className="row-start-1 row-end-2 col-span-2 bg-[var(--leafy-sage)] p-3.5 shadow-md items-center justify-center text-white">
       <div className="flex justify-between  ">
         <div className="flex gap-4 items-center">
           <img
             src="https://cdn-icons-png.flaticon.com/128/12127/12127163.png"
             alt="nav"
-            className={`icon_images  ${isNavOpened ? "absolute left-50" : ""} `}
+            className={`icon_images  ${isNavOpened ? "absolute left-50" : ""} z-20`}
             onClick={() => {
               setIsNavOpend((prev) => !prev);
             }}
@@ -38,7 +38,9 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
                 Ласкаво просимо - <b>{userName}</b>!
               </span>
             ) : (
-              <p>Увійти</p>
+              <Link to="/login" className="border p-2 rounded-2xl">
+                Увійти
+              </Link>
             )}
           </span>
           <img
