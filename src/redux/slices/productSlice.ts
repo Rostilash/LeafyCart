@@ -1,45 +1,8 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-export const categories = [
-  "Овочі",
-  "Крупи",
-  "Фрукти",
-  "Молочні продукти",
-  "М'ясо та риба",
-  "Заморожені",
-  "Напої",
-  "Соуси, приправи",
-  "М’ясо",
-  "Зернові",
-  "Готові страви",
-] as const;
-
-export type Category = (typeof categories)[number];
-
-export interface FoodProduct {
-  id: number;
-  name: string;
-  category: Category;
-  description: string;
-  price: number;
-  img: string;
-  weight: string;
-  tags?: string[];
-  available: boolean;
-  isNew?: boolean;
-  isRecommended?: boolean;
-  nutritionFacts?: {
-    calories: number;
-    protein: number;
-    fat: number;
-    carbs: number;
-  };
-}
-
-export interface ProductState {
-  products: FoodProduct[];
-  selectedProduct: FoodProduct | null;
-}
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { FoodProduct, ProductState } from "../../types/productTypes";
+import { addDoc, setDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import { db } from "../../fireBase/config";
 
 const initialState: ProductState = {
   products: [
@@ -126,7 +89,45 @@ const initialState: ProductState = {
     },
   ],
   selectedProduct: null,
+  loading: false,
+  error: null,
 };
+
+export const getProducts = createAsyncThunk("products/getAll", async (_, thunkAPI) => {
+  try {
+    const snapshot = await getDocs(collection(db, "products"));
+    const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return products;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const addProduct = createAsyncThunk("products/addProduct", async (productData: FoodProduct, thunkAPI) => {
+  try {
+    const docRef = await addDoc(collection(db, "products"), { ...productData, createdAt: new Date() });
+    return { docRefId: docRef.id, ...productData };
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const updateProduct = createAsyncThunk("products/updateProduct", async (product: any, thunkAPI) => {
+  try {
+    await setDoc(doc(db, "products", product.id), product);
+    return product;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const deleteProduct = createAsyncThunk("product/deleteProduct", async (productId: string, thunkAPI) => {
+  try {
+    await deleteDoc(doc(db, "product", productId));
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 export const productSlice = createSlice({
   name: "product",
@@ -135,6 +136,31 @@ export const productSlice = createSlice({
     setSelectedProduct: (state, action: PayloadAction<FoodProduct | null>) => {
       state.selectedProduct = action.payload;
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(getProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(getProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(addProduct.fulfilled, (state, action) => {
+        state.products.push(action.payload);
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        const index = state.products.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) state.products[index] = action.payload;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter((p) => p.id !== action.payload);
+      });
   },
 });
 

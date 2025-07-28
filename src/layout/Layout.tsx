@@ -17,6 +17,7 @@ const Layout = () => {
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
 
   const cartItems = useAppSelector((state) => state.cart.items);
+  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -40,7 +41,7 @@ const Layout = () => {
           <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
             <h2 className="text-xl font-semibold mb-4">Підтвердження замовлення</h2>
             <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
-            <ConfirmBuyoutInfo />
+            <ConfirmBuyoutInfo totalPrice={totalPrice} />
           </Modal>
         </div>
       )}

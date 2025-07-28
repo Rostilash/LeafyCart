@@ -30,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
           <Link to="/">Головна</Link>
           <Link to="/catalog">Каталог</Link>
+          <Link to="/admin">Адмін панель</Link>
         </div>
         <div className="relative flex justify-around items-center w-72 gap-4">
           <span>
