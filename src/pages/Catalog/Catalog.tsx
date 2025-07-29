@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { categories } from "../../redux/slices/productSlice";
+import { categories } from "../../types/productTypes";
 
 export const Catalog = () => {
   const catProducts = categories.map((cat) => (

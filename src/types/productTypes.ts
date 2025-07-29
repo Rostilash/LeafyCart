@@ -15,7 +15,7 @@ export const categories = [
 export type Category = (typeof categories)[number];
 
 export interface FoodProduct {
-  id: number;
+  id: string;
   name: string;
   category: Category;
   description: string;
@@ -37,6 +37,6 @@ export interface FoodProduct {
 export interface ProductState {
   products: FoodProduct[];
   loading: boolean;
-  error: boolean | null;
+  error: string | null;
   selectedProduct: FoodProduct | null;
 }

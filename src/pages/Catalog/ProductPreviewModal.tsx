@@ -1,6 +1,7 @@
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { setSelectedProduct, type FoodProduct } from "../../redux/slices/productSlice";
+import { setSelectedProduct } from "../../redux/slices/productSlice";
+import { type FoodProduct } from "../../types/productTypes";
 import { ProductItem } from "./ProductItem";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {

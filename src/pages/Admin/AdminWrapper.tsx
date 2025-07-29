@@ -3,8 +3,6 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export const AdminWrapper = () => {
   const { user, loading } = useAppSelector((state) => state.auth);
-  console.log(user);
-  console.log(loading);
 
   if (loading) {
     return <div>Loading...</div>;
