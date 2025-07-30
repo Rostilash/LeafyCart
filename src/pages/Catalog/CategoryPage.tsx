@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { ProductItem } from "./ProductItem";
-import { setSelectedProduct, type FoodProduct } from "../../redux/slices/productSlice";
+import { setSelectedProduct } from "../../redux/slices/productSlice";
+import type { FoodProduct } from "../../types/productTypes";
 
 export const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();

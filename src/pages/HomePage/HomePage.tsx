@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { ProductItem } from "./../Catalog/ProductItem";
-import { setSelectedProduct } from "../../redux/slices/productSlice";
+import { getProducts, setSelectedProduct } from "../../redux/slices/productSlice";
+import { useEffect } from "react";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
-  const allProducts = useAppSelector((state) => state.products.products);
+  const { products: allProducts, loading, error } = useAppSelector((state) => state.products);
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
   const recommendedProducts = allProducts
     .filter((product) => product.isNew)
@@ -39,7 +44,16 @@ export const HomePage = () => {
       <div className="bg-[var(--leafy-bg)]   min-h-[calc(100vh-685px)]">
         {/* Recomended products */}
         <h1 className="title-xl p-4 text-center ">Новинки</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 p-10 justify-items-center ">{recommendedProducts}</div>
+
+        {loading ? (
+          <p className="text-center p-10 text-lg">Завантаження товарів...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 p-10">Помилка: {error}</p>
+        ) : recommendedProducts.length === 0 ? (
+          <p className="text-center text-gray-500 p-10">Новинок ще немає</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 p-10 justify-items-center">{recommendedProducts}</div>
+        )}
       </div>
     </>
   );

@@ -5,15 +5,16 @@ import { categories } from "../../../types/productTypes";
 interface ProductFormProps {
   initialProduct: Partial<FoodProduct> | null;
   onSubmit: (product: Partial<FoodProduct>) => void;
+  closeEditModal: () => void;
   submitText?: string;
 }
 
-export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, submitText = "Зберегти" }) => {
+export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, submitText = "Зберегти", closeEditModal }) => {
   const [formData, setFormData] = useState<Partial<FoodProduct>>(initialProduct || {});
 
   useEffect(() => {
     if (initialProduct) {
-      setFormData(initialProduct);
+      setFormData(initialProduct || {});
     }
   }, [initialProduct]);
 
@@ -42,8 +43,10 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (formData) {
       onSubmit(formData);
+      closeEditModal();
     }
   };
 
@@ -74,7 +77,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
       <label className="flex flex-col">
         Ціна (в копійках):
-        <input name="price" type="number" value={formData.price ?? 0} onChange={handleChange} required />
+        <input name="price" type="number" value={formData.price} onChange={handleChange} required />
       </label>
 
       <label className="flex flex-col">
@@ -101,8 +104,6 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         <input type="checkbox" name="isRecommended" checked={formData.isRecommended ?? false} onChange={handleChange} />
         Рекомендовано
       </label>
-
-      {/* Можна додати nutritionFacts при потребі */}
 
       <button type="submit" className="bg-blue-500 text-white btn-primary btn_hover">
         {submitText}

@@ -9,7 +9,6 @@ export const categories = [
   "Соуси, приправи",
   "М’ясо",
   "Зернові",
-  "Готові страви",
 ] as const;
 
 export type Category = (typeof categories)[number];
@@ -26,6 +25,7 @@ export interface FoodProduct {
   available: boolean;
   isNew?: boolean;
   isRecommended?: boolean;
+  createdAt?: string | null;
   nutritionFacts?: {
     calories: number;
     protein: number;
