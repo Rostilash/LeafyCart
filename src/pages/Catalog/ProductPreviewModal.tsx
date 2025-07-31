@@ -22,7 +22,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       {/*Product name */}
       <div>
         <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
-        <span>{product.available ? "В наявності" : "Товару немає"}</span>
+        <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
         <p className="mt-2">{product.description}</p>
         <p className="text-lg font-semibold mt-4">
           {(product.price / 100).toFixed(2)} ₴ / за {product.weight}
@@ -58,9 +58,11 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       <h3 className="text-2xl mb-2 pl-4">Схожі товари</h3>
       <div className="overflow-x-auto p-3 text-xs col-span-2 flex justify-start">
         <div className="flex gap-4 ">
-          {allProducts.map((product) => (
-            <ProductItem key={product.id} product={product} onClick={() => openModal(product)} />
-          ))}
+          {allProducts
+            .filter((product) => product.category)
+            .map((product) => (
+              <ProductItem key={product.id} product={product} onClick={() => openModal(product)} />
+            ))}
         </div>
       </div>
 

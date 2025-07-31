@@ -5,6 +5,7 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import { ProductForm } from "./ProductForm";
 import { addProduct, deleteProduct, getProducts, updateProduct } from "../../../redux/slices/productSlice";
 import { ProductRow } from "./ProductRow";
+import { Loader } from "../../../components/Loader";
 
 export const Products = () => {
   const dispatch = useAppDispatch();
@@ -50,10 +51,10 @@ export const Products = () => {
   ));
 
   return (
-    <section className="p-10 w-400 m-auto">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <span className="flex justify-around ">
         <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover">
-          Add product
+          Додати продукт
         </button>
 
         <div>
@@ -66,18 +67,19 @@ export const Products = () => {
           <button className="btn-primary">Знайти</button>
         </div>
       </span>
-
-      <div className="grid grid-cols-8 border-b p-2">
-        <span>№</span>
+      <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
+      <div className="grid grid-cols-7 border-b p-2">
         <span>Картинка</span>
         <h3>Назва</h3>
         <span>Категорія</span>
         <p>Опис</p>
         <span>Ціна</span>
+        <span>Редагування</span>
+        <span>Видалення</span>
       </div>
 
       {/* main list of products */}
-      {loading && <p>Завантажження</p>}
+      {loading && <Loader />}
       {findProduct.trim() ? findedProducts : products}
 
       <Modal isOpen={!!editingProduct} onClose={closeEditModal}>

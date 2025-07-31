@@ -7,22 +7,23 @@ interface renderProductProps {
 }
 
 export const ProductRow = ({ product, openEditModal, deleteRow }: renderProductProps) => {
+  const preview = product.description.slice(0, 40) + "...";
+
   return (
-    <div className="grid grid-cols-8 items-center justify-center border-b">
-      <span>{product.id}</span>
+    <div className="grid grid-cols-7 items-center justify-center border-b">
       <img
         src={product.img || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSLhGxI3K57BgdJz72uuuQqJQQLcHbA-iY0w&s"}
-        alt={product.name}
+        alt={product.name.slice(0, 40)}
         className="w-18 h-15 rounded-full"
       />
       <h3>{product.name}</h3>
       <span>{product.category}</span>
-      <p>{product.description}</p>
+      <p>{preview}</p>
       <span>{(product.price / 100).toFixed(2)} грн</span>
-      <button className="p-2 border cursor-pointer bg-blue-300  min-w-30" onClick={openEditModal}>
+      <button className="p-2 border cursor-pointer bg-[var(--leafy-dark)] text-white hover:scale-105" onClick={openEditModal}>
         Редагувати
       </button>
-      <button className="p-2 border cursor-pointer bg-red-300 min-w-30" onClick={deleteRow}>
+      <button className="p-2 border cursor-pointer bg-[var(--leafy-error)] text-white hover:scale-105" onClick={deleteRow}>
         Видалити
       </button>
     </div>

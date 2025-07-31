@@ -27,10 +27,10 @@ export interface FoodProduct {
   isRecommended?: boolean;
   createdAt?: string | null;
   nutritionFacts?: {
-    calories: number;
-    protein: number;
-    fat: number;
-    carbs: number;
+    calories?: number;
+    protein?: number;
+    fat?: number;
+    carbs?: number;
   };
 }
 

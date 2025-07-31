@@ -13,7 +13,7 @@ export const HomePage = () => {
   }, [dispatch]);
 
   const recommendedProducts = allProducts
-    .filter((product) => product.isNew)
+    .filter((product) => product.isRecommended)
     .map((product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />);
 
   return (
@@ -43,7 +43,7 @@ export const HomePage = () => {
 
       <div className="bg-[var(--leafy-bg)]   min-h-[calc(100vh-685px)]">
         {/* Recomended products */}
-        <h1 className="title-xl p-4 text-center ">Новинки</h1>
+        <h1 className="title-xl p-4 text-center ">Рекомендовані</h1>
 
         {loading ? (
           <p className="text-center p-10 text-lg">Завантаження товарів...</p>
