@@ -10,7 +10,7 @@ type CartDrawerProps = {
 
 type UpdateAction = "increment" | "decrement";
 
-const matchItemPrice = (price: number, quantity: number): string => {
+const useMatchPrice = (price: number, quantity: number): string => {
   return ((price / 100) * quantity).toFixed(2);
 };
 
@@ -18,37 +18,41 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
-  const onUpdateQuantity = (id: number, type: UpdateAction) => {
+  const onUpdateQuantity = (id: string, type: UpdateAction) => {
     dispatch(updateQuantity({ id, type }));
   };
 
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const ourItems = cartItems.map((item) => (
-    <article key={item.id} className="grid grid-cols-[84px_1fr_auto] items-center gap-4 border p-4 bg-[var(--leafy-white)] rounded-xl shadow-sm">
-      <img src={item.img} alt="" className="icon_images_l shadow-[2px_8px_24px_rgba(0,0,0,0.6)] rounded-xl" />
+  const ourItems = cartItems.map((item) => {
+    const discountedPrice = item.price && item.discountPercentage ? item.price * (1 - item.discountPercentage / 100) : item.price;
 
-      <div className="flex flex-col">
-        <span className="pl-4">{item.name}</span>
-        <span className="pl-6"> {matchItemPrice(item.price, item.quantity)} грн</span>
-      </div>
+    return (
+      <article key={item.id} className="grid grid-cols-[84px_1fr_auto] items-center gap-4 border p-4 bg-[var(--leafy-white)] rounded-xl shadow-sm">
+        <img src={item.img} alt="" className="icon_images_l shadow-[2px_8px_24px_rgba(0,0,0,0.6)] rounded-xl" />
 
-      <div>
-        <div className="flex items-center space-x-2">
-          <button onClick={() => onUpdateQuantity(item.id, "decrement")} className="px-2.5 py-1 bg-[var(--leafy-moss)] rounded text-sm  btn_hover">
-            -
-          </button>
-          <span>{item.quantity}</span>
-          <button
-            onClick={() => onUpdateQuantity(item.id, "increment")}
-            className="px-2 py-1 bg-[var(--leafy-green)] text-white rounded text-sm btn_hover"
-          >
-            +
-          </button>
+        <div className="flex flex-col">
+          <span className="pl-4">{item.name}</span>
+          <span className="pl-6"> {useMatchPrice(discountedPrice, item.quantity)} грн</span>
         </div>
-      </div>
-    </article>
-  ));
+
+        <div>
+          <div className="flex items-center space-x-2">
+            <button onClick={() => onUpdateQuantity(item.id, "decrement")} className="px-2.5 py-1 bg-[var(--leafy-moss)] rounded text-sm  btn_hover">
+              -
+            </button>
+            <span>{item.quantity}</span>
+            <button
+              onClick={() => onUpdateQuantity(item.id, "increment")}
+              className="px-2 py-1 bg-[var(--leafy-green)] text-white rounded text-sm btn_hover"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </article>
+    );
+  });
   const matchedItems = cartItems ? ourItems : <span className="text-[var(--leafy-gray)]">Кошик порожній</span>;
 
   return (

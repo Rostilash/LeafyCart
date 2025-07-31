@@ -19,6 +19,8 @@ export interface FoodProduct {
   category: Category;
   description: string;
   price: number;
+  discountPercentage?: number;
+  discountEndDate?: string;
   img: string;
   weight: string;
   tags?: string[];

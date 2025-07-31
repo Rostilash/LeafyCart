@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../redux/reduxTypeHook";
 import { addToCart } from "../../redux/slices/cartSlice";
-import type { FoodProduct } from "../../redux/slices/productSlice";
+import type { FoodProduct } from "../../types/productTypes";
 import type { CartItem } from "../../types/cartTypes";
 import { mapFoodProductToCartItem } from "../../utils/mapFoodToCartItem";
 

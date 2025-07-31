@@ -15,10 +15,15 @@ export const Products = () => {
   const [editingProduct, setEditingProduct] = useState<FoodProduct | null>(null);
   const [addingProduct, setAddingProduct] = useState<boolean | null>(false);
   const [findProduct, setFindProduct] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Усі");
 
-  const findProducts = allProducts.filter((p) => p.name.toLowerCase().includes(findProduct.toLowerCase()));
+  const findProducts = allProducts.filter((p) => {
+    const matchesName = p.name.toLowerCase().includes(findProduct.toLowerCase());
+    const matchesCategory = selectedCategory === "Усі" || p.category === selectedCategory;
+    return matchesName && matchesCategory;
+  });
 
-  // get allProducts
+  // get all Products
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
@@ -57,19 +62,36 @@ export const Products = () => {
           Додати продукт
         </button>
 
-        <div>
+        <div className="flex gap-2 items-center">
           <input
             type="text"
             placeholder="Пошук"
-            className="p-2 border mr-2"
+            className="p-2 border rounded"
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFindProduct(e.target.value)}
           />
-          <button className="btn-primary">Знайти</button>
+
+          <select className="p-2 border rounded" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+            <option value="Усі">Усі категорії</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <button
+            className="btn-secondary ml-2"
+            onClick={() => {
+              setSelectedCategory("Усі");
+              setFindProduct("");
+            }}
+          >
+            Очистити фільтр
+          </button>
         </div>
       </span>
       <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
       <div className="grid grid-cols-7 border-b p-2">
-        <span>Картинка</span>
+        <span>Зображення</span>
         <h3>Назва</h3>
         <span>Категорія</span>
         <p>Опис</p>
@@ -80,7 +102,7 @@ export const Products = () => {
 
       {/* main list of products */}
       {loading && <Loader />}
-      {findProduct.trim() ? findedProducts : products}
+      {findProduct.trim() || selectedCategory !== "Усі" ? findedProducts : products}
 
       <Modal isOpen={!!editingProduct} onClose={closeEditModal}>
         <ProductForm

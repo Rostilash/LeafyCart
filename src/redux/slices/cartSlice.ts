@@ -21,7 +21,7 @@ export const cartSlice = createSlice({
         state.items.push({ ...action.payload, quantity: 1 });
       }
     },
-    updateQuantity: (state, action: PayloadAction<{ id: number; type: "increment" | "decrement" }>) => {
+    updateQuantity: (state, action: PayloadAction<{ id: string; type: "increment" | "decrement" }>) => {
       console.log(action);
       const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {
@@ -35,7 +35,7 @@ export const cartSlice = createSlice({
         }
       }
     },
-    removeFromCart: (state, action: PayloadAction<number>) => {
+    removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     clearCart: (state) => {

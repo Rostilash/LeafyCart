@@ -108,7 +108,18 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 p-2 h-24 resize-none"
         />
       </label>
-
+      <label className="flex flex-col gap-1 text-sm text-gray-600">
+        Знижка (%):
+        <input
+          name="discountPercentage"
+          type="number"
+          value={formData.discountPercentage ?? ""}
+          onChange={handleChange}
+          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
+          min={0}
+          max={100}
+        />
+      </label>
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Ціна (в копійках):
         <input
