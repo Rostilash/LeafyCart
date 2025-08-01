@@ -90,11 +90,10 @@ export const Products = () => {
         </div>
       </span>
       <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
-      <div className="grid grid-cols-7 border-b p-2">
+      <div className="grid grid-cols-6 border-b p-2">
         <span>Зображення</span>
         <h3>Назва</h3>
         <span>Категорія</span>
-        <p>Опис</p>
         <span>Ціна</span>
         <span>Редагування</span>
         <span>Видалення</span>

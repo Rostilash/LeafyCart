@@ -1,20 +1,15 @@
-import { Footer } from "./Footer";
+import type { ChangeEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
 import { updateQuantity } from "../redux/slices/cartSlice";
+import { Footer } from "./Footer";
 import { Badge } from "../pages/Catalog/Badge";
 import { useMatchPrice } from "../utils/useConvertMoney";
-import type { ChangeEvent } from "react";
 import { useConvertMoney } from "./../utils/useConvertMoney";
-
-type CartDrawerProps = {
-  isCartVisible: boolean;
-  setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onClose: () => void;
-};
+import type { CartDrawerProps } from "../types/cartTypes";
 
 type UpdateAction = "increment" | "decrement";
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen }) => {
+export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
@@ -30,21 +25,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
   };
 
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = cartItems.reduce(
-    (acc, item) =>
-      item.discountPercentage !== undefined
-        ? acc + item.price * (1 - item.discountPercentage / 100) * item.quantity
-        : acc + item.price * item.quantity,
-    0
-  );
 
   const ourItems = cartItems.map((item) => {
     const discountedPrice = item.price && item.discountPercentage ? item.price * (1 - item.discountPercentage / 100) : item.price;
-
     return (
       <article
         key={item.id}
-        className="grid grid-cols-[84px_1fr_auto] items-center gap-4 border p-4 bg-[var(--leafy-white)] rounded-xl shadow-sm relative"
+        className="grid grid-cols-[84px_1fr_auto] items-center gap-4 border p-4 bg-[var(--leafy-white)] rounded-xl shadow-sm relative "
       >
         <img src={item.img} alt="" className="icon_images_l shadow-[2px_8px_24px_rgba(0,0,0,0.6)] rounded-xl" />
         {item.discountPercentage && <Badge position="top-0 left-0" text={`Знижка: ${item.discountPercentage}%`} />}
@@ -82,7 +69,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
   return (
     <aside
       className={` fixed top-0 right-0 h-full w-100 bg-[var(--leafy-bg)]  border-l border-[var(--leafy-moss)] 
-    transform transition-transform duration-300 ease-in-out z-50 ${isCartVisible ? "translate-x-0" : "translate-x-full"} `}
+    transform transition-transform duration-300 ease-in-out z-50 ${
+      isCartVisible ? "translate-x-0" : "translate-x-full"
+    } overflow-y-scroll scrollbar-hide`}
     >
       <div className="p-4 border-b border-[var(--leafy-moss)] font-semibold text-lg flex justify-between">
         У кошику🛒: {totalQuantity} продуктів{" "}
@@ -92,7 +81,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
       </div>
       <div className="p-4 space-y-4 overflow-auto">{matchedItems}</div>
 
-      <span className="flex justify-center text-center p-2 font-bold">Загальна сума: {useConvertMoney(totalPrice)} ₴</span>
+      <span className="flex justify-center text-center p-2 font-bold">Загальна сума: {useConvertMoney(totalPrice - (totalDiscount ?? 0))} ₴</span>
       <div className="p-4 border-t border-[var(--leafy-moss)]">
         <button className="btn-primary w-full btn_hover" disabled={cartItems.length < 1} onClick={() => setCheckoutModalOpen(true)}>
           Оформити замовлення

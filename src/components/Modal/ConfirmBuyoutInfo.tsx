@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { saveOrder } from "../../redux/slices/authSlice";
+import { useConvertMoney } from "../../utils/useConvertMoney";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
+  totalDiscount?: number;
 };
 
-export const ConfirmBuyoutInfo = ({ totalPrice }: ConfirmBuyoutInfoProps) => {
+export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector((state) => state.auth);
 
@@ -40,9 +42,8 @@ export const ConfirmBuyoutInfo = ({ totalPrice }: ConfirmBuyoutInfoProps) => {
     return valid;
   };
 
-  const basePrice = (totalPrice / 100).toFixed(2);
-  const discount = 0;
-  const delivery = 15;
+  const discount = (totalDiscount ?? 0) / 100;
+  const delivery = 0;
   const total = totalPrice / 100 - discount + delivery;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -92,16 +93,20 @@ export const ConfirmBuyoutInfo = ({ totalPrice }: ConfirmBuyoutInfoProps) => {
         <h2 className="text-xl font-semibold mb-4">Підсумок замовлення</h2>
         <div className="flex justify-between">
           <span>Ціна:</span>
-          <span>{basePrice} грн</span>
+          <span>{useConvertMoney(totalPrice)} грн</span>
         </div>
-        <div className="flex justify-between text-green-600">
-          <span>Знижка:</span>
-          <span>-{discount.toFixed(2)} грн</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Доставка:</span>
-          <span>{delivery.toFixed(2)} грн</span>
-        </div>
+        {discount > 0 && (
+          <div className="flex justify-between text-green-600">
+            <span>Знижка:</span>
+            <span>-{discount.toFixed(2)} грн</span>
+          </div>
+        )}
+        {delivery > 0 && (
+          <div className="flex justify-between">
+            <span>Доставка:</span>
+            <span>{delivery.toFixed(2)} грн</span>
+          </div>
+        )}
         <hr />
         <div className="flex justify-between font-bold text-lg">
           <span>Всього:</span>

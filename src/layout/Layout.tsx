@@ -17,8 +17,21 @@ const Layout = () => {
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
 
   const cartItems = useAppSelector((state) => state.cart.items);
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = cartItems.reduce(
+    (acc, item) =>
+      // item.discountPercentage !== undefined
+      //   ? acc + item.price * (1 - item.discountPercentage / 100) * item.quantity
+      acc + item.price * item.quantity,
+    0
+  );
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalDiscount = cartItems.reduce((acc, item) => {
+    if (item.discountPercentage) {
+      const discountPerItem = item.price * (item.discountPercentage / 100);
+      return acc + discountPerItem * item.quantity;
+    }
+    return acc;
+  }, 0);
 
   return (
     <div className="min-h-screen flex bg-[var(--leafy-light)]">
@@ -34,17 +47,24 @@ const Layout = () => {
       </main>
 
       {/* Cart drawer */}
-      {cartItems.length >= 1 && (
-        <div className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${isCartOpen ? "w-100" : "w-0"} overflow-hidden`}>
-          <CartDrawer isCartVisible={isCartOpen} onClose={() => setIsCartOpen(false)} setCheckoutModalOpen={setCheckoutModalOpen} />
+      {/* {cartItems.length >= 1 && ( */}
+      <div className="transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg overflow-y-auto">
+        <CartDrawer
+          isCartVisible={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+          setCheckoutModalOpen={setCheckoutModalOpen}
+          totalPrice={totalPrice}
+          totalDiscount={totalDiscount}
+        />
+      </div>
+      {/* )} */}
 
-          <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
-            <h2 className="text-xl font-semibold mb-4">Підтвердження замовлення</h2>
-            <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
-            <ConfirmBuyoutInfo totalPrice={totalPrice} />
-          </Modal>
-        </div>
-      )}
+      {/* Cart confirm modal */}
+      <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
+        <h2 className="text-xl font-semibold mb-4">Підтвердження замовлення</h2>
+        <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
+        <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
+      </Modal>
       {/* Preview modal */}
       {selectedProduct && (
         <Modal isOpen={!!selectedProduct} onClose={() => dispatch(setSelectedProduct(null))}>
