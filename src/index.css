@@ -57,8 +57,18 @@
   cursor-pointer;
 }
 
+/* button disabled */
 .btn-primary:disabled {
   background-color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+/* scrollbar off */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }

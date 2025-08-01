@@ -64,7 +64,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
   return (
     <form
-      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px]  overflow-y-auto max-h-[90vh]"
+      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px] overflow-y-auto max-h-[90vh]"
       onSubmit={handleSubmit}
     >
       <h3 className="text-xl font-bold text-center text-gray-700">Додати продукт</h3>
@@ -108,6 +108,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 p-2 h-24 resize-none"
         />
       </label>
+
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Знижка (%):
         <input
@@ -120,6 +121,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           max={100}
         />
       </label>
+
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Ціна (в копійках):
         <input

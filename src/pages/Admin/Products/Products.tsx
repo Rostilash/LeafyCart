@@ -79,7 +79,7 @@ export const Products = () => {
             ))}
           </select>
           <button
-            className="btn-secondary ml-2"
+            className="btn-secondary ml-2 btn-primary btn_hover"
             onClick={() => {
               setSelectedCategory("Усі");
               setFindProduct("");

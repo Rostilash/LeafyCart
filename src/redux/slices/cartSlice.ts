@@ -21,18 +21,25 @@ export const cartSlice = createSlice({
         state.items.push({ ...action.payload, quantity: 1 });
       }
     },
-    updateQuantity: (state, action: PayloadAction<{ id: string; type: "increment" | "decrement" }>) => {
-      console.log(action);
+    updateQuantity: (state, action: PayloadAction<{ id: string; type: "increment" | "decrement" | "set"; value?: number }>) => {
       const item = state.items.find((item) => item.id === action.payload.id);
-      if (item) {
-        if (action.payload.type === "increment") {
+      if (!item) return;
+
+      switch (action.payload.type) {
+        case "increment":
           item.quantity += 1;
-        } else {
+          break;
+        case "decrement":
           item.quantity -= 1;
-        }
-        if (item.quantity < 1) {
-          state.items = state.items.filter((item) => item.id !== action.payload.id);
-        }
+          if (item.quantity < 1) {
+            state.items = state.items.filter((i) => i.id !== action.payload.id);
+          }
+          break;
+        case "set":
+          if (action.payload.value && action.payload.value > 0) {
+            item.quantity = action.payload.value;
+          }
+          break;
       }
     },
     removeFromCart: (state, action: PayloadAction<string>) => {

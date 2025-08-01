@@ -14,6 +14,7 @@ export const HomePage = () => {
 
   const recommendedProducts = allProducts
     .filter((product) => product.isRecommended)
+    .slice(0, 6)
     .map((product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />);
 
   return (

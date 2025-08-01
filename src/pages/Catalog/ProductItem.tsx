@@ -1,26 +1,13 @@
 import type { FoodProduct } from "../../types/productTypes";
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
-import { useConvertMoney } from "../../utils/useConvertMoney";
+import { Badge } from "./Badge";
+import { ProductPrice } from "./ProductPrice";
 
 export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
-  const discountedPrice = product.price && product.discountPercentage ? product.price * (1 - product.discountPercentage / 100) : product.price;
-
-  const productPrice = product.discountPercentage ? (
-    <span itemProp="price" className="text-base font-medium">
-      <span className="line-through text-gray-400 mr-2">{useConvertMoney(product.price)} грн</span>
-      <span className="text-red-500 font-semibold">{useConvertMoney(discountedPrice)} грн</span>
-    </span>
-  ) : (
-    <span itemProp="price" className="text-base font-medium">
-      {useConvertMoney(product.price)} грн
-    </span>
-  );
-
   return (
-    <article className="flex flex-col items-center justify-center w-full max-w-xs bg-[var(--leafy-sage)] shadow-2xl rounded-2xl btn_hover relative overflow-hidden">
+    <article className="flex flex-col items-center justify-center w-full  max-w-xs bg-[var(--leafy-sage)] shadow-2xl rounded-2xl btn_hover relative overflow-hidden">
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
       {product.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
-
       <img
         src={product.img}
         alt={product.name}
@@ -35,7 +22,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
           </h3>
           <span className="text-gray-700" itemProp="offers" itemScope itemType="https://schema.org/Offer">
             <meta itemProp="priceCurrency" content="USD" />
-            {productPrice}
+            <ProductPrice product={product} />
           </span>
           <span>за {product.weight}</span>
         </div>
@@ -45,7 +32,3 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
     </article>
   );
 };
-
-const Badge = ({ position, text }: { position: string; text: string }) => (
-  <span className={`absolute ${position} bg-red-400 py-1 px-4 rounded-xl text-white text-xs whitespace-nowrap`}>{text}</span>
-);
