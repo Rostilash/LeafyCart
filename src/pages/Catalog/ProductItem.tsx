@@ -5,7 +5,7 @@ import { ProductPrice } from "./ProductPrice";
 
 export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
   return (
-    <article className="flex flex-col items-center justify-center w-full  max-w-xs bg-[var(--leafy-sage)] shadow-2xl rounded-2xl btn_hover relative overflow-hidden">
+    <article className="flex flex-col items-center justify-center w-[222px] max-w-xs bg-[var(--leafy-sage)] shadow-2xl rounded-2xl btn_hover relative overflow-hidden">
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
       {product.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
       <img
@@ -17,7 +17,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
       <div className="w-full bg-[var(--leafy-white)] p-4 rounded-md flex flex-col gap-2 min-h-[120px]">
         <div className="flex flex-col">
-          <h3 className="font-bold text-lg truncate max-w-full" itemProp="name">
+          <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}
           </h3>
           <span className="text-gray-700" itemProp="offers" itemScope itemType="https://schema.org/Offer">

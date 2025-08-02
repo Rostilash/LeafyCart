@@ -45,6 +45,10 @@
   @apply text-2xl mb-4 font-medium;
   color: var(--leafy-black);
 }
+.title-s {
+  @apply text-xl mb-4 font-normal;
+  color: var(--leafy-black);
+}
 
 /* cart images */
 .icon_images {
