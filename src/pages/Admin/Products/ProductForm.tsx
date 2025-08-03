@@ -1,6 +1,8 @@
 import React, { useEffect, useState, type ChangeEvent, type FC } from "react";
 import type { FoodProduct } from "../../../types/productTypes";
 import { categories } from "../../../types/productTypes";
+import { DynamicFieldEditor } from "./FormSlices/DynamicFieldEditorProps ";
+import { AddFieldInputs } from "./FormSlices/AddFieldInputs";
 
 interface ProductFormProps {
   initialProduct: Partial<FoodProduct> | null;
@@ -11,12 +13,51 @@ interface ProductFormProps {
 
 export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, submitText = "Зберегти", closeEditModal }) => {
   const [formData, setFormData] = useState<Partial<FoodProduct>>(initialProduct || {});
+  const [newKey, setNewKey] = useState("");
+  const [newValue, setNewValue] = useState("");
+
+  const [newNutritionKey, setNewNutritionKey] = useState("");
+  const [newNutritionValue, setNewNutritionValue] = useState<number | "">("");
 
   useEffect(() => {
     if (initialProduct) {
       setFormData(initialProduct || {});
     }
   }, [initialProduct]);
+
+  const handleAddField = (section: "generalInfo" | "nutritionFacts", key: string, value: string | number) => {
+    if (!key.trim() || value === "") return;
+
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key.trim()]: section === "nutritionFacts" ? Number(value) : String(value),
+      },
+    }));
+
+    if (section === "generalInfo") {
+      setNewKey("");
+      setNewValue("");
+    } else {
+      setNewNutritionKey("");
+      setNewNutritionValue("");
+    }
+  };
+
+  const handleRemoveField = (section: "generalInfo" | "nutritionFacts", key: string) => {
+    setFormData((prev) => {
+      if (!prev[section]) return prev;
+
+      const updatedSection = { ...prev[section] };
+      delete updatedSection[key];
+
+      return {
+        ...prev,
+        [section]: updatedSection,
+      };
+    });
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -32,23 +73,21 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         newValue = e.target.checked;
       }
 
-      if (name.startsWith("nutritionFacts.")) {
-        const key = name.split(".")[1] as keyof NonNullable<FoodProduct["nutritionFacts"]>;
-
-        return {
-          ...prev,
-          nutritionFacts: {
-            ...prev?.nutritionFacts,
-            [key]: newValue,
-          },
-        };
-      }
-
       return {
         ...prev,
         [name]: newValue,
       };
     });
+  };
+
+  const handleDynamicChange = (section: "nutritionFacts" | "generalInfo", key: string, value: string | number | boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [key]: value,
+      },
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -156,6 +195,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         />
       </label>
 
+      {/* Checkboxes */}
       <div className="flex flex-wrap gap-4">
         <label className="inline-flex items-center gap-2 text-sm text-gray-600">
           <input type="checkbox" name="available" checked={formData.available ?? false} onChange={handleChange} />
@@ -173,52 +213,44 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         </label>
       </div>
 
-      <fieldset className="border p-4 rounded-md">
+      {/* Nutrifications */}
+      <fieldset className="border p-4 rounded-md ">
         <legend className="font-semibold">Харчова цінність</legend>
+        <AddFieldInputs
+          section="nutritionFacts"
+          keyValue={newNutritionKey}
+          setKeyValue={setNewNutritionKey}
+          value={newNutritionValue}
+          setValue={setNewNutritionValue}
+          onAdd={() => handleAddField("nutritionFacts", newNutritionKey, newNutritionValue)}
+        />
 
-        <label className="flex flex-col">
-          Калорії (ккал):
-          <input
-            name="nutritionFacts.calories"
-            type="number"
-            value={formData.nutritionFacts?.calories ?? ""}
-            onChange={handleChange}
-            className="border-b border-gray-400 focus:outline-none focus:border-green-500 px-1 py-2"
-          />
-        </label>
+        <DynamicFieldEditor
+          section="nutritionFacts"
+          entries={formData.nutritionFacts ?? {}}
+          onChange={(key, val) => handleDynamicChange("nutritionFacts", key, val)}
+          onRemove={(key) => handleRemoveField("nutritionFacts", key)}
+        />
+      </fieldset>
 
-        <label className="flex flex-col">
-          Білки (г):
-          <input
-            name="nutritionFacts.protein"
-            type="number"
-            value={formData.nutritionFacts?.protein ?? ""}
-            onChange={handleChange}
-            className="border-b border-gray-400 focus:outline-none focus:border-green-500 px-1 py-2"
-          />
-        </label>
+      {/* General Info */}
+      <fieldset className="border p-4 rounded-md">
+        <legend className="font-semibold">Загальна інформація</legend>
+        <AddFieldInputs
+          section="generalInfo"
+          keyValue={newKey}
+          setKeyValue={setNewKey}
+          value={newValue}
+          setValue={setNewValue}
+          onAdd={() => handleAddField("generalInfo", newKey, newValue)}
+        />
 
-        <label className="flex flex-col">
-          Жири (г):
-          <input
-            name="nutritionFacts.fat"
-            type="number"
-            value={formData.nutritionFacts?.fat ?? ""}
-            onChange={handleChange}
-            className="border-b border-gray-400 focus:outline-none focus:border-green-500 px-1 py-2"
-          />
-        </label>
-
-        <label className="flex flex-col">
-          Вуглеводи (г):
-          <input
-            name="nutritionFacts.carbs"
-            type="number"
-            value={formData.nutritionFacts?.carbs ?? ""}
-            onChange={handleChange}
-            className="border-b border-gray-400 focus:outline-none focus:border-green-500 px-1 py-2"
-          />
-        </label>
+        <DynamicFieldEditor
+          section="generalInfo"
+          entries={formData.generalInfo ?? {}}
+          onChange={(key, val) => handleDynamicChange("generalInfo", key, val)}
+          onRemove={(key) => handleRemoveField("generalInfo", key)}
+        />
       </fieldset>
 
       <button type="submit" className="bg-blue-500 text-white btn-primary btn_hover">

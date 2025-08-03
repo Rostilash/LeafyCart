@@ -27,13 +27,8 @@ export interface FoodProduct {
   available: boolean;
   isNew?: boolean;
   isRecommended?: boolean;
-  nutritionFacts?: {
-    calories?: number;
-    protein?: number;
-    fat?: number;
-    carbs?: number;
-  };
-  generalInfo?: Record<string, string>; // <-- Це ключ!
+  nutritionFacts?: Record<string, number>;
+  generalInfo?: Record<string, string>;
   createdAt?: string | null;
 }
 

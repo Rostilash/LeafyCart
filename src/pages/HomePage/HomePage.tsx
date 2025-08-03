@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { ProductItem } from "./../Catalog/ProductItem";
 import { getProducts, setSelectedProduct } from "../../redux/slices/productSlice";
 import { useEffect } from "react";
+import { Loader } from "../../components/Loader";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -44,10 +45,12 @@ export const HomePage = () => {
 
       <div className="bg-[var(--leafy-bg)]   min-h-[calc(100vh-685px)]">
         {/* Recomended products */}
-        <h1 className="title-xl p-4 text-center ">Рекомендовані</h1>
+        <h1 className="title-xl p-4 text-center">Рекомендовані</h1>
 
         {loading ? (
-          <p className="text-center p-10 text-lg">Завантаження товарів...</p>
+          <div className="text-center p-10 text-lg">
+            <Loader />
+          </div>
         ) : error ? (
           <p className="text-center text-red-500 p-10">Помилка: {error}</p>
         ) : recommendedProducts.length === 0 ? (

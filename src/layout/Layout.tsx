@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
@@ -15,6 +15,12 @@ const Layout = () => {
   const [isCheckoutModalOpen, setCheckoutModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+    }
+  }, [selectedProduct]);
 
   const cartItems = useAppSelector((state) => state.cart.items);
   const totalPrice = cartItems.reduce(

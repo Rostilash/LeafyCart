@@ -16,12 +16,18 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
     .filter((p) => p.id !== product.id && keywords.some((k) => p.name.toLowerCase().includes(k)))
     .slice(0, 5);
 
-  const recomendedProductsByCategory = allProducts.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 5);
+  const recomendedProductsByCategory = allProducts
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .sort((a, b) => {
+      if (a.available === b.available) return 0;
+      return a.available ? -1 : 1;
+    })
+    .slice(0, 5);
 
+  // Rendering the Product
   const recomendedProductsToRender = (recomendedProductsByKeywords.length > 0 ? recomendedProductsByKeywords : recomendedProductsByCategory).map(
     (product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />
   );
-
   const productsIsNotEmpty = recomendedProductsToRender.length > 0;
 
   return (
@@ -43,32 +49,31 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         </p>
         {product.available && <AddToCartButton product={product} />}
       </div>
-      {/* about item */}
+      {/* Nutrition item */}
       {product.nutritionFacts && (
         <div className="flex flex-col p-4">
-          <h3 className="text-2xl mb-2">Про товар</h3>
-          <span className="flex justify-between">
-            <span>Калорійність:</span> <span>{product.nutritionFacts.calories}г</span>
-          </span>
-          <span className="flex justify-between">
-            <span>Протеїн:</span> <span>{product.nutritionFacts.protein}г</span>
-          </span>
-          <span className="flex justify-between">
-            <span>Жири:</span> <span>{product.nutritionFacts.fat}г</span>
-          </span>
-          <span className="flex justify-between">
-            <span>Вуглеводи:</span> <span>{product.nutritionFacts.carbs}г</span>
-          </span>
+          <h3 className="text-2xl mb-2">Харчові властивості</h3>
+          <div className="flex flex-col space-y-1">
+            {Object.entries(product.nutritionFacts).map(([key, value]) => (
+              <span key={key} className=" rounded px-2  text-sm">
+                <span className="flex justify-between text-[16px]">
+                  <span>{key}:</span> <span>{String(value)}г</span>
+                </span>
+              </span>
+            ))}
+          </div>
         </div>
       )}
-      {/* all info */}
-      {product.tags && product.tags.length > 0 && (
-        <div className="p-4">
+      {/* General info */}
+      {product.generalInfo && (
+        <div className="flex flex-col p-4">
           <h3 className="text-2xl mb-2">Загальна інформація</h3>
-          <div className="flex flex-wrap gap-2">
-            {product.tags.map((tag) => (
-              <span key={tag} className="bg-gray-200 rounded px-2 py-1 text-sm">
-                {tag}
+          <div className="flex flex-col space-y-1">
+            {Object.entries(product.generalInfo).map(([key, value]) => (
+              <span key={key} className=" rounded px-2  text-sm">
+                <span className="flex justify-between text-[16px]">
+                  <span>{key}:</span> <span>{String(value)}</span>
+                </span>
               </span>
             ))}
           </div>

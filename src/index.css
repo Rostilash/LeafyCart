@@ -24,8 +24,8 @@
 }
 
 .btn-primary-sm {
-  @apply px-3 py-2 rounded font-light
-  transition-colors;
+  @apply px-4 py-1.5 rounded font-light
+  transition-colors cursor-pointer;
   border-radius: 10px;
   background-color: var(--leafy-dark);
   color: white;
@@ -75,4 +75,9 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
+}
+
+/* Border */
+.custum-border-outline {
+  @apply border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200;
 }
