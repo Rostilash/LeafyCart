@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from "lucide-react";
 import type { FoodProduct } from "../../../types/productTypes";
 
 interface renderProductProps {
@@ -17,11 +18,11 @@ export const ProductRow = ({ product, openEditModal, deleteRow }: renderProductP
       <h3>{product.name}</h3>
       <span>{product.category}</span>
       <span>{(product.price / 100).toFixed(2)} грн</span>
-      <button className="p-2 border cursor-pointer bg-[var(--leafy-dark)] text-white hover:scale-105 іь" onClick={openEditModal}>
-        Редагувати
+      <button className="cursor-pointer hover:scale-125 flex flex-row justify-center" onClick={openEditModal}>
+        <Pencil className="w-5 h-5 text-[var(--leafy-green)] hover:text-[var(--leafy-dark)] cursor-pointer" />
       </button>
-      <button className="p-2 border cursor-pointer bg-[var(--leafy-error)] text-white hover:scale-105" onClick={deleteRow}>
-        Видалити
+      <button className="cursor-pointer hover:scale-125 flex flex-row justify-center" onClick={deleteRow}>
+        <Trash2 className="w-5 h-5 text-red-600 hover:text-red-800 cursor-pointer" />
       </button>
     </div>
   );

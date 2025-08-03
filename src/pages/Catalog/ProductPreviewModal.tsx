@@ -12,17 +12,24 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
 
   // filtering our products by keywords
   const keywords = product.name.toLowerCase().split(" ");
-  const recomendedProducts = allProducts
+  const recomendedProductsByKeywords = allProducts
     .filter((p) => p.id !== product.id && keywords.some((k) => p.name.toLowerCase().includes(k)))
-    .slice(0, 5)
-    .map((product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />);
-  const productsIsNotEmpty = recomendedProducts.length > 0;
+    .slice(0, 5);
+
+  const recomendedProductsByCategory = allProducts.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 5);
+
+  const recomendedProductsToRender = (recomendedProductsByKeywords.length > 0 ? recomendedProductsByKeywords : recomendedProductsByCategory).map(
+    (product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />
+  );
+
+  const productsIsNotEmpty = recomendedProductsToRender.length > 0;
 
   return (
-    <div className="grid grid-cols-2 gap-4 max-w-5xl mx-auto p-2 overflow-y-auto scrollbar-hide max-h-[90vh]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto p-2 overflow-y-auto scrollbar-hide max-h-[90vh]">
       {/* img */}
-      <div className="relative overflow-hidden w-80 h-60">
-        <img src={product.img} alt={product.name} className="w-full h-full object-cover rounded-xl " />
+      <div className="relative overflow-hidden w-40 h-40 lg:w-120 lg:h-80">
+        <img src={product.img} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+
         {product.isNew && <Badge position="top-2 -left-2" text={`NEW`} />}
         {product.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
       </div>
@@ -34,7 +41,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         <p className="text-lg font-semibold mt-4">
           <ProductPrice product={product} /> / за {product.weight}
         </p>
-        <AddToCartButton product={product} />
+        {product.available && <AddToCartButton product={product} />}
       </div>
       {/* about item */}
       {product.nutritionFacts && (
@@ -68,9 +75,9 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         </div>
       )}
       {/* same products */}
-      <div className="overflow-x-auto p-2 text-xs col-span-2 flex flex-col justify-start">
+      <div className="overflow-x-auto p-2 text-xs col-span-2 flex flex-col justify-start ">
         {productsIsNotEmpty && <h3 className="text-2xl mb-2 pl-2">Схожі товари</h3>}
-        <div className="grid grid-cols-5 gap-2 mb-auto">{recomendedProducts}</div>
+        <div className="grid grid-cols-1 lg:grid-cols-5 sm:grid-cols-2 gap-2  justify-center">{recomendedProductsToRender}</div>
       </div>
 
       <div className="p-4 text-xs text-center col-span-2 flex justify-center">

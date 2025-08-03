@@ -6,6 +6,8 @@ import { ProductForm } from "./ProductForm";
 import { addProduct, deleteProduct, getProducts, updateProduct } from "../../../redux/slices/productSlice";
 import { ProductRow } from "./ProductRow";
 import { Loader } from "../../../components/Loader";
+import { PackagePlus } from "lucide-react";
+import { Pagination } from "../../../components/Pagination";
 
 export const Products = () => {
   const dispatch = useAppDispatch();
@@ -14,8 +16,10 @@ export const Products = () => {
 
   const [editingProduct, setEditingProduct] = useState<FoodProduct | null>(null);
   const [addingProduct, setAddingProduct] = useState<boolean | null>(false);
+
   const [findProduct, setFindProduct] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Усі");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const findProducts = allProducts.filter((p) => {
     const matchesName = p.name.toLowerCase().includes(findProduct.toLowerCase());
@@ -37,29 +41,21 @@ export const Products = () => {
     setEditingProduct(product);
   };
 
-  const products = allProducts.map((product) => (
-    <ProductRow
-      key={product.id}
-      product={product}
-      openEditModal={() => openEditModal(product)}
-      deleteRow={() => dispatch(deleteProduct(product.id))}
-    />
-  ));
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [findProduct, selectedCategory]);
 
-  const findedProducts = findProducts.map((product) => (
-    <ProductRow
-      key={product.id}
-      product={product}
-      openEditModal={() => openEditModal(product)}
-      deleteRow={() => dispatch(deleteProduct(product.id))}
-    />
-  ));
+  const itemsPerPage = 10;
+
+  const filteredProducts = findProduct.trim() || selectedCategory !== "Усі" ? findProducts : allProducts;
+
+  const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <span className="flex justify-around ">
-        <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover">
-          Додати продукт
+    <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="flex justify-around ">
+        <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover flex flex-row">
+          <PackagePlus className="w-6 h-6 text-white-700 mr-2" /> Додати продукт
         </button>
 
         <div className="flex gap-2 items-center">
@@ -88,7 +84,8 @@ export const Products = () => {
             Очистити фільтр
           </button>
         </div>
-      </span>
+      </div>
+
       <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
       <div className="grid grid-cols-6 border-b p-2">
         <span>Зображення</span>
@@ -101,27 +98,48 @@ export const Products = () => {
 
       {/* main list of products */}
       {loading && <Loader />}
-      {findProduct.trim() || selectedCategory !== "Усі" ? findedProducts : products}
+      {paginatedProducts.map((product) => (
+        <ProductRow
+          key={product.id}
+          product={product}
+          openEditModal={() => openEditModal(product)}
+          deleteRow={() => dispatch(deleteProduct(product.id))}
+        />
+      ))}
+
+      <Pagination totalItems={filteredProducts.length} itemsPerPage={itemsPerPage} currentPage={currentPage} onPageChange={setCurrentPage} />
 
       <Modal isOpen={!!editingProduct} onClose={closeEditModal}>
-        <ProductForm
-          initialProduct={editingProduct}
-          onSubmit={(updatedProduct) => dispatch(updateProduct(updatedProduct as FoodProduct))}
-          submitText="Зберегти зміни"
-          closeEditModal={closeEditModal}
-        />
+        {editingProduct && (
+          <ProductForm
+            initialProduct={editingProduct}
+            onSubmit={(updatedProduct) => dispatch(updateProduct(updatedProduct as FoodProduct))}
+            submitText="Зберегти зміни"
+            closeEditModal={closeEditModal}
+          />
+        )}
       </Modal>
 
       <Modal isOpen={!!addingProduct} onClose={closeEditModal}>
-        <ProductForm
-          initialProduct={{ available: true, price: 0, category: categories[0], name: "", description: "", img: "", weight: "" }}
-          onSubmit={(newProduct) => {
-            dispatch(addProduct(newProduct as FoodProduct));
-            setAddingProduct(false);
-          }}
-          submitText="Додати продукт"
-          closeEditModal={closeEditModal}
-        />
+        {addingProduct && (
+          <ProductForm
+            initialProduct={{
+              available: true,
+              price: 0,
+              category: categories[0],
+              name: "",
+              description: "",
+              img: "",
+              weight: "",
+            }}
+            onSubmit={(newProduct) => {
+              dispatch(addProduct(newProduct as FoodProduct));
+              setAddingProduct(false);
+            }}
+            submitText="Додати продукт"
+            closeEditModal={closeEditModal}
+          />
+        )}
       </Modal>
     </section>
   );

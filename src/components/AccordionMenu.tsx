@@ -43,28 +43,56 @@
 import { Link } from "react-router-dom";
 import { categoryTree } from "../utils/categoryTree";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 export const AccordionMenu = () => {
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const toggleCategory = (title: string) => {
+    setOpenCategory((prev) => (prev === title ? null : title));
+  };
+
+  const handleLinkClick = () => {
+    setOpenCategory(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenCategory(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="space-y-2 relative">
+    <div className="space-y-2 relative cursor-pointer" ref={menuRef}>
       {categoryTree.map((cat) => (
-        <div key={cat.title} className="relative group">
-          <button className="flex justify-between items-center w-full font-semibold text-left hover:bg-[var(--leafy-sage)] px-4 py-4 focus:outline-none">
+        <div key={cat.title} className="relative ">
+          <button
+            onClick={() => toggleCategory(cat.title)}
+            className="flex justify-between items-center w-full font-semibold text-left hover:bg-[var(--leafy-sage)] px-4 py-4 focus:outline-none cursor-pointer"
+          >
             <span className="text-xs">{cat.title}</span>
-            <ChevronDown size={20} className="group-focus-within:hidden group-hover:hidden" />
-            <ChevronUp size={20} className="hidden group-focus-within:inline group-hover:inline" />
+            {openCategory === cat.title ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </button>
 
-          <ul className="absolute left-[97%] top-0 ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-[160px] opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-none group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity duration-200">
-            {cat.subcategories.map((sub) => (
-              <li
-                key={sub}
-                className="text-xs text-[var(--leafy-gray)] w-full hover:text-[var(--leafy-white)] p-3 hover:bg-[var(--leafy-sage)] transition"
-              >
-                <Link to={`/catalog/${sub.toLowerCase().replace(/\s+/g, "-")}`}>{sub}</Link>
-              </li>
-            ))}
-          </ul>
+          {openCategory === cat.title && (
+            <ul className="absolute left-[97%] top-0 ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-[160px] transition-all duration-200 ">
+              {cat.subcategories.map((sub) => (
+                <Link key={sub} to={`/catalog/${sub.toLowerCase().replace(/\s+/g, "-")}`} onClick={handleLinkClick} className="block">
+                  <li className="text-xs text-[var(--leafy-gray)] hover:text-[var(--leafy-white)] p-3 hover:bg-[var(--leafy-sage)] transition w-full">
+                    {sub}
+                  </li>
+                </Link>
+              ))}
+            </ul>
+          )}
         </div>
       ))}
     </div>

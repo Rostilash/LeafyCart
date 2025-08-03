@@ -9,7 +9,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
   return (
     <aside
       className={`
-        flex flex-col justify-between top-0 left-0 h-full w-64 bg-[var(--leafy-bg)] shadow-lg z-50 text-[var(--leafy-gray)] 
+        flex flex-col justify-between top-0 left-0 h-full w-100 lg:w-64 bg-[var(--leafy-bg)] shadow-lg z-50 text-[var(--leafy-gray)] 
         transform transition-transform duration-300 ease-in-out
         ${isVisible ? "translate-x-0" : "-translate-x-full"}
       `}

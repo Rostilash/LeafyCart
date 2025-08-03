@@ -14,14 +14,13 @@ type FiltersPanelProps = {
 };
 
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxCategoryPrice }) => {
-  const [minPrice, setMinPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("0");
   const [maxPrice, setMaxPrice] = useState("");
   const [range, setRange] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sort, setSort] = useState("popular");
 
   const handleApply = () => {
-    // debugger;
     onFilterChange({
       minPrice,
       maxPrice,
@@ -30,33 +29,63 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
       sort,
     });
   };
+  const maxPriceRounded = Math.ceil(maxCategoryPrice / 1000);
 
   return (
     <div className="bg-[var(--leafy-bg)] flex flex-col space-y-6 pl-4">
       <h3 className="text-center title-s">Фільтри</h3>
+      {/* Select sort */}
       <label className="text-center cursor-pointer">
         Показати спочатку
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+        <select
+          value={sort}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSort(value);
+            onFilterChange({
+              minPrice,
+              maxPrice,
+              range,
+              inStockOnly,
+              sort: value,
+            });
+          }}
+        >
           <option value="popular">Популярні</option>
           <option value="cheep">Дешеві</option>
           <option value="overcost">Дорогі</option>
         </select>
       </label>
-
+      {/* InStockOnly */}
       <label htmlFor="inStock" className="inline-flex items-center gap-2 cursor-pointer">
-        <input id="inStock" type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+        <input
+          id="inStock"
+          type="checkbox"
+          checked={inStockOnly}
+          onChange={(e) => {
+            const isChecked = e.target.checked;
+            setInStockOnly(isChecked);
+            onFilterChange({
+              minPrice,
+              maxPrice,
+              range,
+              sort,
+              inStockOnly: isChecked,
+            });
+          }}
+        />
         Тільки в наявності
       </label>
-
+      {/* Price */}
       <div className="flex flex-col gap-2">
-        <label className="font-semibold">Ціна:</label>
+        <label className="font-semibold">Ціна, ₴ </label>
 
         <input
           type="range"
           min="0"
-          max={maxCategoryPrice / 100}
+          max={maxPriceRounded * 10}
           step="10"
-          value={Number(maxPrice) || 0}
+          value={Math.min(Number(maxPrice) || 0, maxPriceRounded * 10)}
           onChange={(e) => setMaxPrice(e.target.value)}
         />
 

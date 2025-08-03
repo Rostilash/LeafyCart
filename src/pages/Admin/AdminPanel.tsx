@@ -1,11 +1,36 @@
 import { Link } from "react-router-dom";
+import { Settings, Database } from "lucide-react";
 
 export const AdminPanel = () => {
+  const panels = [
+    {
+      to: "products",
+      label: "Редагування постів",
+      icon: <Database className="w-6 h-6 text-green-700" />,
+    },
+    {
+      to: "settings",
+      label: "Налаштування",
+      icon: <Settings className="w-6 h-6 text-green-700" />,
+    },
+  ];
+
   return (
     <section className="p-10">
-      <Link to="products" className="p-3  rounded bg-[var(--leafy-moss)]">
-        Редагування постів
-      </Link>
+      <h3 className="title-l mb-6">Панель адміністратора</h3>
+
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {panels.map((panel) => (
+          <Link
+            key={panel.to}
+            to={panel.to}
+            className="flex items-center gap-4 p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition hover:bg-[var(--leafy-bg)]"
+          >
+            {panel.icon}
+            <span className="text-md font-medium">{panel.label}</span>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 };

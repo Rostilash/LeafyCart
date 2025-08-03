@@ -13,8 +13,8 @@ export const HomePage = () => {
   }, [dispatch]);
 
   const recommendedProducts = allProducts
-    .filter((product) => product.isRecommended)
-    .slice(0, 6)
+    .filter((product) => product.isRecommended && product.available === true)
+    .slice(0, 12)
     .map((product) => <ProductItem key={product.id} product={product} onClick={() => dispatch(setSelectedProduct(product))} />);
 
   return (

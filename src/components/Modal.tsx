@@ -7,8 +7,6 @@ type ModalProps = {
 };
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -24,12 +22,16 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   }, [isOpen, onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-opacity-30 backdrop-blur-xs max-w-[100vw] flex justify-center items-center">
+    <div
+      className={`fixed inset-0 z-50 flex justify-center items-center bg-black/30 backdrop-blur-sm transition-opacity ${
+        isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}
+    >
       <div className="bg-white p-6 rounded-xl shadow-xl min-w-[300px] relative" onClick={(e) => e.stopPropagation()}>
         <button className="absolute top-2 right-3 text-gray-600 text-2xl cursor-pointer" onClick={onClose}>
           ✕
         </button>
-        {children}
+        {isOpen && children}
       </div>
     </div>
   );

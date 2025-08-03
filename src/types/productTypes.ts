@@ -27,13 +27,14 @@ export interface FoodProduct {
   available: boolean;
   isNew?: boolean;
   isRecommended?: boolean;
-  createdAt?: string | null;
   nutritionFacts?: {
     calories?: number;
     protein?: number;
     fat?: number;
     carbs?: number;
   };
+  generalInfo?: Record<string, string>; // <-- Це ключ!
+  createdAt?: string | null;
 }
 
 export interface ProductState {
