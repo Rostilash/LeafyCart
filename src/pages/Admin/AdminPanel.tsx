@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Settings, Database } from "lucide-react";
+import { Settings, Database, TestTubesIcon } from "lucide-react";
 
 export const AdminPanel = () => {
   const panels = [
@@ -7,6 +7,11 @@ export const AdminPanel = () => {
       to: "products",
       label: "Редагування постів",
       icon: <Database className="w-6 h-6 text-green-700" />,
+    },
+    {
+      to: "testing",
+      label: "Тестування",
+      icon: <TestTubesIcon className="w-6 h-6 text-green-700" />,
     },
     {
       to: "settings",
@@ -17,7 +22,7 @@ export const AdminPanel = () => {
 
   return (
     <section className="p-10">
-      <h3 className="title-l mb-6">Панель адміністратора</h3>
+      <h3 className="title-l mb-6 text-center">Панель адміністратора</h3>
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {panels.map((panel) => (

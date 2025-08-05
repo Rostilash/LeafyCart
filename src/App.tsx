@@ -11,6 +11,7 @@ import { AdminWrapper } from "./pages/Admin/AdminWrapper";
 import { useAppDispatch } from "./redux/reduxTypeHook";
 import { useEffect } from "react";
 import { checkAuth } from "./redux/slices/authSlice";
+import { Testing } from "./pages/Admin/Settings/Testing";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -30,6 +31,7 @@ function App() {
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />
           <Route path="products" element={<Products />} />
+          <Route path="testing" element={<Testing />} />
         </Route>
       </Route>
     </Routes>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
@@ -8,6 +8,7 @@ import { Modal } from "../components/Modal";
 import { setSelectedProduct } from "../redux/slices/productSlice";
 import { ProductPreviewModal } from "../pages/Catalog/ProductPreviewModal";
 import { ConfirmBuyoutInfo } from "../components/Modal/ConfirmBuyoutInfo";
+import { useRecentProducts } from "../hook/useRecentProducts";
 
 const Layout = () => {
   const [isNavOpened, setIsNavOpened] = useState(false);
@@ -16,11 +17,8 @@ const Layout = () => {
   const dispatch = useAppDispatch();
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
 
-  useEffect(() => {
-    if (selectedProduct) {
-      localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
-    }
-  }, [selectedProduct]);
+  // localStorage Hook set Products
+  useRecentProducts();
 
   const cartItems = useAppSelector((state) => state.cart.items);
   const totalPrice = cartItems.reduce(

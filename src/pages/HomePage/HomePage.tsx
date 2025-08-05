@@ -4,6 +4,8 @@ import { ProductItem } from "./../Catalog/ProductItem";
 import { getProducts, setSelectedProduct } from "../../redux/slices/productSlice";
 import { useEffect } from "react";
 import { Loader } from "../../components/Loader";
+import { ProductViewed } from "../Catalog/ProductViewed";
+import { Footer } from "../../components/Footer";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -58,6 +60,9 @@ export const HomePage = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 p-10 justify-items-center">{recommendedProducts}</div>
         )}
+
+        <ProductViewed />
+        <Footer />
       </div>
     </>
   );

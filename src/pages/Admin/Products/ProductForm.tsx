@@ -110,14 +110,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Назва:
-        <input
-          name="name"
-          type="text"
-          value={formData.name || ""}
-          onChange={handleChange}
-          required
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
-        />
+        <input name="name" type="text" value={formData.name || ""} onChange={handleChange} required className="custum-border-outline px-1 py-2" />
       </label>
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
@@ -144,7 +137,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           value={formData.description || ""}
           onChange={handleChange}
           required
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 p-2 h-24 resize-none"
+          className="custum-border-outline p-2 h-24 resize-none"
         />
       </label>
 
@@ -155,7 +148,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           type="number"
           value={formData.discountPercentage ?? ""}
           onChange={handleChange}
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
+          className="custum-border-outline px-1 py-2"
           min={0}
           max={100}
         />
@@ -163,36 +156,17 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Ціна (в копійках):
-        <input
-          name="price"
-          type="number"
-          value={formData.price || ""}
-          onChange={handleChange}
-          required
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
-        />
+        <input name="price" type="number" value={formData.price || ""} onChange={handleChange} required className="custum-border-outline px-1 py-2" />
       </label>
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Зображення (URL):
-        <input
-          name="img"
-          type="text"
-          value={formData.img || ""}
-          onChange={handleChange}
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
-        />
+        <input name="img" type="text" value={formData.img || ""} onChange={handleChange} className="custum-border-outline px-1 py-2" />
       </label>
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Вага:
-        <input
-          name="weight"
-          type="text"
-          value={formData.weight || ""}
-          onChange={handleChange}
-          className="border-b border-gray-300 focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
-        />
+        <input name="weight" type="text" value={formData.weight || ""} onChange={handleChange} className="custum-border-outline px-1 py-2" />
       </label>
 
       {/* Checkboxes */}
@@ -253,7 +227,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         />
       </fieldset>
 
-      <button type="submit" className="bg-blue-500 text-white btn-primary btn_hover">
+      <button type="submit" className="btn-primary btn_hover">
         {submitText}
       </button>
     </form>
