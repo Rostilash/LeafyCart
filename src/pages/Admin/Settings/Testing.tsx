@@ -1,4 +1,5 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { Breadcrumbs } from "../../Catalog/Breadcrumbs";
 
 export const Testing = () => {
@@ -8,9 +9,19 @@ export const Testing = () => {
       <h1 className="text-3xl text-center mb-10">Панель тестування</h1>
       {/* Testing components */}
       <div className="flex flex-col items-center space-y-10 justify-center w-full">
-        <Counter />
-        <TodoList />
-        <Toggle />
+        {/* <Counter /> */}
+        {/* TodoList >> deleting */}
+        {/* <TodoList /> */}
+        {/* Toggle >> sorting >> VisibleCount Showing   */}
+        {/* <Toggle /> */}
+        {/* Fetching api from server users and posts with async function >> timer */}
+        {/* <FetchApi /> */}
+        {/* Pagination per Page */}
+        {/* <Pagination /> */}
+        {/* <DropDownMenu /> */}
+        {/* <Form /> */}
+        {/* <FocusInput /> */}
+        <LoadMoreProducts />
       </div>
     </>
   );
@@ -18,21 +29,29 @@ export const Testing = () => {
 
 const Counter = () => {
   const [count, setCount] = useState(0);
+  const [inputText, setInputText] = useState("");
+
   const pad = "p-2 bg-gray-300 rounded-full min-w-[50px] cursor-pointer";
   return (
-    <div className="flex items-center space-x-2 justify-center w-full">
-      <p>Лічильник</p>
-      <span className="text-xl font-bold px-4">{count}</span>
-      <button onClick={() => setCount((prev) => Math.min(10, prev + 1))} className={pad}>
-        +
-      </button>
-      <button onClick={() => setCount(0)} className={pad}>
-        0
-      </button>
-      <button onClick={() => setCount((prev) => Math.max(0, prev - 1))} className={pad}>
-        -
-      </button>
-    </div>
+    <>
+      <div className="flex items-center space-x-2 justify-center w-full">
+        <p>Лічильник</p>
+        <span className="text-xl font-bold px-4">{count}</span>
+        <button onClick={() => setCount((prev) => Math.min(10, prev + 1))} className={pad}>
+          +
+        </button>
+        <button onClick={() => setCount(0)} className={pad}>
+          0
+        </button>
+        <button onClick={() => setCount((prev) => Math.max(0, prev - 1))} className={pad}>
+          -
+        </button>
+      </div>
+      <div>
+        <p>Your text message: {inputText}</p>
+        <input type="text" placeholder="Enter your text" value={inputText} onChange={(e) => setInputText(e.target.value)} />
+      </div>
+    </>
   );
 };
 
@@ -49,6 +68,10 @@ const TodoList = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (todoValue.trim() === "") return;
+    if (todoValue.trim().length < 3) {
+      alert("Мінімум 3 символи");
+      return;
+    }
     setTodoLists((prev) => [...prev, { id: Date.now().toString(), todo: todoValue }]);
     setTodoValue("");
   };
@@ -112,16 +135,38 @@ const TodoList = () => {
 };
 
 const Toggle = () => {
+  const [array, setArray] = useState<number[]>([1, 5, 4, 22, 6, 2, 3, 9]);
   const [toggleBtn, setToggleBtn] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [inputValue, setInputValue] = useState("");
+  const [sortType, setSortType] = useState("asc");
 
-  const array = [1, 5, 4, 22, 6, 2, 3, 9];
-  const sortedArray = array.sort((a, b) => a - b);
+  const handleAdd = () => {
+    const number = parseInt(inputValue);
+    if (!isNaN(number)) {
+      setArray((prev) => [...prev, number]);
+      setInputValue("");
+    }
+  };
 
-  const withoutFive = array.sort((a, b) => {
-    if (a === 5 && b !== 5) return 1;
-    if (b === 5 && a !== 5) return -1;
-    return a - b;
-  });
+  const getSortedArray = () => {
+    const copy = [...array];
+
+    if (sortType === "asc") {
+      return copy.sort((a, b) => a - b);
+    }
+    if (sortType === "desc") {
+      return copy.sort((a, b) => b - a);
+    }
+    if (sortType === "fiveLast") {
+      const notFive = copy.filter((n) => n !== 5).sort((a, b) => a - b);
+      const fives = copy.filter((n) => n === 5);
+      return [...notFive, ...fives];
+    }
+    return copy;
+  };
+
+  const sortedArray = getSortedArray();
 
   return (
     <div>
@@ -130,6 +175,376 @@ const Toggle = () => {
         {toggleBtn ? "Off" : "On"}
       </button>
       <p className="mt-2">Статус: {toggleBtn ? "Вимкнено" : "Увімкнено"}</p>
+      <h1 className="text-2xl font-bold mb-4">Список чисел з керуванням</h1>
+
+      <div className="flex gap-2 mb-4">
+        <input
+          type="number"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="border px-2 py-1"
+          placeholder="Введи число"
+        />
+        <button onClick={handleAdd} className="px-3 py-1 rounded">
+          Додати
+        </button>
+      </div>
+      <div className="mb-4">
+        <label>Сортування: </label>
+        <select value={sortType} onChange={(e) => setSortType(e.target.value)} className="border p-1 ml-2">
+          <option value="asc">За зростанням</option>
+          <option value="desc">За спаданням</option>
+          <option value="fiveLast">П’ятірки в кінці</option>
+        </select>
+      </div>
+
+      <ul className="mb-4">
+        {sortedArray.slice(0, visibleCount).map((num, index) => (
+          <li key={index}>Число: {num}</li>
+        ))}
+      </ul>
+
+      <div className="flex gap-2">
+        {visibleCount < sortedArray.length && (
+          <button onClick={() => setVisibleCount((prev) => prev + 3)} className="bg-blue-400 text-white px-3 py-1 rounded">
+            Показати ще
+          </button>
+        )}
+        {visibleCount > 3 && (
+          <button onClick={() => setVisibleCount((prev) => Math.max(3, prev - 3))} className="bg-yellow-500 text-white px-3 py-1 rounded">
+            Менше
+          </button>
+        )}
+        <button onClick={() => setVisibleCount(3)} className="bg-red-400 text-white px-3 py-1 rounded">
+          Сховати все
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const FetchApi = () => {
+  const [users, setUsers] = useState<
+    {
+      name: string;
+      phone: string;
+      username: string;
+      website: string;
+    }[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [timer, setTimer] = useState("");
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Помилка при завантаженні:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date().toISOString();
+      setTimer(date);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  //  fetch with async function
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+        const data = await response.json();
+        setPosts(data);
+        console.log(data);
+      } catch (error) {
+        console.log("something went wrong");
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) return <p>Завантаження...</p>;
+
+  return (
+    <div>
+      <h2>🥕 Овочі (з Open Food Facts)</h2>
+      <p>Time For today: {timer}</p>
+      <ul>
+        {users.map((user, index) => (
+          <li
+            key={index}
+            style={{
+              marginBottom: "20px",
+              border: "1px solid #ccc",
+              padding: "10px",
+              borderRadius: "8px",
+              maxWidth: "300px",
+            }}
+          >
+            <strong>{user.name || "Без назви"}</strong>
+            <br />
+            <span>{user.phone}</span>
+            <p>{user.username}</p>
+            <p>{user.website}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const Pagination = () => {
+  const [posts, setPosts] = useState(() => Array.from({ length: 50 }, (_, i) => i + 1));
+
+  const [perPage, setPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(posts.length / perPage);
+  const startIndex = (currentPage - 1) * perPage;
+  const currentItems = posts.slice(startIndex, startIndex + perPage);
+
+  const handleClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  return (
+    <div>
+      <h2>Пагінація</h2>
+
+      <ul>
+        {currentItems.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+
+      <div style={{ marginTop: "20px" }} className="[&>button]:cursor-pointer">
+        <button onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>
+          Попередня
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => handleClick(i + 1)}
+            style={{
+              fontWeight: currentPage === i + 1 ? "bold" : "normal",
+              margin: "0 5px",
+            }}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>
+          Наступна
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DropDownMenu = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const options = ["option1", "option2", "option3", "option4", "option5"];
+
+  const handleSelect = (option: string) => {
+    setSelected(option);
+    setIsOpen(false);
+  };
+
+  return (
+    <div style={{ position: "relative", width: "200px", margin: "20px" }}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          padding: "10px",
+          border: "1px solid gray",
+          cursor: "pointer",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        {selected || "Select"}
+      </div>
+
+      <div
+        className={`
+    absolute top-full right-0 mt-1 w-36 bg-white border border-gray-400
+    transition-all duration-300 ease-in-out
+    ${isOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"}
+  `}
+      >
+        {options.map((option) => (
+          <div
+            key={option}
+            onClick={() => handleSelect(option)}
+            style={{
+              padding: "10px",
+              cursor: "pointer",
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            {option}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Form = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    checkbox: false,
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+    if (formData.username.length < 6) {
+      newErrors.username = "Ім'я користувача має бути не менше 6 символів";
+    }
+
+    if (formData.password.length < 8) {
+      newErrors.password = "Пароль має бути не менше 8 символів";
+    }
+
+    if (!formData.checkbox) {
+      newErrors.checkbox = "Ви маєте погодитись";
+    }
+    setErrors(newErrors);
+    console.log(formData);
+    // Якщо помилок немає — можна відправляти форму
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Форма відправлена", formData);
+    }
+  };
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input name="username" type="text" onChange={handleChange} placeholder="username" value={formData.username} />
+        {errors.username && <p className="text-red-500 text-xs">{errors.username}</p>}
+        <input name="password" type="password" onChange={handleChange} placeholder="password" value={formData.password} />
+        {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
+
+        <label>
+          <input name="checkbox" type="checkbox" checked={formData.checkbox} onChange={handleChange} />
+          Погоджуюсь з умовами
+        </label>
+        {errors.checkbox && <p className="text-red-500 text-xs">{errors.checkbox}</p>}
+        <button type="submit" disabled={Object.keys(errors).length > 0}>
+          Hадіслати
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const FocusInput = () => {
+  // focus on input
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleFocus = () => {
+    inputRef.current?.focus();
+  };
+
+  // save prev number
+  const [count, setCount] = useState(0);
+  const prevCountRef = useRef<number | null>(null);
+  useEffect(() => {
+    prevCountRef.current = count;
+  }, [count]);
+
+  return (
+    <>
+      <div>
+        <input ref={inputRef} type="text" placeholder="place your text" />
+        <button onClick={handleFocus}> Focus on element</button>
+      </div>
+
+      <div>
+        <p>Поточне значення: {count}</p>
+        <p>Попереднє значення: {prevCountRef.current}</p>
+        <button onClick={() => setCount(count + 1)}>Збільшити</button>
+      </div>
+
+      <div></div>
+    </>
+  );
+};
+
+const LoadMoreProducts = () => {
+  const productsMock = Array.from({ length: 200 }, (_, i) => ({
+    id: i + 1,
+    name: `Продукт №${i + 1}`,
+  }));
+  const [visibleProducts, setVisibleProducts] = useState(15);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const loadMore = () => {
+    setVisibleProducts((prev) => Math.min(prev + 5, productsMock.length));
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: "100px" }
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+    console.log(currentLoader);
+    console.log(observer);
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, []);
+
+  return (
+    <div className="p-4 max-w-md mx-auto">
+      <h2 className="text-xl font-bold mb-4">Продукти:</h2>
+      <ul className="space-y-2">
+        {productsMock.slice(0, visibleProducts).map((product) => (
+          <li key={product.id} className="p-2 border rounded">
+            {product.name}
+          </li>
+        ))}
+      </ul>
+      {visibleProducts < productsMock.length && (
+        <div ref={loaderRef} className="mt-6 text-center text-gray-400">
+          Завантаження...
+        </div>
+      )}
     </div>
   );
 };
