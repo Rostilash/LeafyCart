@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { saveOrder } from "../../redux/slices/authSlice";
 import { useConvertMoney } from "../../utils/useConvertMoney";
+import { createLiqPayPayment } from "../../redux/slices/paymentSlice";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
@@ -50,19 +51,49 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!validate()) return;
+  //   const newData = { ...formData, price: total };
+  //   // need to upgrade in future
+  //   console.log(newData);
+  //   // dispatch(saveOrder(newData));
+  // };
+
+  const handleLiqPay = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    const newData = { ...formData, price: total };
-    // need to upgrade in future
-    console.log(newData);
-    // dispatch(saveOrder(newData));
+
+    const result = await dispatch(
+      createLiqPayPayment({
+        amount: Math.round(total * 100) / 100,
+        name: formData.name,
+        email: formData.email,
+      })
+    );
+
+    if (createLiqPayPayment.fulfilled.match(result)) {
+      const { data, signature } = result.payload;
+
+      const liqpay = (window as any).LiqPayCheckout.init({
+        data,
+        signature,
+        embedTo: "#liqpay",
+        mode: "popup",
+      });
+
+      liqpay.on("liqpay.callback", async (response: any) => {
+        if (response.status === "success") {
+          dispatch(saveOrder({ ...formData, price: total }));
+        }
+      });
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 grid grid-cols-2 gap-8">
       {/* Left side */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleLiqPay} className="space-y-4">
         <div>
           <label className="font-semibold block">Ім’я</label>
           <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
@@ -83,9 +114,12 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
 
         {loading && <p>Завантаження...</p>}
         {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Оформити замовлення
+        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-600">
+          Оплатити через LiqPay
         </button>
+        {/* <button type="button" onClick={handleLiqPay} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          Оплатити через LiqPay
+        </button> */}
       </form>
 
       {/* Right side */}

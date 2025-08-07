@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import { collection, addDoc, getDoc, doc, setDoc } from "firebase/firestore";
+import { collection, addDoc, getDoc, doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export interface AuthUser {
   uid: string;
@@ -118,7 +118,7 @@ export const saveOrder = createAsyncThunk(
       await addDoc(collection(db, "orders"), {
         userId: user.uid,
         ...form,
-        createdAt: new Date(),
+        createdAt: serverTimestamp(),
       });
 
       return "ok";

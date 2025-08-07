@@ -21,7 +21,10 @@ export const Testing = () => {
         {/* <DropDownMenu /> */}
         {/* <Form /> */}
         {/* <FocusInput /> */}
-        <LoadMoreProducts />
+        {/* Add products whilte scrolling */}
+        {/* <LoadMoreProductsWithUseRef /> */}
+        {/* serching values by input */}
+        {/* <SearchingValues /> */}
       </div>
     </>
   );
@@ -497,15 +500,13 @@ const FocusInput = () => {
   );
 };
 
-const LoadMoreProducts = () => {
-  const productsMock = Array.from({ length: 200 }, (_, i) => ({
-    id: i + 1,
-    name: `Продукт №${i + 1}`,
-  }));
+const LoadMoreProductsWithUseRef = () => {
+  const products = Array.from({ length: 200 }, (_, i) => ({ id: i + 1, name: `Products ${i + 1}` }));
   const [visibleProducts, setVisibleProducts] = useState(15);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const divRefLoader = useRef<HTMLDivElement | null>(null);
+
   const loadMore = () => {
-    setVisibleProducts((prev) => Math.min(prev + 5, productsMock.length));
+    setVisibleProducts((prev) => Math.min(prev + 5, products.length));
   };
 
   useEffect(() => {
@@ -519,32 +520,45 @@ const LoadMoreProducts = () => {
       { rootMargin: "100px" }
     );
 
-    const currentLoader = loaderRef.current;
-    if (currentLoader) {
-      observer.observe(currentLoader);
+    const currentRef = divRefLoader.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-    console.log(currentLoader);
-    console.log(observer);
+
     return () => {
-      if (currentLoader) observer.unobserve(currentLoader);
+      if (currentRef) observer.unobserve(currentRef);
     };
   }, []);
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-4">Продукти:</h2>
+    <div>
+      <h1>Our Products </h1>
+
       <ul className="space-y-2">
-        {productsMock.slice(0, visibleProducts).map((product) => (
-          <li key={product.id} className="p-2 border rounded">
+        {products.slice(0, visibleProducts).map((product) => (
+          <li key={product.id} className="bg-gray-200 h-6 rounded mb-2 animate-pulse">
             {product.name}
           </li>
         ))}
       </ul>
-      {visibleProducts < productsMock.length && (
-        <div ref={loaderRef} className="mt-6 text-center text-gray-400">
-          Завантаження...
-        </div>
-      )}
+
+      {visibleProducts < products.length && <div ref={divRefLoader}>Завантаження...</div>}
+    </div>
+  );
+};
+
+const SearchingValues = () => {
+  const [serachingValue, setSerachingValue] = useState("");
+  const products = Array.from({ length: 10 }, (_, i) => ({ id: i + 1, name: `Products: ${i + 1}` }));
+  const findedProducts = products.filter((prod) => prod.name.includes(serachingValue));
+  const ourProducts = serachingValue ? findedProducts : products;
+
+  return (
+    <div>
+      <input type="text" value={serachingValue} onChange={(e) => setSerachingValue(e.target.value)} placeholder="enter your number" />
+      {ourProducts.map((product) => (
+        <div key={product.id}> {product.name}</div>
+      ))}
     </div>
   );
 };

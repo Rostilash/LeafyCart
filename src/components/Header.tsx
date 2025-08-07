@@ -1,6 +1,7 @@
-import { useAppSelector } from "../redux/reduxTypeHook";
+import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
 import React from "react";
 import { Link } from "react-router-dom";
+import { logoutUser } from "../redux/slices/authSlice";
 
 type HeaderProps = {
   isNavOpened: boolean;
@@ -11,13 +12,14 @@ type HeaderProps = {
 
 export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, isNavOpened, quantity }) => {
   const { user } = useAppSelector((state) => state.auth);
-
-  // take user name by email
+  const dispatch = useAppDispatch();
+  // take user name by email if user didnt enter name
   const userName = user?.email?.split("@")[0].toLocaleUpperCase();
 
   return (
     <header className="row-start-1 row-end-2 col-span-2 bg-[var(--leafy-sage)] p-3.5 shadow-md items-center justify-center text-white">
       <div className="flex justify-between  ">
+        {/* left side */}
         <div className="flex gap-4 items-center">
           <img
             src="https://cdn-icons-png.flaticon.com/128/12127/12127163.png"
@@ -32,11 +34,15 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
           <Link to="/catalog">Каталог</Link>
           {user && user.role === "admin" && <Link to="/admin">Адмін панель</Link>}
         </div>
-        <div className="relative flex justify-around items-center w-72 gap-4">
+        {/* right side */}
+        <div className="relative flex justify-around items-center gap-4">
           <span>
             {userName ? (
               <span>
-                Ласкаво просимо - <b>{userName}</b>!
+                Ласкаво просимо - <b>{userName}</b>! /{" "}
+                <button onClick={() => dispatch(logoutUser())} className="cursor-pointer">
+                  Вийти
+                </button>
               </span>
             ) : (
               <Link to="/login" className="border p-2 rounded-2xl">
