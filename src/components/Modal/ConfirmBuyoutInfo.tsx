@@ -1,18 +1,33 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { saveOrder } from "../../redux/slices/authSlice";
-import { useConvertMoney } from "../../utils/useConvertMoney";
-import { createLiqPayPayment } from "../../redux/slices/paymentSlice";
+import { convertMoney } from "../../utils/convertMoney";
+import { generateDataAndSignature } from "../../utils/liqpay";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
   totalDiscount?: number;
 };
+interface LiqPayResponse {
+  status: string;
+  [key: string]: unknown;
+}
 
+interface LiqPayCheckoutInstance {
+  init: (config: { data: string; signature: string; embedTo?: string; mode?: string }) => {
+    on: (event: string, callback: (response: LiqPayResponse) => void) => void;
+  };
+}
+
+declare global {
+  interface Window {
+    LiqPayCheckout: LiqPayCheckoutInstance;
+  }
+}
 export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector((state) => state.auth);
-
+  const cartItems = useAppSelector((state) => state.cart.items);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,8 +49,8 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       valid = false;
     }
 
-    if (formData.address.trim().length < 10) {
-      newErrors.address = "Адреса має бути не менше 10 символів";
+    if (formData.address.trim().length < 8) {
+      newErrors.address = "Адреса має бути не менше 8 символів";
       valid = false;
     }
 
@@ -51,43 +66,62 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (!validate()) return;
-  //   const newData = { ...formData, price: total };
-  //   // need to upgrade in future
-  //   console.log(newData);
-  //   // dispatch(saveOrder(newData));
-  // };
-
   const handleLiqPay = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const result = await dispatch(
-      createLiqPayPayment({
-        amount: Math.round(total * 100) / 100,
-        name: formData.name,
-        email: formData.email,
-      })
-    );
+    const privateKey = "sandbox_private_key";
+    const publicKey = "sandbox_public_key";
 
-    if (createLiqPayPayment.fulfilled.match(result)) {
-      const { data, signature } = result.payload;
+    const params = {
+      version: "3",
+      action: "pay",
+      amount: Number(total).toFixed(2),
+      currency: "UAH",
+      description: "Тестова оплата",
+      order_id: `order_${Date.now()}`,
+      result_url: "http://localhost:3000/success",
+      server_url: "http://localhost:3000/callback",
+      sandbox: "1",
+    };
 
-      const liqpay = (window as any).LiqPayCheckout.init({
-        data,
-        signature,
-        embedTo: "#liqpay",
-        mode: "popup",
-      });
+    const { data, signature } = generateDataAndSignature(params, privateKey, publicKey);
 
-      liqpay.on("liqpay.callback", async (response: any) => {
-        if (response.status === "success") {
-          dispatch(saveOrder({ ...formData, price: total }));
-        }
-      });
-    }
+    const liqpay = (window as any).LiqPayCheckout.init({
+      data,
+      signature,
+      embedTo: "#liqpay",
+      mode: "popup",
+    });
+
+    liqpay.on("liqpay.callback", function (response: any) {
+      console.log("LiqPay callback:", response);
+
+      if (response.status === "success" || response.status === "sandbox") {
+        const newData = {
+          name: formData.name,
+          email: formData.email,
+          address: formData.address,
+          price: Number(total.toFixed(2)),
+          cartItems: cartItems,
+          paymentId: response.payment_id || null,
+          paymentStatus: response.status,
+        };
+
+        dispatch(saveOrder(newData));
+        setFormData({ name: "", email: "", address: "" });
+      } else {
+        console.error("Payment failed or cancelled", response);
+      }
+    });
+
+    liqpay.on("liqpay.ready", function () {
+      console.log("LiqPay ready");
+    });
+
+    liqpay.on("liqpay.close", function () {
+      console.log("LiqPay closed");
+    });
   };
 
   return (
@@ -127,7 +161,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
         <h2 className="text-xl font-semibold mb-4">Підсумок замовлення</h2>
         <div className="flex justify-between">
           <span>Ціна:</span>
-          <span>{useConvertMoney(totalPrice)} грн</span>
+          <span>{convertMoney(totalPrice)} грн</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-green-600">

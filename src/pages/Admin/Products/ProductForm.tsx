@@ -14,10 +14,10 @@ interface ProductFormProps {
 export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, submitText = "Зберегти", closeEditModal }) => {
   const [formData, setFormData] = useState<Partial<FoodProduct>>(initialProduct || {});
   const [newKey, setNewKey] = useState("");
-  const [newValue, setNewValue] = useState("");
+  const [newValue, setNewValue] = useState<string | number | "">("");
 
   const [newNutritionKey, setNewNutritionKey] = useState("");
-  const [newNutritionValue, setNewNutritionValue] = useState<number | "">("");
+  const [newNutritionValue, setNewNutritionValue] = useState<string | number | "">("");
 
   useEffect(() => {
     if (initialProduct) {
@@ -63,7 +63,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
     const { name, value, type } = e.target;
 
     setFormData((prev): Partial<FoodProduct> => {
-      let newValue: any = value;
+      let newValue: string | number | boolean | undefined = value;
 
       if (type === "number") {
         newValue = value === "" ? undefined : Number(value);

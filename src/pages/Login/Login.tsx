@@ -12,7 +12,7 @@ const Login = () => {
     if (!loading && currentUser) {
       navigate("/");
     }
-  }, [currentUser, loading]);
+  }, [currentUser, loading, navigate]);
 
   return (
     <div className="p-4 bg-[var(--leafy-bg)] h-screen">

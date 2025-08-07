@@ -5,7 +5,7 @@ interface AddFieldInputsProps {
   keyValue: string;
   setKeyValue: (v: string) => void;
   value: string | number | "";
-  setValue: (v: any) => void;
+  setValue: (v: string | number | "") => void;
   onAdd: () => void;
 }
 

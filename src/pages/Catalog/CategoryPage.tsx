@@ -23,13 +23,13 @@ export const CategoryPage = () => {
 
   const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.products.products);
-  const productsLoaded = useAppSelector((state) => state.products.loading);
+  const isLoading = useAppSelector((state) => state.products.loading);
 
   useEffect(() => {
-    if (!productsLoaded) {
+    if (!isLoading && products.length === 0) {
       dispatch(getProducts());
     }
-  }, [dispatch]);
+  }, [isLoading, products.length, dispatch]);
 
   const openModal = (product: FoodProduct) => {
     dispatch(setSelectedProduct(product));
@@ -77,7 +77,7 @@ export const CategoryPage = () => {
         <div className="flex flex-col gap-4 px-2">
           {/* Products */}
           <div className="grid grid-cols-6 gap-2">
-            {productsLoaded && <Loader />}
+            {isLoading && <Loader />}
             {paginatedProducts.map((product) => (
               <ProductItem key={product.id} product={product} onClick={() => openModal(product)} />
             ))}

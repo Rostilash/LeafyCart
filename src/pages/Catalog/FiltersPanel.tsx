@@ -16,7 +16,7 @@ type FiltersPanelProps = {
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxCategoryPrice }) => {
   const [minPrice, setMinPrice] = useState("0");
   const [maxPrice, setMaxPrice] = useState("");
-  const [range, setRange] = useState(0);
+  // const [range, setRange] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sort, setSort] = useState("popular");
 
@@ -25,7 +25,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
       minPrice,
       maxPrice,
       inStockOnly,
-      range,
+      range: 0,
       sort,
     });
   };
@@ -45,7 +45,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
             onFilterChange({
               minPrice,
               maxPrice,
-              range,
+              range: 0,
               inStockOnly,
               sort: value,
             });
@@ -68,7 +68,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
             onFilterChange({
               minPrice,
               maxPrice,
-              range,
+              range: 0,
               sort,
               inStockOnly: isChecked,
             });

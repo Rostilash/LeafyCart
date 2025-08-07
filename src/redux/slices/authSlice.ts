@@ -47,8 +47,11 @@ export const registerUser = createAsyncThunk("auth/register", async ({ email, pa
 
     await setDoc(doc(db, "users", user.uid), newObj);
     return { user: newObj };
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue(String(error));
   }
 });
 
@@ -69,8 +72,11 @@ export const loginUser = createAsyncThunk("auth/login", async ({ email, password
         role,
       },
     };
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue(String(error));
   }
 });
 
@@ -92,8 +98,11 @@ export const loginWithGoogle = createAsyncThunk("auth/googleLogin", async (_, th
         role,
       },
     };
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue(String(error));
   }
 });
 
@@ -102,34 +111,48 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) =>
   try {
     await signOut(auth);
     return true;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue(String(error));
   }
 });
 
 // Save order
-export const saveOrder = createAsyncThunk(
-  "auth/saveOrder",
-  async (form: { name: string; email: string; address: string; price: number }, thunkAPI) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
+export const saveOrder = createAsyncThunk<
+  string,
+  { name: string; email: string; address: string; price: number; cartItems: any[]; paymentId?: string; paymentStatus?: string },
+  { rejectValue: string }
+>("orders/saveOrder", async (form, thunkAPI) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
 
-      await addDoc(collection(db, "orders"), {
-        userId: user.uid,
-        ...form,
-        createdAt: serverTimestamp(),
-      });
+    await addDoc(collection(db, "orders"), {
+      userId: user.uid,
+      name: form.name,
+      email: form.email,
+      address: form.address,
+      price: form.price,
+      cartItems: form.cartItems,
+      paymentId: form.paymentId || null,
+      paymentStatus: form.paymentStatus || "pending",
+      status: "new",
+      createdAt: serverTimestamp(),
+    });
 
-      return "ok";
-    } catch (error: any) {
+    return "ok";
+  } catch (error: unknown) {
+    if (error instanceof Error) {
       return thunkAPI.rejectWithValue(error.message);
     }
+    return thunkAPI.rejectWithValue(String(error));
   }
-);
+});
 
 // Check out user
-export const checkAuth = createAsyncThunk("auth/checkAuth", async (_, thunkAPI) => {
+export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
   return new Promise<AuthUser | null>((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       unsubscribe();

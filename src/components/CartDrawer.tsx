@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
 import { updateQuantity } from "../redux/slices/cartSlice";
 import { Footer } from "./Footer";
 import { Badge } from "../pages/Catalog/Badge";
-import { useMatchPrice } from "../utils/useConvertMoney";
-import { useConvertMoney } from "./../utils/useConvertMoney";
+import { matchPrice } from "../utils/convertMoney";
+import { convertMoney } from "../utils/convertMoney";
 import type { CartDrawerProps } from "../types/cartTypes";
 
 type UpdateAction = "increment" | "decrement";
@@ -37,7 +37,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
         {item.discountPercentage && <Badge position="top-0 left-0" text={`Знижка: ${item.discountPercentage}%`} />}
         <div className="flex flex-col">
           <span className="pl-4">{item.name}</span>
-          <span className="pl-6"> {useMatchPrice(discountedPrice, item.quantity)} ₴</span>
+          <span className="pl-6"> {matchPrice(discountedPrice, item.quantity)} ₴</span>
         </div>
 
         <div>
@@ -81,7 +81,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
       </div>
       <div className="p-4 space-y-4 overflow-auto">{matchedItems}</div>
 
-      <span className="flex justify-center text-center p-2 font-bold">Загальна сума: {useConvertMoney(totalPrice - (totalDiscount ?? 0))} ₴</span>
+      <span className="flex justify-center text-center p-2 font-bold">Загальна сума: {convertMoney(totalPrice - (totalDiscount ?? 0))} ₴</span>
       <div className="p-4 border-t border-[var(--leafy-moss)]">
         <button className="btn-primary w-full btn_hover" disabled={cartItems.length < 1} onClick={() => setCheckoutModalOpen(true)}>
           Оформити замовлення

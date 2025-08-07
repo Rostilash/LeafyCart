@@ -34,9 +34,13 @@ export const getProducts = createAsyncThunk<FoodProduct[]>("products/getAll", as
     });
 
     return products;
-  } catch (error: any) {
-    console.error("Error fetching products:", error);
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    } else {
+      console.error("Error fetching products:", error);
+      return thunkAPI.rejectWithValue("Unknown error occurred");
+    }
   }
 });
 
@@ -54,8 +58,13 @@ export const addProduct = createAsyncThunk("products/addProduct", async (product
       ...data,
       createdAt: data?.createdAt?.toDate().toISOString() ?? null,
     } as FoodProduct;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    } else {
+      console.error("Error fetching products:", error);
+      return thunkAPI.rejectWithValue("Unknown error occurred");
+    }
   }
 });
 
@@ -66,9 +75,13 @@ export const updateProduct = createAsyncThunk("products/updateProduct", async (u
     await updateDoc(productRef, rest);
 
     return updatedProduct;
-  } catch (error: any) {
-    console.log("Щось пішло не так");
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    } else {
+      console.error("Error fetching products:", error);
+      return thunkAPI.rejectWithValue("Unknown error occurred");
+    }
   }
 });
 
@@ -76,8 +89,13 @@ export const deleteProduct = createAsyncThunk("product/deleteProduct", async (pr
   try {
     await deleteDoc(doc(db, "products", productId));
     return productId;
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    } else {
+      console.error("Error fetching products:", error);
+      return thunkAPI.rejectWithValue("Unknown error occurred");
+    }
   }
 });
 

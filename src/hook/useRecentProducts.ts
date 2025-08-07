@@ -11,20 +11,24 @@ export const useRecentProducts = () => {
   useEffect(() => {
     if (!selectedProduct) return;
 
-    const saved = localStorage.getItem(STORAGE_KEY);
-    let recentProducts: FoodProduct[] = saved ? JSON.parse(saved) : [];
+    let recentProducts: FoodProduct[] = [];
 
-    // Remove old version of same product (by id)
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        recentProducts = JSON.parse(saved);
+      }
+    } catch (error) {
+      console.warn("Could not parse recent products from localStorage", error);
+    }
+
     recentProducts = recentProducts.filter((p) => p.id !== selectedProduct.id);
-
-    // Add to beginning
     recentProducts.unshift(selectedProduct);
 
-    // Keep only the first MAX_RECENT
     if (recentProducts.length > MAX_RECENT) {
       recentProducts = recentProducts.slice(0, MAX_RECENT);
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(recentProducts));
-  }, [selectedProduct?.id]);
+  }, [selectedProduct]);
 };

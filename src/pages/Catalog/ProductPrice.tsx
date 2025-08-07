@@ -1,5 +1,5 @@
 import type { FoodProduct } from "../../types/productTypes";
-import { useConvertMoney } from "../../utils/useConvertMoney";
+import { convertMoney } from "../../utils/convertMoney";
 
 interface PriceProps {
   product: FoodProduct;
@@ -11,12 +11,12 @@ export const ProductPrice = ({ product }: PriceProps) => {
 
   return product.discountPercentage ? (
     <span itemProp="price" className="text-vase font-medium">
-      <span className="line-through text-gray-400 mr-2">{useConvertMoney(product.price)} ₴</span>-{" "}
-      <span className="text-red-500 font-semibold">{useConvertMoney(discountedPrice)} ₴</span>
+      <span className="line-through text-gray-400 mr-2">{convertMoney(product.price)} ₴</span>-{" "}
+      <span className="text-red-500 font-semibold">{convertMoney(discountedPrice)} ₴</span>
     </span>
   ) : (
     <span itemProp="price" className="text-base font-medium">
-      {useConvertMoney(product.price)} ₴
+      {convertMoney(product.price)} ₴
     </span>
   );
 };
