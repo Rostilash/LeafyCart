@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { saveOrder } from "../../redux/slices/authSlice";
+import { getOrdersByUser, saveOrder } from "../../redux/slices/orderSlice";
 import { convertMoney } from "../../utils/convertMoney";
 import { generateDataAndSignature } from "../../utils/liqpay";
 
@@ -24,16 +24,37 @@ declare global {
     LiqPayCheckout: LiqPayCheckoutInstance;
   }
 }
+
 export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const userId = useAppSelector((state) => state.auth.user?.uid);
   const cartItems = useAppSelector((state) => state.cart.items);
+  const allOrders = useAppSelector((state) => state.order.all_orders);
+  const loading = useAppSelector((state) => state.order.loading);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     address: "",
   });
   const [errors, setErrors] = useState({ name: "", email: "", address: "" });
+
+  useEffect(() => {
+    if (allOrders && allOrders.length > 0) {
+      const lastOrder = allOrders.at(-1);
+      setFormData({
+        name: lastOrder?.name || "",
+        email: lastOrder?.email || "",
+        address: lastOrder?.address || "",
+      });
+    }
+  }, [allOrders]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getOrdersByUser(userId));
+    }
+  }, [dispatch, userId]);
 
   const validate = () => {
     let valid = true;
@@ -57,7 +78,6 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     setErrors(newErrors);
     return valid;
   };
-
   const discount = (totalDiscount ?? 0) / 100;
   const delivery = 0;
   const total = totalPrice / 100 - discount + delivery;
@@ -147,13 +167,9 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
         </div>
 
         {loading && <p>Завантаження...</p>}
-        {error && <p className="text-red-500">{error}</p>}
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-600">
           Оплатити через LiqPay
         </button>
-        {/* <button type="button" onClick={handleLiqPay} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-          Оплатити через LiqPay
-        </button> */}
       </form>
 
       {/* Right side */}

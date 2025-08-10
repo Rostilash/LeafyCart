@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import { collection, addDoc, getDoc, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 
 export interface AuthUser {
   uid: string;
@@ -119,38 +119,6 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) =>
   }
 });
 
-// Save order
-export const saveOrder = createAsyncThunk<
-  string,
-  { name: string; email: string; address: string; price: number; cartItems: any[]; paymentId?: string; paymentStatus?: string },
-  { rejectValue: string }
->("orders/saveOrder", async (form, thunkAPI) => {
-  try {
-    const user = auth.currentUser;
-    if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
-
-    await addDoc(collection(db, "orders"), {
-      userId: user.uid,
-      name: form.name,
-      email: form.email,
-      address: form.address,
-      price: form.price,
-      cartItems: form.cartItems,
-      paymentId: form.paymentId || null,
-      paymentStatus: form.paymentStatus || "pending",
-      status: "new",
-      createdAt: serverTimestamp(),
-    });
-
-    return "ok";
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-    return thunkAPI.rejectWithValue(String(error));
-  }
-});
-
 // Check out user
 export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
   return new Promise<AuthUser | null>((resolve, reject) => {
@@ -230,18 +198,6 @@ const authSlice = createSlice({
         state.user = null;
         state.loading = false;
         state.error = null;
-      })
-
-      // SaveOrder
-      .addCase(saveOrder.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(saveOrder.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(saveOrder.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
       })
 
       // Checkout user

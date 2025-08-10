@@ -5,6 +5,11 @@ export interface PaymentState {
   error: {} | string | null;
   liqpayData: { data: string; signature: string } | null;
 }
+export interface PaymentProps {
+  amount: number;
+  name: string;
+  email: string;
+}
 
 const initialState: PaymentState = {
   loading: false,
