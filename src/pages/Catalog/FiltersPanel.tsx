@@ -4,6 +4,7 @@ type Filters = {
   minPrice: string;
   maxPrice: string;
   inStockOnly: boolean;
+  countryFilter: boolean;
   range: number;
   sort: string;
 };
@@ -16,9 +17,9 @@ type FiltersPanelProps = {
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxCategoryPrice }) => {
   const [minPrice, setMinPrice] = useState("0");
   const [maxPrice, setMaxPrice] = useState("");
-  // const [range, setRange] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sort, setSort] = useState("popular");
+  const [countryFilter, setCountryFilter] = useState(false);
 
   const handleApply = () => {
     onFilterChange({
@@ -27,6 +28,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
       inStockOnly,
       range: 0,
       sort,
+      countryFilter,
     });
   };
   const maxPriceRounded = Math.ceil(maxCategoryPrice / 1000);
@@ -48,8 +50,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
               range: 0,
               inStockOnly,
               sort: value,
+              countryFilter,
             });
           }}
+          className=" border rounded"
         >
           <option value="popular">Популярні</option>
           <option value="cheep">Дешеві</option>
@@ -71,6 +75,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
               range: 0,
               sort,
               inStockOnly: isChecked,
+              countryFilter,
             });
           }}
         />
@@ -111,6 +116,27 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ onFilterChange, maxC
           </button>
         </div>
       </div>
+      {/* By City */}
+      <label htmlFor="countryFilter" className="inline-flex items-center gap-2 cursor-pointer">
+        <input
+          id="countryFilter"
+          type="checkbox"
+          checked={countryFilter}
+          onChange={(e) => {
+            const checked = e.target.checked;
+            setCountryFilter(checked);
+            onFilterChange({
+              minPrice,
+              maxPrice,
+              range: 0,
+              sort,
+              inStockOnly,
+              countryFilter: checked,
+            });
+          }}
+        />
+        Країна: Україна
+      </label>
     </div>
   );
 };

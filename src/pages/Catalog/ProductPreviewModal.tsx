@@ -1,14 +1,17 @@
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { setSelectedProduct } from "../../redux/slices/productSlice";
+import { rateProduct, setSelectedProduct } from "../../redux/slices/productSlice";
 import { type FoodProduct } from "../../types/productTypes";
 import { Badge } from "./Badge";
 import { ProductItem } from "./ProductItem";
 import { ProductPrice } from "./ProductPrice";
+import { ProductRating } from "./ProductRating";
+import { useState } from "react";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
   const allProducts = useAppSelector((state) => state.products.products);
+  const [newProduct, setNewProduct] = useState<FoodProduct | null>(null);
 
   // filtering our products by keywords
   const keywords = product.name.toLowerCase().split(" ");
@@ -30,6 +33,23 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   );
   const productsIsNotEmpty = recomendedProductsToRender.length > 0;
 
+  const handleRateProduct = (userRating: number) => {
+    if (!product) return;
+    console.log("Pressed");
+    const newCount = (product.ratingCount || 0) + 1;
+    const newAverage = ((product.rating || 0) * (product.ratingCount || 0) + userRating) / newCount;
+
+    setNewProduct((prev) => {
+      if (!prev) {
+        // Якщо ще немає локальної копії, створюємо її на основі product
+        return { ...product, rating: newAverage, ratingCount: newCount, userRating };
+      }
+      return { ...prev, rating: newAverage, ratingCount: newCount, userRating };
+    });
+
+    dispatch(rateProduct({ productId: product.id, rating: userRating }));
+  };
+  const productToShow = newProduct || product;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto p-2 overflow-y-auto scrollbar-hide max-h-[90vh]">
       {/* img */}
@@ -43,6 +63,12 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       <div>
         <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
         <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
+        <ProductRating
+          rating={productToShow.rating || 0}
+          ratingCount={productToShow.ratingCount || 0}
+          userRating={productToShow.userRating || 0}
+          onRate={handleRateProduct}
+        />
         <p className="mt-2">{product.description}</p>
         <p className="text-lg font-semibold mt-4">
           <ProductPrice product={product} /> / за {product.weight}

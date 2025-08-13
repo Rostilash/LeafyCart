@@ -16,6 +16,7 @@ export const CategoryPage = () => {
     minPrice: "",
     maxPrice: "",
     inStockOnly: false,
+    countryFilter: false,
     range: 0,
     sort: "popular",
   });
@@ -64,8 +65,10 @@ export const CategoryPage = () => {
 
   const itemsPerPage = 18;
 
-  const filteredProducts = fullyFiltered || filters.sort !== "popular" ? fullyFiltered : categoryFiltered;
+  const uniqueCountries = Array.from(new Set(products.map((p) => p.generalInfo?.Країна).filter(Boolean)));
+  console.log(uniqueCountries);
 
+  const filteredProducts = fullyFiltered || filters.sort !== "popular" ? fullyFiltered : categoryFiltered;
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (

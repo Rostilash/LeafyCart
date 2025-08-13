@@ -10,11 +10,11 @@ export const Breadcrumbs = () => {
       {pathnames.map((value, index) => {
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
         const name = decodeURIComponent(value);
-
+        const catalogName = name[0].toUpperCase() + name.slice(1);
         return (
           <span key={to}>
-            {" / "}
-            <Link to={to}>{name}</Link>
+            {" > "}
+            <Link to={to}>{catalogName === "Catalog" ? "Каталог" : catalogName}</Link>
           </span>
         );
       })}

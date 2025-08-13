@@ -12,6 +12,8 @@ import { useAppDispatch } from "./redux/reduxTypeHook";
 import { useEffect } from "react";
 import { checkAuth } from "./redux/slices/authSlice";
 import { Testing } from "./pages/Admin/Settings/Testing";
+import { PersonalInfo } from "./pages/PersonalInfo/PersonalInfo";
+import { Settings } from "./pages/Admin/Settings/Settings";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -25,12 +27,14 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="catalog" element={<Catalog />} />
         <Route path="catalog/:category" element={<CategoryPage />} />
+        <Route path="cart_rents" element={<PersonalInfo />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />
           <Route path="products" element={<Products />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="testing" element={<Testing />} />
         </Route>
       </Route>

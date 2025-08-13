@@ -32,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
           <Link to="/">Головна</Link>
           <Link to="/catalog">Каталог</Link>
+          <Link to="/cart_rents">Панель користувача</Link>
           {user && user.role === "admin" && <Link to="/admin">Адмін панель</Link>}
         </div>
         {/* right side */}

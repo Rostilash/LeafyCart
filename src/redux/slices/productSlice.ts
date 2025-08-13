@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { FoodProduct, ProductState } from "../../types/productTypes";
-import { addDoc, updateDoc, getDocs, getDoc, doc, deleteDoc } from "firebase/firestore";
-import { collection, serverTimestamp, Timestamp } from "firebase/firestore";
+import { addDoc, updateDoc, getDocs, getDoc, doc, deleteDoc, collection, serverTimestamp, Timestamp, runTransaction } from "firebase/firestore";
+
 import { db } from "../../fireBase/config";
 
 const initialState: ProductState = {
@@ -96,6 +96,37 @@ export const deleteProduct = createAsyncThunk("product/deleteProduct", async (pr
       console.error("Error fetching products:", error);
       return thunkAPI.rejectWithValue("Unknown error occurred");
     }
+  }
+});
+
+export const rateProduct = createAsyncThunk("product/rateProduct", async ({ productId, rating }: { productId: string; rating: number }, thunkApi) => {
+  try {
+    const productRef = doc(db, "products", productId);
+    await runTransaction(db, async (transaction) => {
+      const productDoc = await transaction.get(productRef);
+
+      if (!productDoc) {
+        throw new Error("Product not found");
+      }
+      const data = productDoc.data();
+      debugger;
+      const currentRating = data?.rating ?? 0;
+      const currentCount = data?.ratingCount ?? 0;
+
+      const newCount = currentCount + 1;
+      const newRating = (currentRating * currentCount + rating) / newCount;
+
+      transaction.update(productRef, {
+        rating: newRating,
+        ratingCount: newCount,
+      });
+    });
+    return { productId, rating };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkApi.rejectWithValue(error.message);
+    }
+    return thunkApi.rejectWithValue("Unknown error occurred");
   }
 });
 

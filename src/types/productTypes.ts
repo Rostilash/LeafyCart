@@ -18,15 +18,22 @@ export interface FoodProduct {
   name: string;
   category: Category;
   description: string;
+  img: string;
+
   price: number;
   discountPercentage?: number;
-  discountEndDate?: string;
-  img: string;
+  discountEndDate?: string; // should work on it in future
+
   weight: string;
   tags?: string[];
-  available: boolean;
+  available: boolean; // is in the shop
   isNew?: boolean;
   isRecommended?: boolean;
+
+  rating?: number;
+  ratingCount?: number;
+  userRating?: number; // current user Rating
+
   nutritionFacts?: Record<string, number>;
   generalInfo?: Record<string, string>;
   createdAt?: string | null;
