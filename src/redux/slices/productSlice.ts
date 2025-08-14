@@ -1,6 +1,19 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { FoodProduct, ProductState } from "../../types/productTypes";
-import { addDoc, updateDoc, getDocs, getDoc, doc, deleteDoc, collection, serverTimestamp, Timestamp, runTransaction } from "firebase/firestore";
+import {
+  addDoc,
+  updateDoc,
+  getDocs,
+  getDoc,
+  doc,
+  deleteDoc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+  runTransaction,
+  query,
+  where,
+} from "firebase/firestore";
 
 import { db } from "../../fireBase/config";
 
@@ -10,6 +23,11 @@ const initialState: ProductState = {
   loading: false,
   error: null,
 };
+
+interface GetProductByIdArgs {
+  productId: string;
+  userId?: string | null;
+}
 
 export const getProducts = createAsyncThunk<FoodProduct[]>("products/getAll", async (_, thunkAPI) => {
   try {
@@ -43,6 +61,66 @@ export const getProducts = createAsyncThunk<FoodProduct[]>("products/getAll", as
     }
   }
 });
+
+export const getProductById = createAsyncThunk<FoodProduct, GetProductByIdArgs>("products/getById", async ({ productId, userId }, thunkAPI) => {
+  try {
+    const docRef = doc(db, "products", productId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      throw new Error("Product not found");
+    }
+
+    const data = docSnap.data();
+
+    let createdAt: string | null = null;
+    const rawCreatedAt = data.createdAt;
+
+    if (rawCreatedAt instanceof Timestamp) {
+      createdAt = rawCreatedAt.toDate().toISOString();
+    }
+
+    let userRating: number | null = null;
+
+    if (userId) {
+      const ratingsSnap = await getDocs(query(collection(db, "ratings"), where("userId", "==", userId), where("productId", "==", productId)));
+
+      ratingsSnap.forEach((r) => {
+        const rData = r.data();
+        if (typeof rData.rating === "number") {
+          userRating = rData.rating;
+        }
+      });
+    }
+
+    return {
+      id: docSnap.id,
+      ...data,
+      userRating,
+      createdAt,
+    } as FoodProduct;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    } else {
+      console.error("Error fetching product:", error);
+      return thunkAPI.rejectWithValue("Unknown error occurred");
+    }
+  }
+});
+
+export const fetchUserRating = async (userId: string, productId: string) => {
+  const ratingRef = doc(db, "ratings", `${userId}_${productId}`);
+  const ratingSnap = await getDoc(ratingRef);
+
+  if (ratingSnap.exists()) {
+    const data = ratingSnap.data();
+    if (typeof data.rating === "number") {
+      return data.rating;
+    }
+  }
+  return 0;
+};
 
 export const addProduct = createAsyncThunk("products/addProduct", async (productData: Omit<FoodProduct, "id" | "createdAt">, thunkAPI) => {
   try {
@@ -99,36 +177,48 @@ export const deleteProduct = createAsyncThunk("product/deleteProduct", async (pr
   }
 });
 
-export const rateProduct = createAsyncThunk("product/rateProduct", async ({ productId, rating }: { productId: string; rating: number }, thunkApi) => {
-  try {
-    const productRef = doc(db, "products", productId);
-    await runTransaction(db, async (transaction) => {
-      const productDoc = await transaction.get(productRef);
+export const rateProduct = createAsyncThunk(
+  "product/rateProduct",
+  async ({ productId, rating, userId }: { productId: string; rating: number; userId: string }, thunkApi) => {
+    try {
+      const productRef = doc(db, "products", productId);
+      const ratingRef = doc(db, "ratings", `${userId}_${productId}`); // uniq keys for tables
 
-      if (!productDoc) {
-        throw new Error("Product not found");
-      }
-      const data = productDoc.data();
-      debugger;
-      const currentRating = data?.rating ?? 0;
-      const currentCount = data?.ratingCount ?? 0;
+      await runTransaction(db, async (transaction) => {
+        const productDoc = await transaction.get(productRef);
+        if (!productDoc.exists()) throw new Error("Product not found");
 
-      const newCount = currentCount + 1;
-      const newRating = (currentRating * currentCount + rating) / newCount;
+        const data = productDoc.data();
+        const currentRating = data?.rating ?? 0;
+        const currentCount = data?.ratingCount ?? 0;
 
-      transaction.update(productRef, {
-        rating: newRating,
-        ratingCount: newCount,
+        const newCount = currentCount + 1;
+        const newRating = (currentRating * currentCount + rating) / newCount;
+
+        // refresh product statistics
+        transaction.update(productRef, {
+          rating: newRating,
+          ratingCount: newCount,
+        });
+
+        // Save user
+        transaction.set(ratingRef, {
+          userId,
+          productId,
+          rating,
+          createdAt: serverTimestamp(),
+        });
       });
-    });
-    return { productId, rating };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return thunkApi.rejectWithValue(error.message);
+
+      return { productId, rating };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkApi.rejectWithValue(error.message);
+      }
+      return thunkApi.rejectWithValue("Unknown error occurred");
     }
-    return thunkApi.rejectWithValue("Unknown error occurred");
   }
-});
+);
 
 export const productSlice = createSlice({
   name: "product",

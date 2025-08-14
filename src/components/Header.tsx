@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
   const userName = user?.email?.split("@")[0].toLocaleUpperCase();
 
   return (
-    <header className="row-start-1 row-end-2 col-span-2 bg-[var(--leafy-sage)] p-3.5 shadow-md items-center justify-center text-white">
+    <header className="row-start-1 row-end-2 col-span-2 bg-[var(--leafy-sage)] p-3.5 shadow-md items-center justify-center text-black">
       <div className="flex justify-between  ">
         {/* left side */}
         <div className="flex gap-4 items-center">

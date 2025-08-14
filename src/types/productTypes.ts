@@ -32,7 +32,7 @@ export interface FoodProduct {
 
   rating?: number;
   ratingCount?: number;
-  userRating?: number; // current user Rating
+  userRating?: number | null; // current user Rating
 
   nutritionFacts?: Record<string, number>;
   generalInfo?: Record<string, string>;

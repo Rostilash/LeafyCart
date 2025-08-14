@@ -25,7 +25,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
       }`}
     >
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
-      {product.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
+      {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
       <img
         src={product.img}
         alt={product.name}
@@ -33,7 +33,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
         onClick={onClick}
       />
 
-      <div className="w-full bg-[var(--leafy-white)] p-4 rounded-md flex flex-col gap-2 min-h-[172px]">
+      <div className="w-full bg-[var(--leafy-white)] p-4 flex flex-col gap-2 min-h-[172px]">
         <div className="flex flex-col">
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}

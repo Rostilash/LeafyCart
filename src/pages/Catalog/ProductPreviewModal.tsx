@@ -1,17 +1,27 @@
 import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { rateProduct, setSelectedProduct } from "../../redux/slices/productSlice";
+import { fetchUserRating, rateProduct, setSelectedProduct } from "../../redux/slices/productSlice";
 import { type FoodProduct } from "../../types/productTypes";
 import { Badge } from "./Badge";
 import { ProductItem } from "./ProductItem";
 import { ProductPrice } from "./ProductPrice";
 import { ProductRating } from "./ProductRating";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
   const allProducts = useAppSelector((state) => state.products.products);
+  const userId = useAppSelector((state) => state.auth.user?.uid);
   const [newProduct, setNewProduct] = useState<FoodProduct | null>(null);
+  const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
+
+  useEffect(() => {
+    if (product && userId) {
+      fetchUserRating(userId, product.id).then((rating) => {
+        setNewProduct({ ...product, userRating: rating || 0 });
+      });
+    }
+  }, [product, userId]);
 
   // filtering our products by keywords
   const keywords = product.name.toLowerCase().split(" ");
@@ -33,37 +43,37 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   );
   const productsIsNotEmpty = recomendedProductsToRender.length > 0;
 
-  const handleRateProduct = (userRating: number) => {
-    if (!product) return;
-    console.log("Pressed");
+  const handleRateProduct = (userRating: number, userId: string) => {
+    if (!product && userId) return;
+
     const newCount = (product.ratingCount || 0) + 1;
     const newAverage = ((product.rating || 0) * (product.ratingCount || 0) + userRating) / newCount;
-
     setNewProduct((prev) => {
       if (!prev) {
-        // Якщо ще немає локальної копії, створюємо її на основі product
         return { ...product, rating: newAverage, ratingCount: newCount, userRating };
       }
       return { ...prev, rating: newAverage, ratingCount: newCount, userRating };
     });
 
-    dispatch(rateProduct({ productId: product.id, rating: userRating }));
+    dispatch(rateProduct({ productId: product.id, rating: userRating, userId: userId }));
   };
-  const productToShow = newProduct || product;
+  const productToShow = newProduct || selectedProduct || product;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto p-2 overflow-y-auto scrollbar-hide max-h-[90vh]">
       {/* img */}
       <div className="relative overflow-hidden w-40 h-40 lg:w-120 lg:h-80">
-        <img src={product.img} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+        <img src={productToShow.img} alt={productToShow.name} className="w-full h-full object-cover rounded-xl" />
 
-        {product.isNew && <Badge position="top-2 -left-2" text={`NEW`} />}
-        {product.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
+        {productToShow.isNew && <Badge position="top-2 -left-2" text={`NEW`} />}
+        {productToShow.discountPercentage && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
       </div>
       {/*Product name */}
       <div>
-        <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
-        <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
+        <h2 className="text-2xl font-bold mb-4">{productToShow.name}</h2>
+        <span className={`${productToShow.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
         <ProductRating
+          userId={userId}
           rating={productToShow.rating || 0}
           ratingCount={productToShow.ratingCount || 0}
           userRating={productToShow.userRating || 0}
@@ -71,9 +81,9 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         />
         <p className="mt-2">{product.description}</p>
         <p className="text-lg font-semibold mt-4">
-          <ProductPrice product={product} /> / за {product.weight}
+          <ProductPrice product={productToShow} /> / за {productToShow.weight}
         </p>
-        {product.available && <AddToCartButton product={product} />}
+        {product.available && <AddToCartButton product={productToShow} />}
       </div>
       {/* Nutrition item */}
       {product.nutritionFacts && (
