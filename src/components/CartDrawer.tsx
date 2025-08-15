@@ -34,9 +34,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
         className="grid grid-cols-[84px_1fr_auto] items-center gap-4 border p-4 bg-[var(--leafy-white)] rounded-xl shadow-sm relative "
       >
         <img src={item.img} alt="" className="icon_images_l shadow-[2px_8px_24px_rgba(0,0,0,0.6)] rounded-xl" />
-        {item.discountPercentage && <Badge position="top-0 left-0" text={`Знижка: ${item.discountPercentage}%`} />}
+        {Number(item.discountPercentage) > 0 && <Badge position="top-0 left-0" text={`Знижка: ${item.discountPercentage}%`} />}
         <div className="flex flex-col">
-          <span className="pl-4">{item.name}</span>
+          <span className="pl-4">{item.name.length > 10 ? item.name.slice(0, 10) + "..." : item.name}</span>
           <span className="pl-6"> {matchPrice(discountedPrice, item.quantity)} ₴</span>
         </div>
 

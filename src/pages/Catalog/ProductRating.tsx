@@ -32,7 +32,6 @@ export const ProductRating = ({ userId = "", rating = 0, ratingCount, userRating
 
     // if rating === rounded
     if (starType === "full") {
-      console.log(rating);
       return (
         <Star
           key={i}

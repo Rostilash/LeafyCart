@@ -22,18 +22,16 @@ export const HomePage = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-around items-center bg-[var(--leafy-sage)] p-10">
-        <div className="max-w-md text-left space-y-12">
-          <h1 className="text-6xl font-bold leading-tight">
-            Свіжі,
+      <div className="flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-sage)] px-10 gap-30">
+        <div className="max-w-2xl text-left space-y-12 ">
+          <h1 className="text-6xl font-bold leading-tight ">
+            Свіжі
             <br />
-            органічні
-            <br />
-            продукти
+            органічні продукти
             <br />
             Доставлені
             <br />
-            до ваших дверей,
+            до ваших дверей
           </h1>
           <Link to="/catalog" className="btn-primary btn_hover transition cursor-pointer">
             В магазин зараз
@@ -41,7 +39,7 @@ export const HomePage = () => {
         </div>
 
         <div className="mt-8 md:mt-0 md:ml-12 ">
-          <img src="/vagitables.png" alt="vegetable plate" className="w-120 h-auto " />
+          <img src="/freshProducts.png" alt="vegetable plate" className="w-120 h-auto " />
         </div>
       </div>
 
@@ -50,7 +48,7 @@ export const HomePage = () => {
         <h1 className="title-xl p-4 text-center">Рекомендовані</h1>
 
         {loading ? (
-          <div className="text-center p-10 text-lg">
+          <div className="flex justify-center text-center">
             <Loader />
           </div>
         ) : error ? (
@@ -58,10 +56,12 @@ export const HomePage = () => {
         ) : recommendedProducts.length === 0 ? (
           <p className="text-center text-gray-500 p-10">Новинок ще немає</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 p-10 justify-items-center">{recommendedProducts}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 px-10 justify-items-center">{recommendedProducts}</div>
         )}
+        <div className="w-scren pl-12 pr-10">
+          <ProductViewed visibleProducts={6} />
+        </div>
 
-        <ProductViewed />
         <Footer />
       </div>
     </>

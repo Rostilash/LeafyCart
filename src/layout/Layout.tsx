@@ -45,7 +45,7 @@ const Layout = () => {
         <Sidebar isVisible={isNavOpened} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-white)] overflow-auto">
+      <main className="flex-1 bg-[var(--leafy-white)] overflow-auto" onMouseEnter={() => setIsNavOpened(false)}>
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>

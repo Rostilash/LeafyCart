@@ -15,16 +15,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
       `}
     >
       <div>
-        <div className="flex items-center px-8 p-5 text-xl font-bold text-[var(--leafy-white)] bg-[var(--leafy-sage)]">
+        <div className="flex items-center px-8 p-5 text-xl font-bold text-[var(--leafy-black)] bg-[var(--leafy-sage)]">
           <img src="/natural-leaf2.png" alt="Leaf" className="w-6 h-6" />
           LeafyCart
         </div>
 
         <AccordionMenu />
       </div>
-
-      {/* Footer */}
-      <Footer />
     </aside>
   );
 };

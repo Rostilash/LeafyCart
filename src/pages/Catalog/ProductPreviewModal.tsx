@@ -7,6 +7,7 @@ import { ProductItem } from "./ProductItem";
 import { ProductPrice } from "./ProductPrice";
 import { ProductRating } from "./ProductRating";
 import { useState, useEffect } from "react";
+import { ProductViewed } from "./ProductViewed";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
@@ -120,7 +121,9 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
         {productsIsNotEmpty && <h3 className="text-2xl mb-2 pl-2">Схожі товари</h3>}
         <div className="grid grid-cols-1 lg:grid-cols-5 sm:grid-cols-2 gap-2  justify-center">{recomendedProductsToRender}</div>
       </div>
-
+      <div className="min-w-280 pl-2">
+        <ProductViewed visibleProducts={5} />
+      </div>
       <div className="p-4 text-xs text-center col-span-2 flex justify-center">
         <div>
           <p>
