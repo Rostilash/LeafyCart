@@ -1,4 +1,4 @@
-# React+vite+typescripr+redux+fireBase+tailwind
+# React+vite+typescripr+redux+fireBase+tailwind+MatirialUi
 
 ## Expanding the ESLint configuration
 
@@ -12,3 +12,5 @@ npm install base-64
 npm install --save-dev @types/base-64
 
 npm install axios
+
+npm install @mui/material @emotion/react @emotion/styled

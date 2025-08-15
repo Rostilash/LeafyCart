@@ -11,8 +11,8 @@ type PreviewMainInfoProps = {
 
 export const PreviewMainInfo = ({ product, userId, handleRateProduct }: PreviewMainInfoProps) => {
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
+    <div className="p-2">
+      <h2 className="text-2xl font-bold mb-4 ">{product.name}</h2>
       <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
       <ProductRating
         userId={userId}

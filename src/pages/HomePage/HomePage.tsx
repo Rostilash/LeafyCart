@@ -56,7 +56,7 @@ export const HomePage = () => {
         ) : recommendedProducts.length === 0 ? (
           <p className="text-center text-gray-500 p-10">Новинок ще немає</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 px-10 justify-items-center">{recommendedProducts}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 px-10 justify-items-center">{recommendedProducts}</div>
         )}
         <div className="w-scren pl-12 pr-10">
           <ProductViewed visibleProducts={6} />
