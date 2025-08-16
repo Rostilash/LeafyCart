@@ -22,26 +22,25 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const { productToShow, handleRateProduct } = useProductRating(product, userId);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto p-2 overflow-y-auto scrollbar-hide max-h-[90vh]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto md:p-2 overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[90vh]">
       {/* Main Image */}
       <PreviewImage product={productToShow} />
 
       {/*Product name */}
       <PreviewMainInfo product={productToShow} userId={userId} handleRateProduct={handleRateProduct} />
 
-      {/* Nutrition info */}
-      <PreviewInfo title="Харчові властивості" subObject={productToShow.nutritionFacts} />
-
-      {/* General info */}
-      <PreviewInfo title="Загальна інформація" subObject={productToShow.generalInfo} />
-
+      <div className="space-y-6 w-screen">
+        {/* Nutrition info */}
+        <PreviewInfo title="Харчові властивості" subObject={productToShow.nutritionFacts} />
+        {/* General info */}
+        <PreviewInfo title="Загальна інформація" subObject={productToShow.generalInfo} />
+      </div>
       {/* Recomended products */}
       <RecommendedProducts products={recommendedProducts} onSelect={(p) => dispatch(setSelectedProduct(p))} />
 
       {/* Viewed products */}
-      <div className="min-w-280 pl-2">
-        <ProductViewed visibleProducts={5} />
-      </div>
+
+      <ProductViewed visibleProducts={5} />
 
       <PreviewFooter />
     </div>

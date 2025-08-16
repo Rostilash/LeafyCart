@@ -20,7 +20,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
   return (
     <article
-      className={`flex flex-col items-center justify-center w-[160px] md:w-[240px] lg:w-[220px] max-w-xs bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl relative overflow-hidden ${
+      className={`flex flex-col items-center justify-center w-[208px] md:w-[200px] lg:w-[160px]  xl:w-[200px] max-w-xs bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl relative overflow-hidden ${
         isOutOfStock ? "opacity-50" : ""
       }`}
     >
@@ -36,7 +36,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
         loading="lazy"
       />
 
-      <div className="w-full bg-[var(--leafy-white)] p-4 flex flex-col gap-2 min-h-[172px]">
+      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[172px]">
         <div className="flex flex-col">
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}
