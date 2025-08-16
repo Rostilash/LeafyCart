@@ -1,49 +1,33 @@
 import { Link } from "react-router-dom";
-import { categories } from "../../types/productTypes";
+import { categoryTree } from "../../utils/categoryTree";
 
 export const Catalog = () => {
-  const catProducts = categories.map((cat) => (
-    <li key={cat}>
-      <Link to={`/catalog/${cat.toLowerCase().replace(/ /g, "-")}`}>{cat}</Link>
-    </li>
-  ));
   return (
-    <>
-      <h1 className="text-4xl text-center font-bold bg-[var(--leafy-bg)] ">Каталог продуктів</h1>
-      <section className="grid grid-cols-4 justify-items-center p-10 bg-[var(--leafy-bg)] h-screen">
-        <div>
-          <h3 className="title-l">Продукти харчування</h3>
-          <ul className="space-y-2 [&>li]:text-[var(--leafy-gray)] [&>li]:cursor-pointer [&>li]:mb-2 list-disc">{catProducts}</ul>
-        </div>
-        <div>
-          <h3 className="title-l">Готові страви</h3>
-          <ul className="space-y-2 [&>li]:text-[var(--leafy-gray)] [&>li]:cursor-pointer [&>li]:mb-2 list-disc">
-            <li>Сніданки</li>
-            <li>Обіди</li>
-            <li>Вечері</li>
-            <li>Вегетаріанські/веганські страви</li>
-            <li>Фітнес меню</li>
-            <li>Дитяче харчувння</li>
+    <section>
+      {categoryTree.map((cat) => (
+        <div className="px-4 sm:px-6 lg:px-12 p-2" key={cat.title}>
+          {/* Category title */}
+          <h3 className=" text-xl sm:text-2xl md:text-3x text-left font-bold py-2">{cat.title}</h3>
+          {/* Subcategories maping here */}
+          <ul className=" grid gap-6 sm:gap-8 md:gap-10 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {cat.subcategories.map((c) => (
+              <li key={c.name} className="relative group overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300">
+                <Link to={`/catalog/${c.name.toLowerCase().replace(/ /g, "-")}`}>
+                  <img
+                    src={c.img || "/leaf-icon.png"}
+                    alt={c.name}
+                    className="w-full h-52 object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
+                  <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white font-bold text-xl sm:text-2xl md:text-3xl drop-shadow-lg">
+                    {c.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
-        <div>
-          <h3 className="title-l">Раціони</h3>
-          <ul className="space-y-2 [&>li]:text-[var(--leafy-gray)] [&>li]:cursor-pointer [&>li]:mb-2 list-disc">
-            <li>На день/тиждень</li>
-            <li>Дієтичні програми</li>
-            <li>Калорійні набори</li>
-            <li>Інтервальне харчування</li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="title-l">Комбо-набори / Акції</h3>
-          <ul className="space-y-2 [&>li]:text-[var(--leafy-gray)] [&>li]:cursor-pointer [&>li]:mb-2 list-disc">
-            <li>Знижки</li>
-            <li>«1+1»</li>
-            <li>Святкові/сезонні пропозиції</li>
-          </ul>
-        </div>
-      </section>
-    </>
+      ))}
+    </section>
   );
 };

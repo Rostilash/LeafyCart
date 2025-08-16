@@ -117,14 +117,14 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
         Категорія:
         <select
           name="category"
-          value={formData.category || categories[0]}
+          value={formData.category || categories[0].name}
           onChange={handleChange}
           required
           className="border-b border-gray-300 bg-transparent focus:outline-none focus:border-green-500 transition duration-200 px-1 py-2"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+            <option key={cat.name} value={cat.name}>
+              {cat.name}
             </option>
           ))}
         </select>

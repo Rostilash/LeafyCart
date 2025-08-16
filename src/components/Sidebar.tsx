@@ -1,15 +1,16 @@
+import { Link } from "react-router-dom";
 import { AccordionMenu } from "./AccordionMenu";
-import { Footer } from "./Footer";
 
 type SidebarProps = {
   isVisible: boolean;
+  onClose: () => void;
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (
     <aside
       className={`
-        flex flex-col justify-between top-0 left-0 h-full w-100 lg:w-64 bg-[var(--leafy-bg)] shadow-lg z-50 text-[var(--leafy-gray)] 
+        flex flex-col justify-between top-0 left-0 h-full w-screen lg:w-64 bg-[var(--leafy-bg)] shadow-lg z-50 text-[var(--leafy-gray)] 
         transform transition-transform duration-300 ease-in-out
         ${isVisible ? "translate-x-0" : "-translate-x-full"}
       `}
@@ -20,7 +21,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible }) => {
           LeafyCart
         </div>
 
-        <AccordionMenu />
+        <AccordionMenu closeSidebar={onClose} />
+
+        <div className="flex flex-col space-y-8 pl-4 pt-6 text-xs">
+          <Link to="/cart_rents" onClick={() => onClose()}>
+            Панель користувача
+          </Link>
+          <Link to="/admin" onClick={() => onClose()}>
+            Панель адміністратора
+          </Link>
+        </div>
       </div>
     </aside>
   );

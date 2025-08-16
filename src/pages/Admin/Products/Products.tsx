@@ -57,46 +57,46 @@ export const Products = () => {
       <Breadcrumbs />
       <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex justify-around ">
-          <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover flex flex-row">
-            <PackagePlus className="w-6 h-6 text-white-700 mr-2" /> Додати продукт
+          <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover items-center flex flex-row mr-2">
+            <PackagePlus className="w-6 h-6  text-white-700" /> <span className="hidden md:block">Додати продукт</span>
           </button>
 
           <div className="flex gap-2 items-center">
             <input
               type="text"
               placeholder="Пошук"
-              className="p-2 border rounded"
+              className="p-2 w-30 md:w-80 border rounded"
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFindProduct(e.target.value)}
             />
 
-            <select className="p-2 border rounded" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+            <select className="p-2 border rounded  w-30 md:w-60" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <option value="Усі">Усі категорії</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+                <option key={cat.name} value={cat.name}>
+                  {cat.name}
                 </option>
               ))}
             </select>
             <button
-              className="btn-secondary ml-2 btn-primary btn_hover"
+              className="btn-primary btn_hover"
               onClick={() => {
                 setSelectedCategory("Усі");
                 setFindProduct("");
               }}
             >
-              Очистити фільтр
+              Очистити
             </button>
           </div>
         </div>
 
         <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
-        <div className="grid grid-cols-6 border-b p-2">
-          <span>Зображення</span>
+        <div className="grid grid-cols-[1fr_60px_100px_80px] md:grid-cols-6 border-b p-2">
+          <span className="hidden md:block">Зображення</span>
           <h3>Назва</h3>
-          <span>Категорія</span>
+          <span className="hidden md:block">Категорія</span>
           <span>Ціна</span>
-          <span>Редагування</span>
-          <span>Видалення</span>
+          <span className="hidden md:block">Редагування</span>
+          <span className="hidden md:block">Видалення</span>
         </div>
 
         {/* main list of products */}
@@ -129,7 +129,7 @@ export const Products = () => {
               initialProduct={{
                 available: true,
                 price: 0,
-                category: categories[0],
+                category: categories[0].name,
                 name: "",
                 description: "",
                 img: "",

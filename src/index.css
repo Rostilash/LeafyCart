@@ -18,7 +18,7 @@
 
 /* Castum classes */
 .btn-primary {
-  @apply px-4 py-3 rounded font-semibold transition-colors;
+  @apply px-3 py-2  md:px-4 md:py-2 rounded font-semibold transition-colors;
   border-radius: 10px;
   background-color: var(--leafy-dark);
   color: white;

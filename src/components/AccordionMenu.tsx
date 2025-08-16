@@ -1,51 +1,13 @@
-// import { useState } from "react";
-// import { Link } from "react-router-dom";
-// import { categoryTree } from "../utils/categoryTree";
-// import { ChevronDown, ChevronUp } from "lucide-react";
-
-// export const AccordionMenu = () => {
-//   const [openIndex, setOpenIndex] = useState<number | null>(null);
-//   const linkClass = "block w-full hover:text-white hover:bg-[var(--leafy-sage)] font-medium px-4 py-4 pl-8";
-
-//   const toggle = (index: number) => {
-//     setOpenIndex(openIndex === index ? null : index);
-//   };
-
-//   return (
-//     <div className="space-y-4">
-//       {categoryTree.map((cat, idx) => (
-//         <div key={cat.title} className={linkClass}>
-//           <button onClick={() => toggle(idx)} className="flex justify-between items-center w-full font-semibold  text-left">
-//             <span className="cursor-pointer text-xl">{cat.title}</span>
-//             {openIndex === idx ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-//           </button>
-
-//           {openIndex === idx && (
-//             <ul className="mt-2 ml-2 space-y-1 pl-2 border-l border-[var(--leafy-sage)]">
-//               {cat.subcategories.map((sub) => (
-//                 <li key={sub}>
-//                   <Link
-//                     to={`/catalog/${sub.toLowerCase().replace(/\s+/g, "-")}`}
-//                     className="text-lg text-[var(--leafy-gray)] hover:text-[var(--leafy-sage)] transition"
-//                   >
-//                     {sub}
-//                   </Link>
-//                 </li>
-//               ))}
-//             </ul>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
 import { Link } from "react-router-dom";
 import { categoryTree } from "../utils/categoryTree";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-export const AccordionMenu = () => {
+type AccordionMenuProps = {
+  closeSidebar: () => void;
+};
+
+export const AccordionMenu: React.FC<AccordionMenuProps> = ({ closeSidebar }) => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -55,6 +17,7 @@ export const AccordionMenu = () => {
 
   const handleLinkClick = () => {
     setOpenCategory(null);
+    closeSidebar();
   };
 
   useEffect(() => {
@@ -73,7 +36,7 @@ export const AccordionMenu = () => {
   return (
     <div className="space-y-2 relative cursor-pointer" ref={menuRef}>
       {categoryTree.map((cat) => (
-        <div key={cat.title} className="relative ">
+        <div key={cat.title} className="relative">
           <button
             onClick={() => toggleCategory(cat.title)}
             className="flex justify-between items-center w-full font-semibold text-left hover:bg-[var(--leafy-sage)] px-4 py-4 focus:outline-none cursor-pointer"
@@ -81,13 +44,16 @@ export const AccordionMenu = () => {
             <span className="text-xs">{cat.title}</span>
             {openCategory === cat.title ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </button>
-
+          {/* subcategories maping here */}
           {openCategory === cat.title && (
-            <ul className="absolute left-[97%] top-0 ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-[160px] transition-all duration-200 ">
+            <ul
+              className="absolute right-0 lg:left-[97%] top-0 lg:ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-1/2 lg:min-w-[160px] transition-all duration-200 "
+              onMouseLeave={() => setOpenCategory(null)}
+            >
               {cat.subcategories.map((sub) => (
-                <Link key={sub} to={`/catalog/${sub.toLowerCase().replace(/\s+/g, "-")}`} onClick={handleLinkClick} className="block">
-                  <li className="text-xs text-[var(--leafy-gray)] hover:text-[var(--leafy-white)] p-3 hover:bg-[var(--leafy-sage)] transition w-full">
-                    {sub}
+                <Link key={sub.name} to={`/catalog/${sub.name.toLowerCase().replace(/\s+/g, "-")}`} onClick={handleLinkClick} className="block">
+                  <li className="text-xs text-[var(--leafy-gray)] hover:text-[var(--leafy-white)] p-3 hover:bg-[var(--leafy-dark)] transition w-full">
+                    {sub.name}
                   </li>
                 </Link>
               ))}

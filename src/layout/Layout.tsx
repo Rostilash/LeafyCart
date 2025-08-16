@@ -42,10 +42,10 @@ const Layout = () => {
       <div
         className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${isNavOpened ? "w-64" : "w-0"} overflow-visible z-10`}
       >
-        <Sidebar isVisible={isNavOpened} />
+        <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-white)] overflow-auto" onMouseEnter={() => setIsNavOpened(false)}>
+      <main className="flex-1 bg-[var(--leafy-white)] pt-[60px] lg:pt-[80px] overflow-auto" onMouseEnter={() => setIsNavOpened(false)}>
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>
@@ -69,6 +69,7 @@ const Layout = () => {
         <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
         <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
       </Modal>
+
       {/* Preview modal */}
       {selectedProduct && (
         <Modal isOpen={!!selectedProduct} onClose={() => dispatch(setSelectedProduct(null))}>

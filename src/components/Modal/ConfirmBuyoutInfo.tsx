@@ -145,7 +145,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 grid grid-cols-2 gap-8">
+    <div className="h-full max-w-4xl mx-auto p-0 lg:p-6 grid grid-cols-2 gap-8">
       {/* Left side */}
       <form onSubmit={handleLiqPay} className="space-y-4">
         <div>
@@ -173,7 +173,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       </form>
 
       {/* Right side */}
-      <div className="bg-gray-100 p-6 rounded shadow space-y-4">
+      <div className="bg-gray-100 p-6 rounded shadow space-y-4 max-h-150">
         <h2 className="text-xl font-semibold mb-4">Підсумок замовлення</h2>
         <div className="flex justify-between">
           <span>Ціна:</span>

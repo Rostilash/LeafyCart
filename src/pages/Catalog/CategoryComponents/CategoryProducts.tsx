@@ -17,7 +17,7 @@ export const CategoryProducts = ({ filteredProducts, openModal }: CategoryProdPr
     <div className="flex flex-col gap-4 px-2">
       {/* Products */}
       {paginatedProducts.length < 1 && <div className="w-full text-center text-gray-500 mt-10">В данній категорії немає товарів...</div>}
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2">
         {paginatedProducts.map((product) => (
           <ProductItem key={product.id} product={product} onClick={() => openModal(product)} />
         ))}

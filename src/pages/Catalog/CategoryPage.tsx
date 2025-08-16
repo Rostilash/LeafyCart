@@ -37,7 +37,7 @@ export const CategoryPage = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className="grid grid-cols-[246px_1fr] gap-2 p-2 h-screen">
+      <div className="grid grid-rows-2 md:grid-cols-[246px_1fr] gap-2 p-2 h-screen">
         <FiltersPanel filters={filters} onFilterChange={setFilters} maxCategoryPrice={maxCategoryPrice} uniqueCountries={uniqueCountries} />
 
         {isLoading && (
