@@ -22,13 +22,18 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const { productToShow, handleRateProduct } = useProductRating(product, userId);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto md:p-2 overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[90vh]">
+    <div
+      className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto 
+     md:p-2 overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[85vh] z-50"
+    >
       {/* Main Image */}
+
       <PreviewImage product={productToShow} />
 
       {/*Product name */}
+      {/* <div className="w-screen md:w-100 md:col-span-full"> */}
       <PreviewMainInfo product={productToShow} userId={userId} handleRateProduct={handleRateProduct} />
-
+      {/* </div> */}
       <div className="space-y-6 w-screen">
         {/* Nutrition info */}
         <PreviewInfo title="Харчові властивості" subObject={productToShow.nutritionFacts} />
@@ -39,8 +44,9 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       <RecommendedProducts products={recommendedProducts} onSelect={(p) => dispatch(setSelectedProduct(p))} />
 
       {/* Viewed products */}
-
-      <ProductViewed visibleProducts={5} />
+      <div className="w-screen md:w-full md:col-span-full">
+        <ProductViewed visibleProducts={5} />
+      </div>
 
       <PreviewFooter />
     </div>

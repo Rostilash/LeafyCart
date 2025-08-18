@@ -27,8 +27,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="bg-white p-1 md:p-6 rounded-xl shadow-xl min-w-[300px] relative" onClick={(e) => e.stopPropagation()}>
-        <button className="absolute top-2 right-3 text-gray-600 text-2xl cursor-pointer" onClick={onClose}>
+      <div className="bg-white p-1 md:p-6 rounded-xl shadow-xl min-w-[300px] relative " onClick={(e) => e.stopPropagation()}>
+        <button className="absolute font-bold top-20 md:top-2 right-3 text-gray-600 text-2xl cursor-pointer z-100" onClick={onClose}>
           ✕
         </button>
         {isOpen && children}

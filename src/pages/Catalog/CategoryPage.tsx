@@ -24,12 +24,13 @@ export const CategoryPage = () => {
   const products = useAppSelector((state) => state.products.products);
   const isLoading = useAppSelector((state) => state.products.loading);
 
+  if (isLoading) <Loader />;
   // Rerender the products with useEffect if they didnt render with 1 time render
-  useEffect(() => {
-    if (!isLoading && products.length === 0) {
-      dispatch(getProducts());
-    }
-  }, [isLoading, products.length, dispatch]);
+  // useEffect(() => {
+  //   if (!isLoading && products.length === 0) {
+  //     dispatch(getProducts());
+  //   }
+  // }, [isLoading, products.length, dispatch]);
 
   // Our custoom filter utils
   const { filteredProducts, maxCategoryPrice, uniqueCountries } = useCategoryFilter({ products, filters, category });

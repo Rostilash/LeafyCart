@@ -20,9 +20,11 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
   return (
     <article
-      className={`flex flex-col items-center justify-center w-[208px] md:w-[200px] lg:w-[160px]  xl:w-[200px] max-w-xs bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl relative overflow-hidden ${
-        isOutOfStock ? "opacity-50" : ""
-      }`}
+      className={`flex flex-col items-center justify-center 
+              w-full sm:w-[48%] md:w-[30%] lg:w-[20%] 
+              sm:min-w-[220px] sm:max-w-[220px]  min-w-[120px] max-w-[200px]
+              bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl 
+              relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}`}
     >
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
       {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
@@ -31,7 +33,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
         alt={product.name}
         width={160}
         height={160}
-        className="w-full h-40 sm:w-full sm:h-48 object-cover cursor-pointer"
+        className="w-full h-40 sm:h-48 object-cover cursor-pointer"
         onClick={onClick}
         loading="lazy"
       />
@@ -41,6 +43,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}
           </h3>
+
           <span className="text-gray-700" itemProp="offers" itemScope itemType="https://schema.org/Offer">
             <meta itemProp="priceCurrency" content="USD" />
             <ProductPrice product={product} />

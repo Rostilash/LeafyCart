@@ -3,7 +3,7 @@ import type { FoodProduct } from "../types/productTypes";
 import { useAppSelector } from "../redux/reduxTypeHook";
 
 const STORAGE_KEY = "recentProducts";
-const MAX_RECENT = 6;
+const MAX_RECENT = 7;
 
 export const useRecentProducts = () => {
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);

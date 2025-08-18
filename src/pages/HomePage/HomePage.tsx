@@ -22,7 +22,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <div className="hidden md:flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-sage)] p-2 lg:px-10 gap-30">
+      <div className="hidden md:flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-sage)]">
         <div className=" max-w-2xl text-left space-y-12 ">
           <h1 className="text-6xl font-bold leading-tight ">
             Свіжі
@@ -39,7 +39,7 @@ export const HomePage = () => {
         </div>
 
         <div className="mt-8 md:mt-0 md:ml-12 ">
-          <img src="/freshProducts.png" alt="vegetable plate" className="w-50 scale-120 lg:w-120 h-auto " />
+          <img src="/freshProducts.png" alt="vegetable plate" className="w-50 scale-100 lg:w-120 h-auto " />
         </div>
       </div>
 
@@ -55,13 +55,12 @@ export const HomePage = () => {
         ) : recommendedProducts.length === 0 ? (
           <p className="text-center text-gray-500 p-10">Новинок ще немає</p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 md:px-10 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 justify-items-center">
             {recommendedProducts}
           </div>
         )}
-        <div className="w-scren md:pl-12 md:pr-10 ">
-          <ProductViewed visibleProducts={6} />
-        </div>
+
+        <ProductViewed visibleProducts={7} />
 
         <Footer />
       </div>

@@ -38,14 +38,16 @@ const Layout = () => {
   }, 0);
 
   return (
-    <div className="min-h-screen flex bg-[var(--leafy-light)]">
+    <div className=" h-screen sm:min-h-screen flex bg-[var(--leafy-light)]">
       <div
-        className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${isNavOpened ? "w-64" : "w-0"} overflow-visible z-10`}
+        className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${
+          isNavOpened ? "w-screen sm:w-64" : "w-0"
+        } overflow-visible  z-100`}
       >
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-white)] pt-[60px] lg:pt-[80px] overflow-auto" onMouseEnter={() => setIsNavOpened(false)}>
+      <main className="flex-1 bg-[var(--leafy-white)] pt-[60px] lg:pt-[80px] overflow-auto px-4 sm:px-0" onMouseEnter={() => setIsNavOpened(false)}>
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>

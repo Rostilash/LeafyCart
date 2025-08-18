@@ -19,9 +19,9 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 bg-[var(--leafy-white)] shadow-md transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-screen sm:w-full z-50 bg-[var(--leafy-white)] shadow-md transition-all duration-300 ${
         isNavOpened ? "ml-none md:ml-84 lg:ml-64" : "ml-0"
-      }`}
+      } z-100`}
     >
       <div className="flex justify-between items-center px-4 py-3 md:px-8">
         {/* left side */}
@@ -29,6 +29,9 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
           {/* Бургер меню показуємо тільки на мобільному */}
           <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
 
+          <Link to="/" className="hover:underline">
+            Головна
+          </Link>
           {/* Навігація прихована на мобільному */}
           <nav className="hidden md:flex gap-6">
             <NavigationLinks />
@@ -42,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
         {/* right side */}
         <div className="flex items-center gap-4">
-          <span>
+          <span className="hidden sm:block">
             {userName ? (
               <>
                 Ласкаво просимо <b>{userName}</b>!{" "}
