@@ -55,10 +55,10 @@ export const Products = () => {
   return (
     <>
       <Breadcrumbs />
-      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section className="w-full max-w-5xl mx-auto px-0 sm:px-6 lg:px-8 py-10">
         <div className="flex justify-around ">
           <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover items-center flex flex-row mr-2">
-            <PackagePlus className="w-6 h-6  text-white-700" /> <span className="hidden md:block">Додати продукт</span>
+            <PackagePlus className="w-6 h-6 text-white-700" /> <span className="hidden md:block">Додати продукт</span>
           </button>
 
           <div className="flex gap-2 items-center">
@@ -69,7 +69,7 @@ export const Products = () => {
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFindProduct(e.target.value)}
             />
 
-            <select className="p-2 border rounded  w-30 md:w-60" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+            <select className="p-2 border rounded  w-25 md:w-60" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <option value="Усі">Усі категорії</option>
               {categories.map((cat) => (
                 <option key={cat.name} value={cat.name}>

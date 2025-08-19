@@ -3,17 +3,14 @@ import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 import { Badge } from "./Badge";
 import { ProductPrice } from "./ProductPrice";
 import { useAppSelector } from "../../redux/reduxTypeHook";
-import { Loader } from "../../components/Loader";
+
+import { ProductSkeleton } from "../../components/ProductSkeleton";
 
 export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
   const isLoading = useAppSelector((state) => state.products.loading);
 
   if (isLoading) {
-    return (
-      <article className="flex items-center justify-center w-[222px] h-[300px] bg-[var(--leafy-sage)] shadow-2xl rounded-2xl">
-        <Loader />
-      </article>
-    );
+    return <ProductSkeleton />;
   }
 
   const isOutOfStock = !product.available;
@@ -33,12 +30,12 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
         alt={product.name}
         width={160}
         height={160}
-        className="w-full h-40 sm:h-48 object-cover cursor-pointer"
+        className="w-full h-40 sm:h-48 object-cover cursor-pointer p-2"
         onClick={onClick}
         loading="lazy"
       />
 
-      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[172px]">
+      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[172px] p-2">
         <div className="flex flex-col">
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}

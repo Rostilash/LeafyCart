@@ -26,39 +26,34 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
       <div className="flex justify-between items-center px-4 py-3 md:px-8">
         {/* left side */}
         <div className="flex items-center gap-4">
-          {/* Бургер меню показуємо тільки на мобільному */}
           <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
-
-          <Link to="/" className="hover:underline">
-            Головна
-          </Link>
-          {/* Навігація прихована на мобільному */}
+          <Link to="/">Головна</Link>
           <nav className="hidden md:flex gap-6">
             <NavigationLinks />
-            {user && user.role === "admin" && (
-              <Link to="/admin" className="hover:underline">
-                Адмін панель
-              </Link>
-            )}
           </nav>
+          {user && user.role === "admin" && (
+            <Link to="/admin" className="hover:underline">
+              Адмін панель
+            </Link>
+          )}
         </div>
 
         {/* right side */}
         <div className="flex items-center gap-4">
-          <span className="hidden sm:block">
-            {userName ? (
-              <>
+          {userName ? (
+            <>
+              <span className="hidden sm:inline-block">
                 Ласкаво просимо <b>{userName}</b>!{" "}
-                <button onClick={() => dispatch(logoutUser())} className="cursor-pointer text-red-500 hover:underline">
-                  Вийти
-                </button>
-              </>
-            ) : (
-              <Link to="/login" className="border p-2 rounded-xl hover:bg-gray-100">
-                Увійти
-              </Link>
-            )}
-          </span>
+              </span>
+              <button onClick={() => dispatch(logoutUser())} className="cursor-pointer text-red-500 hover:underline">
+                Вийти
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="border p-2 rounded-xl hover:bg-gray-100">
+              Увійти
+            </Link>
+          )}
 
           {/* Кошик */}
           <button onClick={() => setIsCartOpen((prev) => !prev)} className="relative p-2">

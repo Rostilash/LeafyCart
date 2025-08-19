@@ -27,9 +27,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
           <Link to="/cart_rents" onClick={() => onClose()}>
             Панель користувача
           </Link>
-          <Link to="/admin" onClick={() => onClose()}>
-            Панель адміністратора
-          </Link>
         </div>
       </div>
     </aside>

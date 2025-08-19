@@ -1,5 +1,6 @@
 import type { FoodProduct } from "../types/productTypes";
 import { useMemo } from "react";
+import { getMaxPrice, getUniqueCountries } from "./filters";
 
 export interface Filters {
   minPrice: string;
@@ -10,10 +11,22 @@ export interface Filters {
   sort: string;
 }
 
-export const useCategoryFilter = ({ products, category, filters }: { products: FoodProduct[]; category: string | undefined; filters: Filters }) => {
+export const useCategoryFilter = ({
+  products,
+  categoryName,
+  filters,
+}: {
+  products: FoodProduct[];
+  categoryName: string | undefined;
+  filters: Filters;
+}) => {
   return useMemo(() => {
     const categoryFiltered = products
-      .filter((p) => p.category.toLowerCase().replace(/ /g, "-") === category)
+      .filter((p) => {
+        if (!categoryName) return true;
+        if (categoryName === "знижки") return true;
+        return p.category.toLowerCase().replace(/ /g, "-") === categoryName;
+      })
       .sort((a, b) => (a.available === b.available ? 0 : a.available ? -1 : 1));
 
     const fullyFiltered = categoryFiltered
@@ -23,6 +36,7 @@ export const useCategoryFilter = ({ products, category, filters }: { products: F
         const matchesRange = price >= filters.range;
         const stockOk = !filters.inStockOnly || product.available;
         const matchesCountry = !filters.countryFilter || product.generalInfo?.Країна === filters.countryFilter;
+
         return inRange && matchesRange && stockOk && matchesCountry;
       })
       .sort((a, b) => {
@@ -31,12 +45,10 @@ export const useCategoryFilter = ({ products, category, filters }: { products: F
         return 0;
       });
 
-    const maxCategoryPrice = Math.max(...categoryFiltered.map((p) => p.price));
-
+    const maxCategoryPrice = getMaxPrice(categoryFiltered);
     const filteredProducts = fullyFiltered.length > 0 || filters.sort !== "popular" ? fullyFiltered : categoryFiltered;
-
-    const uniqueCountries = Array.from(new Set(filteredProducts.map((p) => p.generalInfo?.Країна).filter((c): c is string => Boolean(c))));
+    const uniqueCountries = getUniqueCountries(filteredProducts);
 
     return { filteredProducts, maxCategoryPrice, uniqueCountries };
-  }, [products, category, filters]);
+  }, [products, categoryName, filters]);
 };
