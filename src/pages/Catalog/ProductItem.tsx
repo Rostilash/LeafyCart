@@ -15,6 +15,11 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
   const isOutOfStock = !product.available;
 
+  const isOnePlusOne = product.tags?.includes("1+1");
+
+  // Якщо в тегах є подарунок (gift:<id>)
+  const giftId = product.tags?.find((tag) => tag.startsWith("gift:"))?.split(":")[1];
+
   return (
     <article
       className={`flex flex-col items-center justify-center 
@@ -23,8 +28,15 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
               bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl 
               relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}`}
     >
+      {/* NEW */}
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
-      {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`Знижка: ${product.discountPercentage}%`} />}
+
+      {/* -% знижка */}
+      {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`-${product.discountPercentage}%`} />}
+
+      {/* 1+1 акція */}
+      {isOnePlusOne && <Badge position="top-10 -left-2 bg-red-500" text="1+1" />}
+
       <img
         src={product.img}
         alt={product.name}
@@ -42,10 +54,12 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
           </h3>
 
           <span className="text-gray-700" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-            <meta itemProp="priceCurrency" content="USD" />
+            <meta itemProp="priceCurrency" content="UAH" />
             <ProductPrice product={product} />
           </span>
           <span>за {product.weight}</span>
+
+          {giftId && <p className="text-xs text-green-600 mt-1">🎁 Подарунок у комплекті</p>}
         </div>
 
         {!isOutOfStock && <AddToCartButton product={product} />}

@@ -27,19 +27,16 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
     md:p-2 overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[85vh] z-50"
     >
       {/* Main Image */}
-
       <PreviewImage product={productToShow} />
 
       {/*Product name */}
-      {/* <div className="w-screen md:w-100 md:col-span-full"> */}
       <PreviewMainInfo product={productToShow} userId={userId} handleRateProduct={handleRateProduct} />
-      {/* </div> */}
-      <div className="space-y-6 w-screen">
-        {/* Nutrition info */}
-        <PreviewInfo title="Харчові властивості" subObject={productToShow.nutritionFacts} />
-        {/* General info */}
-        <PreviewInfo title="Загальна інформація" subObject={productToShow.generalInfo} />
-      </div>
+
+      {/* Nutrition info */}
+      <PreviewInfo title="Харчові властивості" subObject={productToShow.nutritionFacts} />
+      {/* General info */}
+      <PreviewInfo title="Загальна інформація" subObject={productToShow.generalInfo} />
+
       {/* Recomended products */}
       <RecommendedProducts products={recommendedProducts} onSelect={(p) => dispatch(setSelectedProduct(p))} />
 

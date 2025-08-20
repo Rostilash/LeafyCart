@@ -3,6 +3,7 @@ import type { FoodProduct } from "../../../types/productTypes";
 import { categories } from "../../../types/productTypes";
 import { DynamicFieldEditor } from "./FormSlices/DynamicFieldEditorProps ";
 import { AddFieldInputs } from "./FormSlices/AddFieldInputs";
+import { X } from "lucide-react";
 
 interface ProductFormProps {
   initialProduct: Partial<FoodProduct> | null;
@@ -19,15 +20,37 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
   const [newNutritionKey, setNewNutritionKey] = useState("");
   const [newNutritionValue, setNewNutritionValue] = useState<string | number | "">("");
 
+  const [newTag, setNewTag] = useState("");
+
   useEffect(() => {
     if (initialProduct) {
       setFormData(initialProduct || {});
     }
   }, [initialProduct]);
 
+  const handleAddTag = () => {
+    if (!newTag.trim()) return;
+    setFormData((prev) => ({
+      ...prev,
+      tags: [...(prev.tags ?? []), newTag.trim()],
+    }));
+    setNewTag("");
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: (prev.tags ?? []).filter((t) => t !== tag),
+    }));
+  };
+
   const handleAddField = (section: "generalInfo" | "nutritionFacts", key: string, value: string | number) => {
     if (!key.trim() || value === "") return;
-
+    if (section === "nutritionFacts" && isNaN(Number(value))) {
+      alert("Значення для харчової цінності має бути числом!");
+      return;
+    }
+    console.log(" will work");
     setFormData((prev) => ({
       ...prev,
       [section]: {
@@ -225,6 +248,36 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           onChange={(key, val) => handleDynamicChange("generalInfo", key, val)}
           onRemove={(key) => handleRemoveField("generalInfo", key)}
         />
+      </fieldset>
+
+      {/* Tags */}
+      <fieldset className="border p-4 rounded-md">
+        <legend className="font-semibold">Теги</legend>
+
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="Введіть тег (наприклад: 1+1, gift:123)"
+            className="custum-border-outline px-2 py-1 flex-1"
+          />
+          <button type="button" onClick={handleAddTag} className="px-3 py-1 btn-primary-sm btn_hover">
+            Додати
+          </button>
+        </div>
+
+        {/* Tegs Preview */}
+        <div className="flex flex-wrap gap-2">
+          {(formData.tags ?? []).map((tag) => (
+            <span key={tag} className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">
+              {tag}
+              <button type="button" onClick={() => handleRemoveTag(tag)} className="text-red-500 hover:text-red-700">
+                <X size={14} />
+              </button>
+            </span>
+          ))}
+        </div>
       </fieldset>
 
       <button type="submit" className="btn-primary btn_hover">

@@ -92,8 +92,6 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
           Оформити замовлення
         </button>
       </div>
-
-      <Footer />
     </aside>
   );
 };

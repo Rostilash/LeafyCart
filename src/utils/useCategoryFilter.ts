@@ -11,25 +11,9 @@ export interface Filters {
   sort: string;
 }
 
-export const useCategoryFilter = ({
-  products,
-  categoryName,
-  filters,
-}: {
-  products: FoodProduct[];
-  categoryName: string | undefined;
-  filters: Filters;
-}) => {
+export const useCategoryFilter = ({ products, filters }: { products: FoodProduct[]; filters: Filters }) => {
   return useMemo(() => {
-    const categoryFiltered = products
-      .filter((p) => {
-        if (!categoryName) return true;
-        if (categoryName === "знижки") return true;
-        return p.category.toLowerCase().replace(/ /g, "-") === categoryName;
-      })
-      .sort((a, b) => (a.available === b.available ? 0 : a.available ? -1 : 1));
-
-    const fullyFiltered = categoryFiltered
+    const fullyFiltered = products
       .filter((product) => {
         const price = product.price / 100;
         const inRange = (!filters.minPrice || price >= Number(filters.minPrice)) && (!filters.maxPrice || price <= Number(filters.maxPrice));
@@ -45,10 +29,10 @@ export const useCategoryFilter = ({
         return 0;
       });
 
-    const maxCategoryPrice = getMaxPrice(categoryFiltered);
-    const filteredProducts = fullyFiltered.length > 0 || filters.sort !== "popular" ? fullyFiltered : categoryFiltered;
+    const maxCategoryPrice = getMaxPrice(products);
+    const filteredProducts = fullyFiltered.length > 0 || filters.sort !== "popular" ? fullyFiltered : products;
     const uniqueCountries = getUniqueCountries(filteredProducts);
 
     return { filteredProducts, maxCategoryPrice, uniqueCountries };
-  }, [products, categoryName, filters]);
+  }, [products, filters]);
 };

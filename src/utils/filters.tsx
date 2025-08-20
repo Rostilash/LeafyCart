@@ -20,13 +20,14 @@ export const getFilteredProductItems = (products: FoodProduct[], filterFn: (p: F
 };
 
 export const getProductsForSubcategory = (products: FoodProduct[], subcategoryName: string) => {
-  console.log(subcategoryName);
   switch (subcategoryName) {
     case "знижки":
       return products.filter((p) => p.discountPercentage && p.discountPercentage > 0);
-    // case "1+1":
-    //   return products.filter((p) => p.isOnePlusOne); // приклад для іншої спец. підкатегорії
+    case "1+1":
+      return products.filter((p) => p.tags?.includes("1+1"));
     default:
-      return products.filter((p) => p.category === subcategoryName);
+      return products
+        .filter((p) => p.category.toLowerCase().replace(/ /g, "-") === subcategoryName.toLowerCase())
+        .sort((a, b) => (a.available === b.available ? 0 : a.available ? -1 : 1));
   }
 };

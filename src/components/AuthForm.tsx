@@ -56,7 +56,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
         required
       />
 
-      <button type="submit" disabled={loading} className="bg-blue-500 text-white p-2 rounded cursor-pointer hover:bg-blue-600">
+      <button type="submit" disabled={loading} className="btn-primary btn_hover">
         {loading ? "Завантаження..." : mode === "register" ? "Зареєструватися" : "Увійти"}
       </button>
     </form>

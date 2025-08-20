@@ -10,10 +10,10 @@ interface AddFieldInputsProps {
 }
 
 export const AddFieldInputs: React.FC<AddFieldInputsProps> = ({ keyValue, setKeyValue, value, setValue, onAdd }) => (
-  <div className="flex  gap-2 items-center mt-2">
+  <div className="flex justify-between gap-2 items-center mt-2">
     <input
       type="text"
-      placeholder="ключ"
+      placeholder="Назва"
       value={keyValue}
       onChange={(e) => setKeyValue(e.target.value)}
       className="px-2 py-1 custum-border-outline "
@@ -25,7 +25,7 @@ export const AddFieldInputs: React.FC<AddFieldInputsProps> = ({ keyValue, setKey
       onChange={(e) => setValue(typeof value === "number" ? parseFloat(e.target.value) || "" : e.target.value)}
       className="px-2 py-1 custum-border-outline"
     />
-    <button type="button" onClick={onAdd} className="btn-primary-sm">
+    <button type="button" onClick={onAdd} className="btn-primary-sm btn_hover">
       Додати
     </button>
   </div>

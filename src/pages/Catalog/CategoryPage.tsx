@@ -43,10 +43,9 @@ export const CategoryPage = () => {
 
   const { filteredProducts, maxCategoryPrice, uniqueCountries } = useCategoryFilter({
     products: subcategoryProducts,
-    categoryName,
     filters,
   });
-  console.log(subcategoryProducts);
+
   return (
     <>
       <Breadcrumbs />
