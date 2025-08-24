@@ -18,7 +18,7 @@ export const Catalog = () => {
                     alt={c.name}
                     className="w-full h-52 object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-500" />
                   <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white font-bold text-xl sm:text-2xl md:text-3xl drop-shadow-lg">
                     {c.name}
                   </span>

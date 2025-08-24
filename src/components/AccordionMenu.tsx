@@ -36,18 +36,20 @@ export const AccordionMenu: React.FC<AccordionMenuProps> = ({ closeSidebar }) =>
   return (
     <div className="space-y-2 relative cursor-pointer" ref={menuRef}>
       {categoryTree.map((cat) => (
-        <div key={cat.title} className="relative">
+        <div key={cat.title}>
           <button
             onClick={() => toggleCategory(cat.title)}
             className="flex justify-between items-center w-full font-semibold text-left hover:bg-[var(--leafy-sage)] px-4 py-4 focus:outline-none cursor-pointer"
           >
-            <span className="text-xs">{cat.title}</span>
+            <span className="flex items-center gap-2 text-xs">
+              {cat.icon} {cat.title}
+            </span>
             {openCategory === cat.title ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </button>
           {/* subcategories maping here */}
           {openCategory === cat.title && (
             <ul
-              className="absolute right-0 lg:left-[97%] top-0 lg:ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-1/2 lg:min-w-[160px] transition-all duration-200 "
+              className="absolute right-0 lg:left-[97%] top-0 lg:ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-1/2 lg:min-w-[240px] transition-all duration-200 "
               onMouseLeave={() => setOpenCategory(null)}
             >
               {cat.subcategories.map((sub) => (

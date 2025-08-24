@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { Settings, Database, TestTubesIcon } from "lucide-react";
+import {
+  Database,
+  // Settings,  TestTubesIcon
+} from "lucide-react";
 
 export const AdminPanel = () => {
   const panels = [
@@ -8,16 +11,16 @@ export const AdminPanel = () => {
       label: "Редагування постів",
       icon: <Database className="w-6 h-6 text-green-700" />,
     },
-    {
-      to: "testing",
-      label: "Тестування",
-      icon: <TestTubesIcon className="w-6 h-6 text-green-700" />,
-    },
-    {
-      to: "settings",
-      label: "Налаштування",
-      icon: <Settings className="w-6 h-6 text-green-700" />,
-    },
+    // {
+    //   to: "testing",
+    //   label: "Тестування",
+    //   icon: <TestTubesIcon className="w-6 h-6 text-green-700" />,
+    // },
+    // {
+    //   to: "settings",
+    //   label: "Налаштування",
+    //   icon: <Settings className="w-6 h-6 text-green-700" />,
+    // },
   ];
 
   return (

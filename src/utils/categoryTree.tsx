@@ -1,12 +1,15 @@
 import { categories } from "../types/productTypes";
+import { Coffee, Box, Gift, Apple, User } from "lucide-react";
 
 export const categoryTree = [
   {
     title: "Продукти харчування",
+    icon: <Apple size={16} />,
     subcategories: categories,
   },
   {
     title: "Готові страви",
+    icon: <Box size={16} />,
     subcategories: [
       { name: "Сніданки", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmSgfhbd_Ma5dKizbTNZeKsc8edZ4u_hP_XA&s" },
       { name: "Обіди", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOjGUpzmbC6dFdqFCjQW6H5BKBD7RYI2c97Q&s" },
@@ -21,6 +24,7 @@ export const categoryTree = [
   },
   {
     title: "Комбо-набори / Акції",
+    icon: <Gift size={16} />,
     subcategories: [
       { name: "Знижки", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzgiT2ItgY0KwK-oTNGORcgg_7y9TnKKwQZg&s" },
       { name: "1+1", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_06EFn9o9WkIYp9cn5i-ylcjLYcWkvpJ4og&s" },
@@ -29,15 +33,12 @@ export const categoryTree = [
   },
   {
     title: "Раціони",
+    icon: <Coffee size={16} />,
     subcategories: [
       { name: "На день/тиждень", img: "" },
       { name: "Дієтичні програми", img: "" },
       { name: "Калорійні набори", img: "" },
       { name: "Інтервальне харчування", img: "" },
     ],
-  },
-  {
-    title: "Навігація",
-    subcategories: [{ name: "../catalog", img: "" }],
   },
 ];

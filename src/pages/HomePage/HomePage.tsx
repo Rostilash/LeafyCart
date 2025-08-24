@@ -27,7 +27,7 @@ export const HomePage = () => {
 
   return (
     <>
-      <div className="hidden md:flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-sage)]">
+      <div className="hidden md:flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-bg)]">
         <div className=" max-w-2xl text-left space-y-12 ">
           <h1 className="text-6xl font-bold leading-tight ">
             Свіжі

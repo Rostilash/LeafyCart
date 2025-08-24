@@ -19,23 +19,18 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
   return (
     <header
-      className={`fixed top-0 left-0 w-screen sm:w-full z-50 bg-[var(--leafy-white)] shadow-md transition-all duration-300 ${
-        isNavOpened ? "ml-none md:ml-84 lg:ml-64" : "ml-0"
-      } z-100`}
+      className={`
+    fixed left-0 w-screen z-100 bg-[var(--leafy-white)] shadow-md transition-all duration-300
+    bottom-0 sm:top-0 sm:bottom-auto
+    ${isNavOpened ? "ml-none md:ml-84 lg:ml-64" : "ml-0"}
+  `}
     >
-      <div className="flex justify-between items-center px-4 py-3 md:px-8">
+      <div className="flex justify-around sm:justify-between items-center px-4 py-3 md:px-8">
         {/* left side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
-          <Link to="/">Головна</Link>
-          <nav className="hidden md:flex gap-6">
-            <NavigationLinks />
-          </nav>
-          {user && user.role === "admin" && (
-            <Link to="/admin" className="hover:underline">
-              Адмін панель
-            </Link>
-          )}
+
+          <NavigationLinks user={user} />
         </div>
 
         {/* right side */}
@@ -56,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
           )}
 
           {/* Кошик */}
-          <button onClick={() => setIsCartOpen((prev) => !prev)} className="relative p-2">
+          <button onClick={() => setIsCartOpen((prev) => !prev)} className="relative p-2 cursor-pointer">
             <ShoppingCart className="w-6 h-6 text-[var(--leafy-dark)]" />
             {quantity !== undefined && quantity > 0 && (
               <span className="absolute -top-1 -right-1 bg-[var(--leafy-sage)] font-bold text-black text-xs rounded-full px-1.5 py-0.5 shadow-md">

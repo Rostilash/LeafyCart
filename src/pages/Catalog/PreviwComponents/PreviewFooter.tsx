@@ -1,5 +1,3 @@
-import React from "react";
-
 export const PreviewFooter = () => {
   return (
     <div className="p-4 text-xs text-center col-span-2 flex justify-center">

@@ -5,8 +5,21 @@ interface CartState {
   items: CartItem[];
 }
 
+const loadCart = (): CartItem[] => {
+  try {
+    const data = localStorage.getItem("cart");
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveCart = (items: CartItem[]) => {
+  localStorage.setItem("cart", JSON.stringify(items));
+};
+
 const initialState: CartState = {
-  items: [],
+  items: loadCart(),
 };
 
 export const cartSlice = createSlice({
@@ -20,6 +33,7 @@ export const cartSlice = createSlice({
       } else {
         state.items.push({ ...action.payload, quantity: 1 });
       }
+      saveCart(state.items);
     },
     updateQuantity: (state, action: PayloadAction<{ id: string; type: "increment" | "decrement" | "set"; value?: number }>) => {
       const item = state.items.find((item) => item.id === action.payload.id);
@@ -41,12 +55,15 @@ export const cartSlice = createSlice({
           }
           break;
       }
+      saveCart(state.items);
     },
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+      saveCart(state.items);
     },
     clearCart: (state) => {
       state.items = [];
+      saveCart(state.items);
     },
   },
 });

@@ -14,7 +14,7 @@ export type FiltersPanelProps = {
 
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, onFilterChange, maxCategoryPrice, uniqueCountries }) => {
   return (
-    <div className="bg-[var(--leafy-bg)] flex flex-col space-y-2 pl-4">
+    <div className="bg-[var(--leafy-bg)] flex flex-col space-y-2 pl-4 ">
       <h3 className="text-center title-s">Фільтри</h3>
       {/* Select sort */}
       <SortSelect filters={filters} onFilterChange={onFilterChange} />

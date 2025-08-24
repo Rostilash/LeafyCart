@@ -1,21 +1,31 @@
 import type { ChangeEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
-import { updateQuantity } from "../redux/slices/cartSlice";
-import { Footer } from "./Footer";
+import { clearCart, updateQuantity } from "../redux/slices/cartSlice";
 import { Badge } from "../pages/Catalog/Badge";
 import { matchPrice } from "../utils/convertMoney";
 import { convertMoney } from "../utils/convertMoney";
 import type { CartDrawerProps } from "../types/cartTypes";
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type UpdateAction = "increment" | "decrement";
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
+  const user = useAppSelector((state) => state.auth.user);
 
   const onUpdateQuantity = (id: string, type: UpdateAction) => {
     dispatch(updateQuantity({ id, type }));
+  };
+
+  const handleCheckout = () => {
+    if (!user) {
+      alert("Щоб оформити замовлення, увійдіть у свій акаунт 🚀");
+      // We can use Redirecto to login page
+    } else {
+      setCheckoutModalOpen(true);
+    }
   };
 
   const handleChangeQuanity = (e: ChangeEvent<HTMLInputElement>, id: string) => {
@@ -65,7 +75,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
     );
   });
 
-  const matchedItems = cartItems ? ourItems : <span className="text-[var(--leafy-gray)]">Кошик порожній</span>;
+  const matchedItems = cartItems.length > 0 ? ourItems : <span className="text-[var(--leafy-gray)] flex justify-center">Кошик порожній...</span>;
 
   return (
     <aside
@@ -84,13 +94,30 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
           ✕
         </span>
       </div>
-      <div className="p-4 space-y-4 overflow-auto">{matchedItems}</div>
+
+      <div className="p-4 space-y-4 overflow-auto">
+        {cartItems.length > 0 && (
+          <button className="btn-primary w-full btn_hover p-4" onClick={() => dispatch(clearCart())}>
+            Очистити Корзину
+          </button>
+        )}
+        {matchedItems}
+      </div>
 
       <span className="flex justify-center text-center p-2 font-bold">Загальна сума: {convertMoney(totalPrice - (totalDiscount ?? 0))} ₴</span>
-      <div className="p-4 border-t border-[var(--leafy-moss)]">
-        <button className="btn-primary w-full btn_hover" disabled={cartItems.length < 1} onClick={() => setCheckoutModalOpen(true)}>
-          Оформити замовлення
-        </button>
+      <div className="p-4 border-t border-[var(--leafy-moss)] space-y-2">
+        {user ? (
+          <button className="btn-primary w-full btn_hover" disabled={cartItems.length < 1} onClick={handleCheckout}>
+            Оформити замовлення
+          </button>
+        ) : (
+          <>
+            <span className="text-gray-500">Щоб зробити замовлення треба авторизуватися</span>
+            <Link to="/login" className="btn-primary w-full btn_hover flex justify-center">
+              Увійти
+            </Link>
+          </>
+        )}
       </div>
     </aside>
   );

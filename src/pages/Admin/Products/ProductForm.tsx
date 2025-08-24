@@ -272,8 +272,8 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
           {(formData.tags ?? []).map((tag) => (
             <span key={tag} className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">
               {tag}
-              <button type="button" onClick={() => handleRemoveTag(tag)} className="text-red-500 hover:text-red-700">
-                <X size={14} />
+              <button type="button" onClick={() => handleRemoveTag(tag)} className="text-red-500 hover:text-red-700 cursor-pointer">
+                <X size={18} />
               </button>
             </span>
           ))}

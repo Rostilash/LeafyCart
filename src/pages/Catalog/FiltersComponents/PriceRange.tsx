@@ -8,7 +8,7 @@ type PriceRangeProps = Omit<FiltersPanelProps, "uniqueCountries">;
 export const PriceRange: React.FC<PriceRangeProps> = ({ filters, onFilterChange, maxCategoryPrice }) => {
   const maxPriceRounded = Math.ceil(maxCategoryPrice / 1000);
 
-  const handleChange = (event: Event, newValue: number | number[]): void => {
+  const handleChange = (_event: Event, newValue: number | number[]): void => {
     if (Array.isArray(newValue)) {
       onFilterChange((prev) => ({
         ...prev,

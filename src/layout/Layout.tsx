@@ -47,7 +47,7 @@ const Layout = () => {
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-white)] pt-[60px] lg:pt-[80px] overflow-auto px-2 sm:px-0" onMouseEnter={() => setIsNavOpened(false)}>
+      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0" onMouseEnter={() => setIsNavOpened(false)}>
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>
@@ -70,7 +70,7 @@ const Layout = () => {
         <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
       </Modal>
 
-      {/* Preview modal */}
+      {/* Product preview modal */}
       {selectedProduct && (
         <Modal isOpen={!!selectedProduct} onClose={() => dispatch(setSelectedProduct(null))}>
           <ProductPreviewModal product={selectedProduct} />
