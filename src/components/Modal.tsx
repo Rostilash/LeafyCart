@@ -25,10 +25,12 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     <div
       className={`fixed inset-0 z-50 flex justify-center items-center bg-black/30 backdrop-blur-sm transition-opacity ${
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-      }`}
+      }
+        scrollbar-hide
+      `}
     >
       <div className="bg-white p-1 md:p-6 rounded-xl shadow-xl min-w-[300px] relative " onClick={(e) => e.stopPropagation()}>
-        <button className="absolute font-bold  md:top-2 right-3 text-gray-600 text-2xl cursor-pointer z-100" onClick={onClose}>
+        <button className="absolute font-bold md:top-2 right-3 lg:top-10 text-gray-600 text-2xl cursor-pointer z-100" onClick={onClose}>
           ✕
         </button>
         {isOpen && children}

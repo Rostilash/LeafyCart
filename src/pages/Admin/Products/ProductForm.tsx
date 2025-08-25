@@ -126,10 +126,10 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
   return (
     <form
-      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px] overflow-y-auto max-h-[90vh]"
+      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px] max-h-[100vh] sm:max-h-[90vh] scrollbar-hide overflow-y-auto pb-24"
       onSubmit={handleSubmit}
     >
-      <h3 className="text-xl font-bold text-center text-gray-700">Додати продукт</h3>
+      <h3 className="text-xl font-bold text-center text-gray-700">Редагувати</h3>
 
       <label className="flex flex-col gap-1 text-sm text-gray-600">
         Назва:
@@ -211,7 +211,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
       </div>
 
       {/* Nutrifications */}
-      <fieldset className="border p-4 rounded-md ">
+      <fieldset className="border p-2">
         <legend className="font-semibold">Харчова цінність</legend>
         <AddFieldInputs
           section="nutritionFacts"
@@ -231,7 +231,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
       </fieldset>
 
       {/* General Info */}
-      <fieldset className="border p-4 rounded-md">
+      <fieldset className="border p-2 rounded-md">
         <legend className="font-semibold">Загальна інформація</legend>
         <AddFieldInputs
           section="generalInfo"
@@ -251,7 +251,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
       </fieldset>
 
       {/* Tags */}
-      <fieldset className="border p-4 rounded-md">
+      <fieldset className="border p-2 rounded-md">
         <legend className="font-semibold">Теги</legend>
 
         <div className="flex gap-2 mb-2">

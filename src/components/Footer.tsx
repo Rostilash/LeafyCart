@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-700 text-gray-300 py-10 px-6 md:px-16">
+    <footer className="bg-[var(--leafy-gray)] text-gray-300 py-10 px-6 md:px-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
         {/* Logo & contact */}
         <div>
@@ -70,7 +70,7 @@ export const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-4">Контакти</h3>
           <p className="text-sm">help@leafycart.com</p>
-          <p className="text-sm">м. Київ, вул. Легоцького 24</p>
+          <p className="text-sm">м. Ужгород, вул. Легоцького 24</p>
           <div className="flex space-x-4 mt-4 text-xl">
             <a href="#">
               <i className="fab fa-facebook"></i>

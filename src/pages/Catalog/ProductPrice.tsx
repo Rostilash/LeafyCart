@@ -11,7 +11,7 @@ export const ProductPrice = ({ product }: PriceProps) => {
   return product.discountPercentage ? (
     <span itemProp="price" className="text-vase font-medium">
       <span className="line-through text-gray-400 mr-2">{convertMoney(product.price)} ₴</span>-{" "}
-      {Number(convertMoney(product.price)) > 100 && <br className="flex sm:hidden" />}
+      {/* {Number(convertMoney(product.price)) > 100 && <br className="flex sm:hidden" />} */}
       <span className="text-red-500 font-semibold">{convertMoney(discountedPrice)} ₴</span>
     </span>
   ) : (

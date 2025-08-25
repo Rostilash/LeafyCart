@@ -89,7 +89,7 @@ export const Products = () => {
           </div>
         </div>
 
-        <h1 className="text-3xl p-4 text-center">Редагування постів</h1>
+        <h1 className="text-3xl p-4 text-center">Продукти</h1>
         <div className="grid grid-cols-[1fr_60px_100px_80px] md:grid-cols-6 border-b p-2">
           <span className="hidden md:block">Зображення</span>
           <h3>Назва</h3>

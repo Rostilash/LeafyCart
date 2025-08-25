@@ -17,7 +17,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
   const isOnePlusOne = product.tags?.includes("1+1");
 
-  // Якщо в тегах є подарунок (gift:<id>)
+  // if we have a gift in tegs (gift:<id>)
   const giftId = product.tags?.find((tag) => tag.startsWith("gift:"))?.split(":")[1];
 
   return (
@@ -25,7 +25,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
       className={`flex flex-col items-center justify-center 
               w-full sm:w-[48%] md:w-[30%] lg:w-[20%] 
               sm:min-w-[220px] sm:max-w-[220px]  min-w-[120px] max-w-[200px]
-              bg-[var(--leafy-sage)] shadow-xs hover:shadow-2xl 
+              bg-[var(--leafy-sage)] shadow-xs hover:shadow-green-200 
               relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}`}
     >
       {/* NEW */}
@@ -35,7 +35,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
       {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`-${product.discountPercentage}%`} />}
 
       {/* 1+1 акція */}
-      {isOnePlusOne && <Badge position="top-10 -left-2 bg-red-500" text="1+1" />}
+      {isOnePlusOne && <Badge position="top-10 -right-2" text="1+1" />}
 
       <img
         src={product.img}

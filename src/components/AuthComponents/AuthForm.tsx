@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
-import { registerUser, loginUser } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
+import { registerUser, loginUser } from "../../redux/slices/authSlice";
 
 interface AuthFormProps {
   mode: "register" | "login";
@@ -32,9 +32,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     const result = await dispatch(action(dataSet));
 
     if (action.rejected.match(result)) {
-      console.error("Помилка:", result.payload);
+      // console.error("Помилка:", result.payload);
     } else {
-      console.log("Успішно:", result.payload);
+      // console.log("Успішно:", result.payload);
     }
   };
 

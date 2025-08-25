@@ -26,14 +26,14 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
   `}
     >
       <div className="flex justify-around sm:justify-between items-center px-4 py-3 md:px-8">
-        {/* left side */}
+        {/* Left side */}
         <div className="flex items-center gap-6">
           <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
 
           <NavigationLinks user={user} />
         </div>
 
-        {/* right side */}
+        {/* Right side */}
         <div className="flex items-center gap-4">
           {userName ? (
             <>
@@ -45,12 +45,12 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
               </button>
             </>
           ) : (
-            <Link to="/login" className="border p-2 rounded-xl hover:bg-gray-100">
+            <Link to="/auth" className="border p-1  rounded-xl hover:bg-gray-100">
               Увійти
             </Link>
           )}
 
-          {/* Кошик */}
+          {/* Cart */}
           <button onClick={() => setIsCartOpen((prev) => !prev)} className="relative p-2 cursor-pointer">
             <ShoppingCart className="w-6 h-6 text-[var(--leafy-dark)]" />
             {quantity !== undefined && quantity > 0 && (

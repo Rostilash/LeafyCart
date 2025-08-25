@@ -1,44 +1,44 @@
 @import "tailwindcss";
 
 :root {
+  /* Primary brand */
   --leafy-green: #6baa75;
-  --leafy-dark: #8cafa2;
-  --leafy-light: #f2eedb;
-  /* --leafy-sage: #a3b18a; */
-  --leafy-sage: #f8f9fa;
-  --leafy-moss: #ccd5ae;
-  --leafy-yelgreen: #d7ddb9;
-  --leafy-yellow: #ffeb3b;
-  --leafy-bg: #f5f5f4;
-  --leafy-white: #f8faf9;
-  --leafy-gray: #5c645e;
-  --leafy-black: rgb(40, 40, 51);
-  --leafy-error: #a36656;
+  --leafy-dark: #3d6650;
+
+  /* Secondary / background */
+  --leafy-bg: #f9fafb;
+  --leafy-white: #ffffff;
+  --leafy-gray: #49524b;
+  --leafy-gray-opacity: #6b728062;
+
+  /* States */
+  --leafy-error: #dc2626;
+  --leafy-warning: #facc15;
 }
 
 /* Castum classes */
 .btn-primary {
-  @apply px-3 py-2  md:px-4 md:py-2 rounded font-semibold transition-colors;
+  @apply px-3 py-2 md:px-4 md:py-2 rounded font-semibold transition-colors active:scale-85 active:opacity-80 cursor-pointer;
   border-radius: 10px;
-  background-color: var(--leafy-dark);
+  background-color: var(--leafy-green);
   color: white;
 }
 
 .btn-primary-sm {
   @apply px-4 py-1.5 rounded font-light
-  transition-colors cursor-pointer;
+  transition-colors cursor-pointer active:scale-85 active:opacity-80;
   border-radius: 10px;
-  background-color: var(--leafy-dark);
+  background-color: var(--leafy-green);
   color: white;
 }
 
 .btn_hover {
-  @apply hover:bg-yellow-500 hover:text-black cursor-pointer;
+  @apply hover:bg-[var(--leafy-dark)] hover:text-white cursor-pointer;
 }
 
 /* h1 */
 .title-xl {
-  @apply text-4xl font-bold;
+  @apply text-3xl font-bold;
   color: var(--leafy-black);
 }
 

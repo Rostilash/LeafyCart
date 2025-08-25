@@ -9,22 +9,22 @@ interface NavigationLinksProps {
 
 export const NavigationLinks: React.FC<NavigationLinksProps> = ({ user }) => {
   return (
-    <nav className="flex flex-row space-x-4 sm:flex-row gap-4 sm:gap-6 items-center">
+    <nav className="flex flex-row space-x-4 sm:flex-row gap-4 sm:gap-0 items-center">
       {/* Головна */}
-      <Link to="/" className="flex items-center gap-2">
+      <Link to="/" className="flex items-center gap-2 hover:bg-gray-200">
         <Home size={20} />
         <span className="hidden sm:inline">Головна</span>
       </Link>
 
       {/* Каталог */}
-      <Link to="/catalog" className="flex items-center gap-2">
+      <Link to="/catalog" className="flex items-center gap-2 hover:bg-gray-200">
         <Box size={20} />
         <span className="hidden sm:inline">Каталог</span>
       </Link>
 
       {/* Панель користувача */}
       {user && (
-        <Link to="/cart_rents" className="flex items-center gap-2">
+        <Link to="/cart_rents" className="flex items-center gap-2 hover:bg-gray-200">
           <User size={20} />
           <span className="hidden sm:inline">Панель користувача</span>
         </Link>
@@ -32,7 +32,7 @@ export const NavigationLinks: React.FC<NavigationLinksProps> = ({ user }) => {
 
       {/* Адмін панель */}
       {user && user.role === "admin" && (
-        <Link to="/admin" className="flex items-center gap-2">
+        <Link to="/admin" className="flex items-center gap-2 hover:bg-gray-200">
           <Settings size={20} />
           <span className="hidden sm:inline">Адмін панель</span>
         </Link>

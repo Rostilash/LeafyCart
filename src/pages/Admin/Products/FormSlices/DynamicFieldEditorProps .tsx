@@ -11,13 +11,13 @@ interface DynamicFieldEditorProps {
 export const DynamicFieldEditor: React.FC<DynamicFieldEditorProps> = ({ section, entries, onChange, onRemove }) => (
   <>
     {Object.entries(entries).map(([key, value]) => (
-      <label key={key} className="grid grid-cols-3 w-xs  items-center gap-5 text-sm text-gray-600 capitalize">
+      <label key={key} className="grid grid-cols-3 px-2 items-center text-sm text-gray-600 capitalize">
         {key.replace(/([A-Z])/g, " $1")}:
         <input
           type={typeof value === "number" ? "number" : "text"}
           value={value}
           onChange={(e) => onChange(key, typeof value === "number" ? parseFloat(e.target.value) : e.target.value)}
-          className="border-b px-1 py-2 w-30 pl-2"
+          className="border-b px-1 py-2 pl-2"
           placeholder={section}
         />
         <button type="button" onClick={() => onRemove(key)} className="text-red-500 mt-1 flex justify-center">

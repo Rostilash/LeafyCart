@@ -1,12 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
 import { HomePage } from "./pages/HomePage/HomePage";
 import { Catalog } from "./pages/Catalog/Catalog";
 import { CategoryPage } from "./pages/Catalog/CategoryPage";
 import { AdminPanel } from "./pages/Admin/AdminPanel";
-import { Products } from "./pages/Admin/Products/Products";
+import { Products } from "./pages/Admin/Products/ProductsList";
 import { AdminWrapper } from "./pages/Admin/AdminWrapper";
 import { useAppDispatch } from "./redux/reduxTypeHook";
 import { useEffect } from "react";
@@ -14,6 +12,7 @@ import { checkAuth } from "./redux/slices/authSlice";
 import { Testing } from "./pages/Admin/Settings/Testing";
 import { PersonalInfo } from "./pages/PersonalInfo/PersonalInfo";
 import { Settings } from "./pages/Admin/Settings/Settings";
+import AuthPage from "./components/AuthComponents/AuthPage";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -28,8 +27,7 @@ function App() {
         <Route path="catalog" element={<Catalog />} />
         <Route path="catalog/:category" element={<CategoryPage />} />
         <Route path="cart_rents" element={<PersonalInfo />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="auth" element={<AuthPage />} />
 
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />

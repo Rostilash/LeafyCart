@@ -1,5 +1,5 @@
 import { categories } from "../types/productTypes";
-import { Coffee, Box, Gift, Apple, User } from "lucide-react";
+import { Coffee, Box, Gift, Apple } from "lucide-react";
 
 export const categoryTree = [
   {
