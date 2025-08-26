@@ -1,26 +1,18 @@
 import { Link } from "react-router-dom";
-import {
-  Database,
-  // Settings,  TestTubesIcon
-} from "lucide-react";
+import { Database, Settings } from "lucide-react";
 
 export const AdminPanel = () => {
   const panels = [
     {
       to: "products",
       label: "Редагування постів",
-      icon: <Database className="w-6 h-6 text-green-700" />,
+      icon: <Database className="w-6 h-6 text-[var(--leafy-green)]" />,
     },
-    // {
-    //   to: "testing",
-    //   label: "Тестування",
-    //   icon: <TestTubesIcon className="w-6 h-6 text-green-700" />,
-    // },
-    // {
-    //   to: "settings",
-    //   label: "Налаштування",
-    //   icon: <Settings className="w-6 h-6 text-green-700" />,
-    // },
+    {
+      to: "settings",
+      label: "Налаштування",
+      icon: <Settings className="w-6 h-6 text-[var(--leafy-green)]" />,
+    },
   ];
 
   return (

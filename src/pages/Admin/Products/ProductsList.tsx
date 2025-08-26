@@ -2,7 +2,7 @@ import { Modal } from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../redux/reduxTypeHook";
 import { categories, type FoodProduct } from "../../../types/productTypes";
 import { useState, useEffect, type ChangeEvent } from "react";
-import { ProductForm } from "./ProductForm";
+import { ProductForm } from "./FormSlices/ProductForm";
 import { addProduct, deleteProduct, getProducts, updateProduct } from "../../../redux/slices/productSlice";
 import { ProductRow } from "./ProductRow";
 import { Loader } from "../../../components/Loader";
@@ -55,7 +55,7 @@ export const Products = () => {
   return (
     <>
       <Breadcrumbs />
-      <section className="w-full max-w-5xl mx-auto px-0 sm:px-6 lg:px-8 py-10">
+      <section className="w-full max-w-5xl mx-auto px-0 sm:px-6 lg:px-8">
         <div className="flex justify-around ">
           <button onClick={() => setAddingProduct(true)} className="btn-primary btn_hover items-center flex flex-row mr-2">
             <PackagePlus className="w-6 h-6 text-white-700" /> <span className="hidden md:block">Додати продукт</span>
@@ -92,7 +92,7 @@ export const Products = () => {
         <h1 className="text-3xl p-4 text-center">Продукти</h1>
         <div className="grid grid-cols-[1fr_60px_100px_80px] md:grid-cols-6 border-b p-2">
           <span className="hidden md:block">Зображення</span>
-          <h3>Назва</h3>
+          <span>Назва</span>
           <span className="hidden md:block">Категорія</span>
           <span>Ціна</span>
           <span className="hidden md:block">Редагування</span>
