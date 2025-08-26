@@ -9,6 +9,7 @@ import { setSelectedProduct } from "../redux/slices/productSlice";
 import { ProductPreviewModal } from "../pages/Catalog/ProductPreviewModal";
 import { ConfirmBuyoutInfo } from "../components/Modal/ConfirmBuyoutInfo";
 import { useRecentProducts } from "../hook/useRecentProducts";
+import { useCartTotals } from "../hook/useCartTotals";
 
 const Layout = () => {
   const [isNavOpened, setIsNavOpened] = useState(false);
@@ -20,22 +21,7 @@ const Layout = () => {
   // localStorage Hook set Products
   useRecentProducts();
 
-  const cartItems = useAppSelector((state) => state.cart.items);
-  const totalPrice = cartItems.reduce(
-    (acc, item) =>
-      // item.discountPercentage !== undefined
-      //   ? acc + item.price * (1 - item.discountPercentage / 100) * item.quantity
-      acc + item.price * item.quantity,
-    0
-  );
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const totalDiscount = cartItems.reduce((acc, item) => {
-    if (item.discountPercentage) {
-      const discountPerItem = item.price * (item.discountPercentage / 100);
-      return acc + discountPerItem * item.quantity;
-    }
-    return acc;
-  }, 0);
+  const { totalPrice, totalQuantity, totalDiscount } = useCartTotals();
 
   return (
     <div className=" h-screen sm:min-h-screen flex bg-[var(--leafy-light)]">
@@ -47,7 +33,7 @@ const Layout = () => {
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0" onMouseEnter={() => setIsNavOpened(false)}>
+      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0" onMouseDown={() => setIsNavOpened(false)}>
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>

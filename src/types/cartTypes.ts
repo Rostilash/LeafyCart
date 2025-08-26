@@ -1,3 +1,5 @@
+export type UpdateAction = "increment" | "decrement";
+
 export type CartItem = {
   id: string;
   name: string;

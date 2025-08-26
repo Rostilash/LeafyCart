@@ -1,13 +1,11 @@
 import type { ChangeEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { clearCart, updateQuantity } from "../../redux/slices/cartSlice";
-import type { CartDrawerProps } from "../../types/cartTypes";
+import type { CartDrawerProps, UpdateAction } from "../../types/cartTypes";
 import { CartItemElement } from "./CartItemElement";
 import { CartHeader } from "./CartHeader";
 import { CartTotal } from "./CartTotal";
 import { CartCheckout } from "./CartCheckout";
-
-export type UpdateAction = "increment" | "decrement";
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();

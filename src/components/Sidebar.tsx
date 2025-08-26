@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { AccordionMenu } from "./AccordionMenu";
-import { User } from "lucide-react";
 
 type SidebarProps = {
   isVisible: boolean;
@@ -23,12 +21,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
         </div>
 
         <AccordionMenu closeSidebar={onClose} />
-
-        <div className="flex flex-col space-y-8 pl-4 pt-6 text-xs">
-          <Link to="/cart_rents" onClick={() => onClose()} className="flex flex-row gap-2">
-            <User size={16} /> Панель користувача
-          </Link>
-        </div>
       </div>
     </aside>
   );

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { categoryTree } from "../utils/categoryTree";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, User } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 
 type AccordionMenuProps = {
@@ -66,6 +66,11 @@ export const AccordionMenu: React.FC<AccordionMenuProps> = ({ closeSidebar }) =>
           )}
         </div>
       ))}
+      <div className="flex flex-col space-y-6 pl-4 pt-4 text-xs">
+        <Link to="/cart_rents" onClick={() => closeSidebar()} className="flex flex-row gap-2">
+          <User size={16} /> Панель користувача
+        </Link>
+      </div>
     </div>
   );
 };
