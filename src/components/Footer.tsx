@@ -70,7 +70,7 @@ export const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-4">Контакти</h3>
           <p className="text-sm">help@leafycart.com</p>
-          <p className="text-sm">м. Ужгород, вул. Легоцького 24</p>
+          <p className="text-sm">м. , вул. Легоцького 24</p>
           <div className="flex space-x-4 mt-4 text-xl">
             <a href="#">
               <i className="fab fa-facebook"></i>
@@ -89,7 +89,7 @@ export const Footer = () => {
       </div>
 
       {/* Bottom */}
-      <div className="mt-10 border-t border-gray-700 pt-4 text-center text-sm text-gray-400">
+      <div className="mt-10 border-t border-gray-400 pt-4 text-center text-sm text-gray-400">
         © 2010 - {new Date().getFullYear()} Всі права захищені. LIMITED LIABILITY COMPANY "LEAFYCART"
       </div>
     </footer>

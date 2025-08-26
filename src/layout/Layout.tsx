@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
-import { CartDrawer } from "../components/CartDrawer";
+import { CartDrawer } from "../components/CartDrawer/CartDrawer";
 import { useAppDispatch, useAppSelector } from "../redux/reduxTypeHook";
 import { Modal } from "../components/Modal";
 import { setSelectedProduct } from "../redux/slices/productSlice";

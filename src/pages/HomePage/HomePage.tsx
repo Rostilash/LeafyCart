@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { getProducts } from "../../redux/slices/productSlice";
-import { useEffect } from "react";
-import { Loader } from "../../components/Loader";
-import { ProductViewed } from "../Catalog/ProductViewed";
-import { Footer } from "../../components/Footer";
 import { getFilteredProductItems } from "../../utils/filters";
+import { ProductViewed } from "../Catalog/ProductViewed";
+import { HeroSection } from "./components/HeroSection";
+import { ProductSection } from "./components/ProductSection";
+import { Footer } from "../../components/Footer";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -27,81 +27,13 @@ export const HomePage = () => {
 
   return (
     <>
-      <div className="hidden md:flex flex-col md:flex-row justify-center items-center bg-[var(--leafy-bg)]">
-        <div className=" max-w-2xl text-left space-y-12 ">
-          <h1 className="text-6xl font-bold leading-tight ">
-            Свіжі
-            <br />
-            органічні продукти
-            <br />
-            Доставлені
-            <br />
-            до ваших дверей
-          </h1>
-          <Link to="/catalog" className="btn-primary btn_hover transition cursor-pointer">
-            В магазин зараз
-          </Link>
-        </div>
-
-        <div className="mt-8 md:mt-0 md:ml-12 ">
-          <img src="/freshProducts.png" alt="vegetable plate" className="w-50 scale-100 lg:w-120 h-auto " />
-        </div>
+      <HeroSection />
+      <ProductSection title="Рекомендовані" products={recommendedProducts} loading={loading} error={error} emptyMessage="Новинок ще немає" />
+      <ProductSection title="Новинки" products={newProducts} loading={loading} error={error} emptyMessage="Новинок поки не має..." />
+      <ProductSection title="Акції" products={discountedProducts} loading={loading} error={error} emptyMessage="Зараз немає акцій" />
+      <div className="px-4">
+        <ProductViewed visibleProducts={7} />
       </div>
-
-      <div className="bg-[var(--leafy-bg)] min-h-[calc(100vh-685px)]">
-        {/* Recomended products */}
-        <h1 className="title-xl p-4 text-center">Рекомендовані</h1>
-        {loading ? (
-          <div className="flex justify-center text-center">
-            <Loader />
-          </div>
-        ) : error ? (
-          <p className="text-center text-red-500 p-10">Помилка: {error}</p>
-        ) : recommendedProducts.length === 0 ? (
-          <p className="text-center text-gray-500 p-10">Новинок ще немає</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 justify-items-center">
-            {recommendedProducts}
-          </div>
-        )}
-      </div>
-
-      <div className="bg-[var(--leafy-bg)]">
-        {/* New */}
-        <h1 className="title-xl p-4 text-center">Новинки</h1>
-        {loading ? (
-          <div className="flex justify-center text-center">
-            <Loader />
-          </div>
-        ) : error ? (
-          <p className="text-center text-red-500 p-10">Помилка: {error}</p>
-        ) : newProducts.length === 0 ? (
-          <p className="text-center text-gray-500 p-10">Новинок поки не має...</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 justify-items-center">{newProducts}</div>
-        )}
-      </div>
-
-      <div className="bg-[var(--leafy-bg)]">
-        {/* Discount */}
-        <h1 className="title-xl p-4 text-center">Акції</h1>
-        {loading ? (
-          <div className="flex justify-center text-center">
-            <Loader />
-          </div>
-        ) : error ? (
-          <p className="text-center text-red-500 p-10">Помилка: {error}</p>
-        ) : discountedProducts.length === 0 ? (
-          <p className="text-center text-gray-500 p-10">Зараз немає акцій</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 justify-items-center">
-            {discountedProducts}
-          </div>
-        )}
-      </div>
-
-      <ProductViewed visibleProducts={7} />
-
       <Footer />
     </>
   );

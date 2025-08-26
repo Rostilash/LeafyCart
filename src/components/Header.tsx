@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
     ${isNavOpened ? "ml-none md:ml-84 lg:ml-64" : "ml-0"}
   `}
     >
-      <div className="flex justify-around sm:justify-between items-center px-4 py-3 md:px-8">
+      <div className="flex justify-between items-center px-4 py-3 md:px-8">
         {/* Left side */}
         <div className="flex items-center gap-6">
           <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
