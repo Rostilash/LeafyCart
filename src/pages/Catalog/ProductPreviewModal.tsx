@@ -23,8 +23,8 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
 
   return (
     <div
-      className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-6xl mx-auto 
-    md:p-2 overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[85vh] z-50"
+      className="grid grid-cols-1 lg:grid-cols-2 md:gap-4 max-w-6xl mx-auto 
+    overflow-y-auto scrollbar-hide max-h-[100vh] md:max-h-[85vh] z-50"
     >
       {/* Main Image */}
       <PreviewImage product={productToShow} />

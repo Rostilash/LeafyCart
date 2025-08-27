@@ -1,8 +1,7 @@
 import type { ChangeEvent } from "react";
 import { Badge } from "../../pages/Catalog/Badge";
-import type { CartItem } from "../../types/cartTypes";
+import type { CartItem, UpdateAction } from "../../types/cartTypes";
 import { matchPrice } from "../../utils/convertMoney";
-import type { UpdateAction } from "./CartDrawer";
 
 interface CartItemProps {
   item: CartItem;

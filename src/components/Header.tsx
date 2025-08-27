@@ -13,15 +13,21 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
   return (
     <header
       className={`
-    fixed left-0 w-screen z-100 bg-[var(--leafy-white)] shadow-md transition-all duration-300
+    fixed left-0 w-screen z-[100] bg-[var(--leafy-white)] shadow-md transition-all duration-300
     bottom-0 sm:top-0 sm:bottom-auto
-    ${isNavOpened ? "ml-none md:ml-84 lg:ml-64" : "ml-0"}
+    ${isNavOpened ? "ml-0 md:ml-84 lg:ml-64 lg:pr-70" : "ml-0"}
   `}
     >
       <div className="flex justify-between items-center px-4 py-3 md:px-8">
         {/* Left side */}
         <div className="flex items-center gap-6">
-          <Menu onClick={() => setIsNavOpend((prev) => !prev)} className="cursor-pointer" />
+          <Menu
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsNavOpend((prev) => !prev);
+            }}
+            className="cursor-pointer"
+          />
           <NavigationLinks user={user} />
         </div>
 

@@ -13,7 +13,7 @@ export const Breadcrumbs = () => {
         const catalogName = name[0].toUpperCase() + name.slice(1);
         return (
           <span key={to}>
-            {" > "}
+            {" / "}
             <Link to={to}>{catalogName === "Catalog" ? "Каталог" : catalogName}</Link>
           </span>
         );

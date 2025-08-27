@@ -28,10 +28,10 @@ export const HomePage = () => {
   return (
     <>
       <HeroSection />
-      <ProductSection title="Рекомендовані" products={recommendedProducts} loading={loading} error={error} emptyMessage="Новинок ще немає" />
-      <ProductSection title="Новинки" products={newProducts} loading={loading} error={error} emptyMessage="Новинок поки не має..." />
-      <ProductSection title="Акції" products={discountedProducts} loading={loading} error={error} emptyMessage="Зараз немає акцій" />
-      <div className="px-4">
+      <div className="flex flex-col items-center justify-center">
+        <ProductSection title="Рекомендовані" products={recommendedProducts} loading={loading} error={error} emptyMessage="Новинок ще немає" />
+        <ProductSection title="Новинки" products={newProducts} loading={loading} error={error} emptyMessage="Новинок поки не має..." />
+        <ProductSection title="Акції" products={discountedProducts} loading={loading} error={error} emptyMessage="Зараз немає акцій" />
         <ProductViewed visibleProducts={7} />
       </div>
       <Footer />

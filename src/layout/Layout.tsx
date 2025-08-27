@@ -21,6 +21,7 @@ const Layout = () => {
   // localStorage Hook set Products
   useRecentProducts();
 
+  // Custom hook getting all totals
   const { totalPrice, totalQuantity, totalDiscount } = useCartTotals();
 
   return (
@@ -33,7 +34,10 @@ const Layout = () => {
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0" onMouseDown={() => setIsNavOpened(false)}>
+      <main
+        className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0"
+        //  onMouseDown={() => setIsNavOpened(false)}
+      >
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>

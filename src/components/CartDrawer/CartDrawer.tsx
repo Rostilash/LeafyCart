@@ -10,19 +10,9 @@ import { CartCheckout } from "./CartCheckout";
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
-  const user = useAppSelector((state) => state.auth.user);
 
   const onUpdateQuantity = (id: string, type: UpdateAction) => {
     dispatch(updateQuantity({ id, type }));
-  };
-
-  const handleCheckout = () => {
-    if (!user) {
-      alert("Щоб оформити замовлення, увійдіть у свій акаунт 🚀");
-      // We can use Redirec to to login page
-    } else {
-      setCheckoutModalOpen(true);
-    }
   };
 
   const handleChangeQuanity = (e: ChangeEvent<HTMLInputElement>, id: string) => {
@@ -36,7 +26,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
 
   return (
     <aside
-      className={` fixed top-0 right-0 h-full w-screen lg:w-100 bg-[var(--leafy-bg)]  border-l border-[var(--leafy-moss)] 
+      className={` fixed top-0 right-0 h-full w-screen lg:w-100 bg-[var(--leafy-bg)] shadow-2xl border-[var(--leafy-moss)] 
     transform transition-transform duration-300 ease-in-out z-100 ${
       isCartVisible ? "translate-x-0" : "translate-x-full"
     } overflow-y-scroll scrollbar-hide`}
@@ -60,9 +50,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
         )}
       </div>
 
+      {/* Total Price */}
       <CartTotal totalPrice={totalPrice} totalDiscount={totalDiscount} />
 
-      <CartCheckout user={user} cartItemsLength={cartItems.length} onCheckout={handleCheckout} />
+      {/* Accept button */}
+      <CartCheckout cartItemsLength={cartItems.length} onCheckout={() => setCheckoutModalOpen(true)} onClose={onClose} />
     </aside>
   );
 };

@@ -12,9 +12,9 @@ interface PruductSectionProps {
 
 export const ProductSection: React.FC<PruductSectionProps> = ({ title, products, loading, error, emptyMessage }) => {
   return (
-    <div className="min-h-[calc(100vh-685px)] px-4">
+    <div className="max-w-8xl">
       {/* Recomended products */}
-      <h1 className="title-xl p-4 text-center">{title}</h1>
+      <h1 className="title-xl p-4 text-left">{title}</h1>
       {loading ? (
         <div className="flex justify-center text-center">
           <Loader />

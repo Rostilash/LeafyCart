@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { getProducts, setSelectedProduct } from "../../redux/slices/productSlice";
-import { Breadcrumbs } from "./Breadcrumbs";
-import { FiltersPanel } from "./CategoryComponents/FiltersPanel";
-import type { FoodProduct } from "../../types/productTypes";
-import { CategoryProducts } from "./CategoryComponents/CategoryProducts";
-import { useCategoryFilter } from "../../utils/useCategoryFilter";
-import { getProductsForSubcategory } from "../../utils/filters";
+import { useAppDispatch, useAppSelector } from "../../../redux/reduxTypeHook";
+import { getProducts, setSelectedProduct } from "../../../redux/slices/productSlice";
+import { Breadcrumbs } from "../Breadcrumbs";
+import { FiltersPanel } from "./FiltersPanel";
+import type { FoodProduct } from "../../../types/productTypes";
+import { CategoryProducts } from "./CategoryProducts";
+import { useCategoryFilter } from "../../../utils/useCategoryFilter";
+import { getProductsForSubcategory } from "../../../utils/filters";
 
 export const CategoryPage = () => {
   const { category: categoryName } = useParams<{ category: string }>();

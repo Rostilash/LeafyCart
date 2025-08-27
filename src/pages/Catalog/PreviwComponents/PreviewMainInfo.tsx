@@ -11,7 +11,11 @@ type PreviewMainInfoProps = {
 
 export const PreviewMainInfo = ({ product, userId, handleRateProduct }: PreviewMainInfoProps) => {
   return (
-    <div className=" relative min-w-92 pt-68 mr-2 sm:pr-0 sm:pt-0">
+    <div
+      className=" relative pt-[270px] 
+    sm:pt-0 
+    mx-2 sm:mx-0 mb-4 sm:mb-0 "
+    >
       <h2 className="text-2xl font-bold mb-4 ">{product.name}</h2>
       <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
       <ProductRating
@@ -22,7 +26,7 @@ export const PreviewMainInfo = ({ product, userId, handleRateProduct }: PreviewM
         onRate={handleRateProduct}
       />
 
-      <p className="mt-2">{product.description}</p>
+      <p className="mt-2 ">{product.description}</p>
       <p className="text-lg font-semibold mt-4">
         <ProductPrice product={product} /> / за {product.weight}
       </p>

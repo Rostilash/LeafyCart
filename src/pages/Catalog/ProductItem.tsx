@@ -24,7 +24,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
     <article
       className={`flex flex-col items-center justify-center 
               w-full sm:w-[48%] md:w-[30%] lg:w-[20%] 
-              sm:min-w-[220px] sm:max-w-[220px]  min-w-[120px] max-w-[200px]
+              sm:min-w-[200px] sm:max-w-[220px]  min-w-[120px] max-w-[200px]
               bg-[var(--leafy-sage)] shadow-xs hover:shadow-green-200 
               relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}`}
     >

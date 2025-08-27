@@ -145,7 +145,14 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   };
 
   return (
-    <div className="h-full max-w-4xl mx-auto p-0 lg:p-6 grid grid-cols-2 gap-8">
+    <div
+      className="
+    max-w-4xl mx-auto p-2 lg:p-6 
+    grid grid-cols-1 lg:grid-cols-2 gap-8
+    min-h-screen lg:min-h-0
+    overflow-y-auto lg:overflow-visible
+  "
+    >
       {/* Left side */}
       <form onSubmit={handleLiqPay} className="space-y-4">
         <div>
@@ -167,13 +174,13 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
         </div>
 
         {loading && <p>Завантаження...</p>}
-        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-600">
+        <button type="submit" className="btn-primary btn_hover">
           Оплатити через LiqPay
         </button>
       </form>
 
       {/* Right side */}
-      <div className="bg-gray-100 p-6 rounded shadow space-y-4 max-h-150">
+      <div className="bg-gray-100 p-6 rounded shadow space-y-4">
         <h2 className="text-xl font-semibold mb-4">Підсумок замовлення</h2>
         <div className="flex justify-between">
           <span>Ціна:</span>
