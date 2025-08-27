@@ -16,7 +16,7 @@ export const PreviewMainInfo = ({ product, userId, handleRateProduct }: PreviewM
     sm:pt-0 
     mx-2 sm:mx-0 mb-4 sm:mb-0 "
     >
-      <h2 className="text-2xl font-bold mb-4 ">{product.name}</h2>
+      <h2 className="title-xl">{product.name}</h2>
       <span className={`${product.available ? "text-green-500" : "text-red-500"}`}>{product.available ? "В наявності" : "Товару немає"}</span>
       <ProductRating
         userId={userId}

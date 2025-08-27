@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../redux/reduxTypeHook";
 import { logoutUser } from "../redux/slices/authSlice";
+import { UserCheck } from "lucide-react";
 
 type UserSectionProps = {
   userName?: string;
@@ -23,8 +24,11 @@ export const UserSection: React.FC<UserSectionProps> = ({ userName }) => {
   }
 
   return (
-    <Link to="/auth" className="border p-1 rounded-xl hover:bg-gray-100">
-      Увійти
+    <Link
+      to="/auth"
+      className="flex items-center gap-2 px-2 py-4 h-full hover:bg-[var(--leafy-dark)] hover:text-[var(--leafy-white)] transition-all duration-300"
+    >
+      <UserCheck size={20} /> <span className="hidden sm:inline-block">Увійти</span>
     </Link>
   );
 };

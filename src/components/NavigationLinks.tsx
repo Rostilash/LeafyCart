@@ -22,11 +22,15 @@ export const NavigationLinks: React.FC<NavigationLinksProps> = ({ user }) => {
   ];
 
   return (
-    <nav className="flex flex-row space-x-4 sm:flex-row gap-4 sm:gap-0 items-center">
+    <nav className="flex flex-row sm:flex-row gap-4 sm:gap-0 items-center">
       {links
         .filter((link) => (link.show ? link.show(user) : true))
         .map((link) => (
-          <Link key={link.to} to={link.to} className="flex items-center gap-2 hover:bg-gray-200">
+          <Link
+            key={link.to}
+            to={link.to}
+            className="flex items-center gap-2 px-2 py-4 h-full hover:bg-[var(--leafy-dark)] hover:text-[var(--leafy-white)] transition-all duration-300"
+          >
             {link.icon}
             <span className="hidden sm:inline">{link.label}</span>
           </Link>

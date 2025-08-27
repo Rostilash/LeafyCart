@@ -23,7 +23,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTab }) => {
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
             className={`px-4 py-2 transition 2-t ${
-              activeTab === tab.value ? "bg-[var(--leafy-green)] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              activeTab === tab.value ? "bg-[var(--leafy-green)] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
             }`}
           >
             {tab.label}

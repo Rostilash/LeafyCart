@@ -18,7 +18,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   // Filtering our products by keywords (with useMemo)
   const recommendedProducts = getRecommendedProducts(product, allProducts);
 
-  // Rendering the Product (castum hook)
+  // Rendering the Product (Custom hook)
   const { productToShow, handleRateProduct } = useProductRating(product, userId);
 
   return (
@@ -29,7 +29,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       {/* Main Image */}
       <PreviewImage product={productToShow} />
 
-      {/*Product name */}
+      {/* Product name */}
       <PreviewMainInfo product={productToShow} userId={userId} handleRateProduct={handleRateProduct} />
 
       {/* Nutrition info */}
@@ -41,7 +41,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       <RecommendedProducts products={recommendedProducts} onSelect={(p) => dispatch(setSelectedProduct(p))} />
 
       {/* Viewed products */}
-      <div className="w-screen md:w-full md:col-span-full">
+      <div className="w-full md:col-span-full">
         <ProductViewed visibleProducts={5} />
       </div>
 

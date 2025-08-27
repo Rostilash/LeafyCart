@@ -14,6 +14,7 @@
   /* States */
   --leafy-error: #dc2626;
   --leafy-warning: #facc15;
+  --leafy-disabled: #ccc;
 }
 
 /* Castum classes */
@@ -33,7 +34,7 @@
 }
 
 .btn_hover {
-  @apply hover:bg-[var(--leafy-dark)] hover:text-white cursor-pointer;
+  @apply hover:bg-[var(--leafy-dark)] hover:text-[var(--leafy-white)] cursor-pointer;
 }
 
 /* h1 */
@@ -64,7 +65,7 @@
 
 /* button disabled */
 .btn-primary:disabled {
-  background-color: #ccc;
+  background-color: var(--leafy-disabled);
   cursor: not-allowed;
   opacity: 0.6;
 }

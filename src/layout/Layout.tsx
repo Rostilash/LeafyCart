@@ -26,6 +26,7 @@ const Layout = () => {
 
   return (
     <div className=" h-screen sm:min-h-screen flex bg-[var(--leafy-light)]">
+      {/* SideBar */}
       <div
         className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${
           isNavOpened ? "w-screen sm:w-64" : "w-0"
@@ -34,14 +35,13 @@ const Layout = () => {
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
       </div>
 
-      <main
-        className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0"
-        //  onMouseDown={() => setIsNavOpened(false)}
-      >
+      {/* Main menu */}
+      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0">
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>
 
+      {/* Modals */}
       {/* Cart drawer */}
       <div className="transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg overflow-y-auto">
         <CartDrawer
@@ -52,14 +52,12 @@ const Layout = () => {
           totalDiscount={totalDiscount}
         />
       </div>
-
       {/* Cart confirm modal */}
       <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
         <h2 className="text-xl font-semibold mb-4">Підтвердження замовлення</h2>
         <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
         <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
       </Modal>
-
       {/* Product preview modal */}
       {selectedProduct && (
         <Modal isOpen={!!selectedProduct} onClose={() => dispatch(setSelectedProduct(null))}>

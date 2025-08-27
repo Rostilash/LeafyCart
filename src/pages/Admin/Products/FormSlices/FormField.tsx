@@ -1,7 +1,5 @@
 import type { ChangeEvent, FC } from "react";
 
-type FieldType = "input" | "textarea" | "select";
-
 export interface FormFieldProps {
   title: string;
   value: string | number;

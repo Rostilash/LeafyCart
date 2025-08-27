@@ -18,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
     ${isNavOpened ? "ml-0 md:ml-84 lg:ml-64 lg:pr-70" : "ml-0"}
   `}
     >
-      <div className="flex justify-between items-center px-4 py-3 md:px-8">
+      <div className="flex justify-between items-center px-2 md:px-8">
         {/* Left side */}
         <div className="flex items-center gap-6">
           <Menu
@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
               e.stopPropagation();
               setIsNavOpend((prev) => !prev);
             }}
-            className="cursor-pointer"
+            className="cursor-pointer hover:scale-110"
           />
           <NavigationLinks user={user} />
         </div>
