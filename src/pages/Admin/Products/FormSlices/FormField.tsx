@@ -12,6 +12,7 @@ export interface FormFieldProps {
   options?: { value: string }[];
   min?: number;
   max?: number;
+  error?: string;
 }
 
 export const FormField: FC<FormFieldProps> = ({
@@ -26,6 +27,7 @@ export const FormField: FC<FormFieldProps> = ({
   inputType,
   min,
   max,
+  error,
 }) => {
   return (
     <label className="flex flex-col gap-1 text-sm text-gray-600">
@@ -41,16 +43,19 @@ export const FormField: FC<FormFieldProps> = ({
           ))}
         </select>
       ) : (
-        <input
-          name={name}
-          type={inputType || "text"}
-          value={value}
-          onChange={onChange}
-          required={required}
-          className={className}
-          min={min}
-          max={max}
-        />
+        <>
+          <input
+            name={name}
+            type={inputType || "text"}
+            value={value}
+            onChange={onChange}
+            required={required}
+            className={className}
+            min={min}
+            max={max}
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+        </>
       )}
     </label>
   );

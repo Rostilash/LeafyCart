@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, where, query, getDocs, addDoc } from "firebase/firestore";
 import { auth, db } from "../../fireBase/config";
-import { serverTimestamp } from "firebase/firestore";
-import { Timestamp } from "firebase/firestore";
+import { collection, where, query, getDocs, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import type { CartItem } from "../../types/cartTypes";
+import { signInAnonymously } from "firebase/auth";
 
 export interface OrderType {
   id: string;
   userId: string;
   name: string;
   email: string;
+  city: string;
   address: string;
   price: number;
   cartItems: CartItem[];
@@ -62,17 +62,18 @@ export const getOrdersByUser = createAsyncThunk<OrderType[], string, { rejectVal
 
 export const saveOrder = createAsyncThunk<
   string,
-  { name: string; email: string; address: string; price: number; cartItems: any[]; paymentId?: string; paymentStatus?: string },
+  { name: string; email: string; address: string; city: string; price: number; cartItems: any[]; paymentId?: string; paymentStatus?: string },
   { rejectValue: string }
 >("orders/saveOrder", async (form, thunkAPI) => {
   try {
-    const user = auth.currentUser;
+    const user = auth.currentUser || (await signInAnonymously(auth)).user;
     if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
 
     await addDoc(collection(db, "orders"), {
       userId: user.uid,
       name: form.name,
       email: form.email,
+      city: form.city,
       address: form.address,
       price: form.price,
       cartItems: form.cartItems,
@@ -81,7 +82,7 @@ export const saveOrder = createAsyncThunk<
       status: "new",
       createdAt: serverTimestamp(),
     });
-
+    console.log("all saved");
     return "ok";
   } catch (error: unknown) {
     if (error instanceof Error) {

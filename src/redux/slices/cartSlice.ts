@@ -63,7 +63,7 @@ export const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.items = [];
-      saveCart(state.items);
+      saveCart([]);
     },
   },
 });

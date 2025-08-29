@@ -26,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       className={`fixed inset-0 z-50 flex justify-center items-center bg-black/30 backdrop-blur-sm transition-opacity ${
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
-      onClick={onClose}
+      // onClick={onClose}
     >
       <div
         className="

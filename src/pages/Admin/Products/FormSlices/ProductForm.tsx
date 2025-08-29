@@ -148,7 +148,7 @@ export const ProductForm: FC<ProductFormProps> = ({ initialProduct, onSubmit, su
 
   return (
     <form
-      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px] max-h-[100vh] sm:max-h-[90vh] scrollbar-hide overflow-y-auto pb-24"
+      className="flex flex-col gap-4 p-4 sm:p-6 [&>label>input]:border min-w-[200px] sm:min-w-[700px] max-h-[100vh] sm:max-h-[80vh] scrollbar-hide overflow-y-auto pb-24"
       onSubmit={handleSubmit}
     >
       <h3 className="text-xl font-bold text-center text-gray-700">Редагувати</h3>

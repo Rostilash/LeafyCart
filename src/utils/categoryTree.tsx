@@ -35,7 +35,7 @@ export const categoryTree = [
     title: "Раціони",
     icon: <Coffee size={16} />,
     subcategories: [
-      { name: "На день/тиждень", img: "" },
+      { name: "На день", img: "" },
       { name: "Дієтичні програми", img: "" },
       { name: "Калорійні набори", img: "" },
       { name: "Інтервальне харчування", img: "" },

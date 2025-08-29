@@ -5,7 +5,7 @@ import type { CartDrawerProps, UpdateAction } from "../../types/cartTypes";
 import { CartItemElement } from "./CartItemElement";
 import { CartHeader } from "./CartHeader";
 import { CartTotal } from "./CartTotal";
-import { CartCheckout } from "./CartCheckout";
+import { CartCheckoutButton } from "./CartCheckoutButton";
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
@@ -54,7 +54,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
       <CartTotal totalPrice={totalPrice} totalDiscount={totalDiscount} />
 
       {/* Accept button */}
-      <CartCheckout cartItemsLength={cartItems.length} onCheckout={() => setCheckoutModalOpen(true)} onClose={onClose} />
+      <CartCheckoutButton cartItemsLength={cartItems.length} onCheckout={() => setCheckoutModalOpen(true)} onClose={onClose} />
     </aside>
   );
 };

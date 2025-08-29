@@ -13,7 +13,7 @@ export const HeroSection = () => {
           <br />
           до ваших дверей
         </h1>
-        <Link to="/catalog" className="btn-primary btn_hover transition cursor-pointer">
+        <Link to="/catalog" className="btn-primary btn_hover hover:scale-105">
           В магазин зараз
         </Link>
       </div>

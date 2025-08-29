@@ -20,8 +20,8 @@ const AuthPage: React.FC = () => {
         <Tabs
           defaultTab="login"
           tabs={[
-            { label: "Увійти", value: "login", content: <AuthForm mode="login" /> },
-            { label: "Зареєструватися", value: "register", content: <AuthForm mode="register" /> },
+            { label: "Увійти", value: "login", content: <AuthForm mode="login" title="Увійти" /> },
+            { label: "Зареєструватися", value: "register", content: <AuthForm mode="register" title="Зареєструватися" /> },
           ]}
         />
       </div>

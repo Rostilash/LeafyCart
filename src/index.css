@@ -19,7 +19,7 @@
 
 /* Castum classes */
 .btn-primary {
-  @apply px-3 py-2 md:px-4 md:py-2 rounded font-semibold transition-colors active:scale-85 active:opacity-80 cursor-pointer;
+  @apply px-3 py-2 md:px-4 md:py-2 rounded font-semibold transition-colors active:scale-95 active:opacity-80 cursor-pointer;
   border-radius: 10px;
   background-color: var(--leafy-green);
   color: white;
@@ -27,7 +27,7 @@
 
 .btn-primary-sm {
   @apply px-4 py-1.5 rounded font-light
-  transition-colors cursor-pointer active:scale-85 active:opacity-80;
+  transition-colors cursor-pointer active:scale-95 active:opacity-80;
   border-radius: 10px;
   background-color: var(--leafy-green);
   color: white;

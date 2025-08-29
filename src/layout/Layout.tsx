@@ -36,7 +36,7 @@ const Layout = () => {
       </div>
 
       {/* Main menu */}
-      <main className="flex-1 bg-[var(--leafy-bg)] lg:pt-[80px] overflow-auto px-2 sm:px-0">
+      <main className="flex-1 bg-[var(--leafy-bg)] md:pt-[100px] lg:pt-[80px] overflow-auto px-2 sm:px-0">
         <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>
@@ -54,9 +54,7 @@ const Layout = () => {
       </div>
       {/* Cart confirm modal */}
       <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
-        <h2 className="text-xl font-semibold mb-4">Підтвердження замовлення</h2>
-        <p>Ви хочете оформити замовлення на {totalQuantity} товар(ів)?</p>
-        <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
+        <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} onClose={() => setCheckoutModalOpen(false)} />
       </Modal>
       {/* Product preview modal */}
       {selectedProduct && (

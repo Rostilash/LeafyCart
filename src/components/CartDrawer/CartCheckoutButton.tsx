@@ -1,4 +1,4 @@
-export const CartCheckout: React.FC<{
+export const CartCheckoutButton: React.FC<{
   cartItemsLength: number;
   onClose: () => void;
   onCheckout: () => void;

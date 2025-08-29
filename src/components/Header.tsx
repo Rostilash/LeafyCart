@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
       className={`
     fixed left-0 w-screen z-[100] bg-[var(--leafy-white)] shadow-md transition-all duration-300
     bottom-0 sm:top-0 sm:bottom-auto
-    ${isNavOpened ? "ml-0 md:ml-84 lg:ml-64 lg:pr-70" : "ml-0"}
+    ${isNavOpened ? "ml-0 md:ml-64 lg:ml-64 lg:pr-70" : "ml-0"}
   `}
     >
       <div className="flex justify-between items-center px-2 md:px-8">

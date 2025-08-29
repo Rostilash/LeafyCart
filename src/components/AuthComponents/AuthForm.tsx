@@ -4,9 +4,10 @@ import { registerUser, loginUser } from "../../redux/slices/authSlice";
 
 interface AuthFormProps {
   mode: "register" | "login";
+  title: string;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ mode, title }) => {
   const dispatch = useAppDispatch();
   const { error, loading } = useAppSelector((state) => state.auth);
 
@@ -40,7 +41,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
 
   return (
     <form onSubmit={onUserSubmit} className="flex flex-col gap-4 max-w-sm mx-auto">
-      <h2 className="text-xl font-bold text-center">{mode === "register" ? "Реєстрація" : "Вхід"}</h2>
+      <h2 className="text-xl font-bold text-center">{title}</h2>
 
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
