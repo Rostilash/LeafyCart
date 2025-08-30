@@ -45,7 +45,7 @@ const orderFields = [
   { name: "mid_name", title: "По батькові", required: true },
   { name: "city", title: "Місто (українською мовою)", required: true },
   { name: "address", title: "Адреса", required: true },
-  { name: "phone_number", title: "Номер телефону", inputType: "number", required: true },
+  { name: "phone_number", title: "Номер телефону", inputType: "tel", required: true, className: "px-2 py-2 border border-gray-300 rounded-r flex-1" },
   { name: "email", title: "Email", inputType: "email", required: true },
 ];
 
@@ -53,7 +53,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.uid);
   const cartItems = useAppSelector((state) => state.cart.items);
-  const { all_orders: allOrders, successMessage, error, loading } = useAppSelector((state) => state.order);
+  const { user_orders, successMessage, error, loading } = useAppSelector((state) => state.order);
 
   const hasCartItems = cartItems.length > 0;
 
@@ -61,8 +61,8 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
 
   useEffect(() => {
-    if (allOrders && allOrders.length > 0) {
-      const lastOrder = allOrders.at(-1);
+    if (user_orders && user_orders.length > 0) {
+      const lastOrder = user_orders.at(-1);
       setFormData({
         name: lastOrder?.name || "",
         email: lastOrder?.email || "",
@@ -74,7 +74,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
         phone_number: lastOrder?.phone_number || "",
       });
     }
-  }, [allOrders]);
+  }, [user_orders]);
 
   useEffect(() => {
     if (userId) {
@@ -111,6 +111,17 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       valid = false;
     }
 
+    if (formData.phone_number) {
+      const phonePattern = /^\+380\d{9}$/;
+      if (!phonePattern.test(formData.phone_number.toString())) {
+        newErrors.phone_number = "Номер телефону повинен починатися з +380 та містити 9 цифр після";
+        valid = false;
+      }
+    } else {
+      newErrors.phone_number = "Номер телефону обов'язковий";
+      valid = false;
+    }
+
     setErrors(newErrors);
     return valid;
   };
@@ -120,7 +131,14 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   const total = totalPrice / 100 - discount + delivery;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+
+    if (name === "phone_number") {
+      value = value.replace(/\D/g, "");
+      if (value.length > 9) value = value.slice(0, 9);
+    }
+
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleLiqPay = async (e: React.FormEvent) => {

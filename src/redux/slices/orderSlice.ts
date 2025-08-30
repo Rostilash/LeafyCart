@@ -84,7 +84,11 @@ export const getOrdersByUser = createAsyncThunk<OrderType[], string, { rejectVal
       } as OrderType;
     });
 
-    return orders;
+    // Need to change it for OrderBy by desc -> from FireBase latter
+    return orders.sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -129,6 +133,9 @@ export const saveOrder = createAsyncThunk<
     await addDoc(collection(db, "orders"), {
       userId: user.uid,
       name: form.name,
+      last_name: form.last_name,
+      mid_name: form.mid_name,
+      phone_number: form.phone_number,
       email: form.email,
       city: form.city,
       payment: form.payment,

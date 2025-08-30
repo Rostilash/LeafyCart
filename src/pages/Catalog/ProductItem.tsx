@@ -3,7 +3,6 @@ import { AddToCartButton } from "../../components/Buttons/AddToCartButton";
 import { Badge } from "./Badge";
 import { ProductPrice } from "./ProductPrice";
 import { useAppSelector } from "../../redux/reduxTypeHook";
-
 import { ProductSkeleton } from "../../components/ProductSkeleton";
 
 export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
