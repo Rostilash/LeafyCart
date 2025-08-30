@@ -14,6 +14,7 @@ import { PersonalInfo } from "./pages/PersonalInfo/PersonalInfo";
 import { Settings } from "./pages/Admin/Settings/Settings";
 import AuthPage from "./components/AuthComponents/AuthPage";
 import { NotFoundPage } from "./components/NotFoundPage";
+import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ function App() {
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />
           <Route path="products" element={<Products />} />
+          <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="settings" element={<Settings />} />
           <Route path="testing" element={<Testing />} />
         </Route>

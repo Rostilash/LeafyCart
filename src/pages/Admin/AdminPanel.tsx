@@ -9,6 +9,11 @@ export const AdminPanel = () => {
       icon: <Database className="w-6 h-6 text-[var(--leafy-green)]" />,
     },
     {
+      to: "orders",
+      label: "Редагування замовлень",
+      icon: <Database className="w-6 h-6 text-[var(--leafy-green)]" />,
+    },
+    {
       to: "settings",
       label: "Налаштування",
       icon: <Settings className="w-6 h-6 text-[var(--leafy-green)]" />,

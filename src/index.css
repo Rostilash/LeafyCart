@@ -12,6 +12,7 @@
   --leafy-gray-opacity: #6b728062;
 
   /* States */
+  --leafy-accept: #05df72;
   --leafy-error: #dc2626;
   --leafy-warning: #facc15;
   --leafy-disabled: #ccc;

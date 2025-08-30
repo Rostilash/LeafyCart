@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { auth, db } from "../../fireBase/config";
-import { collection, where, query, getDocs, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
+import { collection, where, query, updateDoc, doc, getDoc, getDocs, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
 
@@ -30,6 +30,7 @@ export interface OderState {
   loading: boolean;
   error: string | { message: string } | null;
   all_orders: OrderType[];
+  user_orders: OrderType[];
   successMessage: string | null;
 }
 
@@ -38,7 +39,30 @@ const initialState: OderState = {
   error: null,
   successMessage: "",
   all_orders: [],
+  user_orders: [],
 };
+
+function normalizeOrder(id: string, data: any): OrderType {
+  return {
+    id,
+    ...data,
+    createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
+  } as OrderType;
+}
+
+export const getAllOrders = createAsyncThunk<OrderType[], void, { rejectValue: string }>("orders/getAllOrders", async (_, thunkAPI) => {
+  try {
+    const q = query(collection(db, "orders"));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => normalizeOrder(doc.id, doc.data()));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue("Unknown error");
+  }
+});
 
 export const getOrdersByUser = createAsyncThunk<OrderType[], string, { rejectValue: string }>("orders/getByUser", async (userId, thunkAPI) => {
   try {
@@ -69,6 +93,25 @@ export const getOrdersByUser = createAsyncThunk<OrderType[], string, { rejectVal
   }
 });
 
+export const updateOrderStatus = createAsyncThunk<OrderType, { id: string; status: string }, { rejectValue: string }>(
+  "orders/updateOrderStatus",
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const orderRef = doc(db, "orders", id);
+      await updateDoc(orderRef, { status });
+
+      const updatedDoc = await getDoc(orderRef);
+      const data = updatedDoc.data();
+      if (!data) throw new Error("Order not found");
+
+      return normalizeOrder(updatedDoc.id, data);
+    } catch (error: unknown) {
+      if (error instanceof Error) return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue("Unknown error");
+    }
+  }
+);
+
 export const saveOrder = createAsyncThunk<
   string,
   OrderFormData & {
@@ -94,7 +137,7 @@ export const saveOrder = createAsyncThunk<
       cartItems: form.cartItems,
       paymentId: form.paymentId || null,
       paymentStatus: form.paymentStatus || "pending",
-      status: "new",
+      status: "Нове замовлення",
       createdAt: serverTimestamp(),
     });
 
@@ -135,11 +178,32 @@ const orderSlice = createSlice({
       })
       .addCase(getOrdersByUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.all_orders = action.payload;
+        state.user_orders = action.payload;
       })
       .addCase(getOrdersByUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Unknown error";
+      })
+
+      // get all Orders for admin
+      .addCase(getAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.all_orders = action.payload;
+      })
+      .addCase(getAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Unknown error";
+      })
+
+      // Uppdate orders
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        const updatedOrder = action.payload;
+        state.all_orders = state.all_orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order));
+        state.user_orders = state.user_orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order));
       });
   },
 });

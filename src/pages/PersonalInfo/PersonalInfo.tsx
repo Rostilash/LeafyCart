@@ -7,7 +7,7 @@ export const PersonalInfo = () => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.uid);
   const userEmail = useAppSelector((state) => state.auth.user?.email);
-  const all_orders = useAppSelector((state) => state.order.all_orders);
+  const user_orders = useAppSelector((state) => state.order.user_orders);
   const [orders, setOrders] = useState<OrderType[] | null>(null);
 
   useEffect(() => {
@@ -17,8 +17,8 @@ export const PersonalInfo = () => {
   }, [dispatch, userId]);
 
   useEffect(() => {
-    setOrders(all_orders);
-  }, [all_orders]);
+    setOrders(user_orders);
+  }, [user_orders]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6 md:px-16">
@@ -46,19 +46,33 @@ export const PersonalInfo = () => {
                   <div key={order.id} className="p-4 border rounded-xl bg-white shadow-sm hover:shadow-md transition-all">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700 font-medium">Замовлення #{index + 1}</span>
-                      <span className="text-lg font-bold text-indigo-600">{order.price} грн</span>
+                      <span className="text-lg font-bold">{order.price} грн</span>
                     </div>
 
                     <p
                       className={`mt-2 text-sm ${
                         order.paymentStatus === "error"
-                          ? "text-red-500 font-semibold"
+                          ? "text-[var(--leafy-error)] font-semibold"
                           : order.paymentStatus === "success"
-                          ? "text-green-600 font-semibold"
-                          : "text-gray-500"
+                          ? "text-[var(--leafy-accept)] font-semibold"
+                          : "text-gray-400"
                       }`}
                     >
-                      Статус: {order.paymentStatus === "error" ? "Помилка" : order.paymentStatus === "success" ? "Оплачено" : "В обробці"}
+                      Cтатус замовлення:{" "}
+                      {order.paymentStatus === "error" ? "Не оплатив." : order.paymentStatus === "success" ? "Оплачено" : "В обробці"}
+                    </p>
+                    <p
+                      className={`mt-2 text-sm ${
+                        order.status === "Помилка"
+                          ? "text-[var(--leafy-error)] font-semibold"
+                          : order.status === "Прийнято"
+                          ? "text-[var(--leafy-accept)] font-semibold"
+                          : order.status === "Відхилено"
+                          ? "text-[var(--leafy-error)] font-semibold"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      {order.status}
                     </p>
                   </div>
                 ))
