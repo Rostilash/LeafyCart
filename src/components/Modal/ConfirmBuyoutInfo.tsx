@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { getOrdersByUser, saveOrder } from "../../redux/slices/orderSlice";
+import { getOrdersByUser, saveOrder, type OrderFormData } from "../../redux/slices/orderSlice";
 import { convertMoney } from "../../utils/convertMoney";
-import { generateDataAndSignature } from "../../utils/liqpay";
+// import { generateDataAndSignature } from "../../utils/liqpay";
 import { FormField } from "../../pages/Admin/Products/FormSlices/FormField";
 import AuthPage from "../AuthComponents/AuthPage";
 import { Loader } from "../Loader";
 import { clearCart } from "../../redux/slices/cartSlice";
+import { FormRadio } from "../../pages/Admin/Products/FormSlices/FormRadio";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
   totalDiscount?: number;
-  onClose: () => void;
 };
 interface LiqPayResponse {
   status: string;
@@ -28,22 +28,37 @@ declare global {
   }
 }
 
-export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: ConfirmBuyoutInfoProps) => {
+const initialForm: OrderFormData = {
+  name: "",
+  email: "",
+  address: "",
+  city: "",
+  payment: "",
+  last_name: "",
+  mid_name: "",
+  phone_number: "",
+};
+
+const orderFields = [
+  { name: "name", title: "Ім’я", required: true },
+  { name: "last_name", title: "Призвіще", required: true },
+  { name: "mid_name", title: "По батькові", required: true },
+  { name: "city", title: "Місто (українською мовою)", required: true },
+  { name: "address", title: "Адреса", required: true },
+  { name: "phone_number", title: "Номер телефону", inputType: "number", required: true },
+  { name: "email", title: "Email", inputType: "email", required: true },
+];
+
+export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.uid);
   const cartItems = useAppSelector((state) => state.cart.items);
-  const allOrders = useAppSelector((state) => state.order.all_orders);
-  const loading = useAppSelector((state) => state.order.loading);
+  const { all_orders: allOrders, successMessage, error, loading } = useAppSelector((state) => state.order);
 
-  const isCartEmpty = cartItems.length > 0;
+  const hasCartItems = cartItems.length > 0;
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    address: "",
-    city: "",
-  });
-  const [errors, setErrors] = useState({ name: "", email: "", address: "", city: "" });
+  const [formData, setFormData] = useState<OrderFormData>(initialForm);
+  const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
 
   useEffect(() => {
     if (allOrders && allOrders.length > 0) {
@@ -53,6 +68,10 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
         email: lastOrder?.email || "",
         address: lastOrder?.address || "",
         city: lastOrder?.city || "",
+        payment: lastOrder?.payment || "",
+        last_name: lastOrder?.last_name || "",
+        mid_name: lastOrder?.mid_name || "",
+        phone_number: lastOrder?.phone_number || "",
       });
     }
   }, [allOrders]);
@@ -65,7 +84,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
 
   const validate = () => {
     let valid = true;
-    const newErrors = { name: "", email: "", address: "", city: "" };
+    const newErrors = initialForm;
 
     if (!formData.name.trim()) {
       newErrors.name = "Ім'я обов'язкове";
@@ -76,6 +95,11 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
       newErrors.email = "Некоректний email";
       valid = false;
     }
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(formData.email)) {
+      newErrors.email = "Некоректний email";
+      valid = false;
+    }
 
     if (formData.address.trim().length < 8) {
       newErrors.address = "Адреса має бути не менше 8 символів";
@@ -83,13 +107,14 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
     }
 
     if (formData.city.trim().length < 4) {
-      newErrors.city = "Адреса має бути не менше 8 символів";
+      newErrors.city = "Адреса має бути не менше 4 символів";
       valid = false;
     }
 
     setErrors(newErrors);
     return valid;
   };
+
   const discount = (totalDiscount ?? 0) / 100;
   const delivery = 0;
   const total = totalPrice / 100 - discount + delivery;
@@ -140,8 +165,18 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
     //     };
 
     // dispatch(saveOrder(newData));
-    dispatch(saveOrder({ ...formData, price: Number(total.toFixed(2)), cartItems: cartItems, paymentId: "123456", paymentStatus: "good" }));
-    setFormData({ name: "", email: "", address: "", city: "" });
+    const result = await dispatch(
+      saveOrder({ ...formData, price: Number(total.toFixed(2)), cartItems: cartItems, paymentId: "123456", paymentStatus: "good" })
+    );
+    if (saveOrder.fulfilled.match(result) && result.payload === "ok") {
+      alert("✅ Замовлення оформлене успішно!");
+      // або відкрити модалку, або перенаправити на сторінку подяки
+    }
+
+    if (saveOrder.rejected.match(result)) {
+      alert("❌ Сталася помилка: " + result.payload);
+    }
+    setFormData(initialForm);
     //   } else {
     //     console.error("Payment failed or cancelled", response);
     //   }
@@ -155,7 +190,6 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
     //   console.log("LiqPay closed");
     // });
     dispatch(clearCart());
-    onClose();
   };
 
   return (
@@ -169,31 +203,42 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount, onClose }: Confir
           </p>
         </div>
       )}
-      <h2 className="title-l pl-2">Підтвердження замовлення</h2>
+
       <div
         className="
             mx-auto p-2 
             grid grid-cols-1 lg:grid-cols-2 gap-8
-            min-h-screen lg:min-h-0
+            min-h-[screen] lg:min-h-0
             overflow-y-auto lg:overflow-visible
+            sm:pt-10
           "
       >
         {/* Left side */}
         <form onSubmit={handleLiqPay} className="space-y-4 ">
-          <FormField name="name" title="Ім’я" value={formData.name} onChange={handleChange} error={errors.name} />
+          {orderFields.map((o) => (
+            <FormField
+              key={o.name}
+              {...o}
+              value={formData[o.name as keyof typeof formData]}
+              onChange={handleChange}
+              error={errors[o.name as keyof typeof errors]}
+            />
+          ))}
 
-          <FormField name="city" title="Місто" value={formData.city} onChange={handleChange} error={errors.city} />
-
-          <FormField name="address" title="Адреса" value={formData.address} onChange={handleChange} error={errors.address} />
-
-          <FormField inputType="email" name="email" title="Email" value={formData.email} onChange={handleChange} error={errors.email} />
+          <h3>Оплата</h3>
+          <FormRadio name="payment" value="cash" checked={formData.payment === "cash"} onChange={handleChange} title="У віділенні" />
+          <FormRadio name="payment" value="card" checked={formData.payment === "card"} onChange={handleChange} title="Карткою" />
 
           {loading && <Loader />}
           <div className="mb-12"></div>
 
-          <button type="submit" className="btn-primary btn_hover" disabled={!isCartEmpty}>
-            Оплатити через LiqPay
+          <button type="submit" className="btn-primary btn_hover" disabled={!hasCartItems}>
+            {formData.payment === "cash" ? "Оплатити у віділенні" : "Оплатити через LiqPay"}
           </button>
+
+          {/* Succes message and Error */}
+          {successMessage && <p className="text-green-600">{successMessage}</p>}
+          {error && <p className="text-red-600">{String(error)}</p>}
         </form>
 
         {/* Right side */}

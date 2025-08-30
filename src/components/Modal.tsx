@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       bg-white p-1 md:p-6 md:rounded-xl shadow-xl 
       relative 
       w-full max-w-6xl
-      max-h-[100vh] 
+      max-h-[90vh] 
       overflow-y-auto
     "
         onClick={(e) => e.stopPropagation()}

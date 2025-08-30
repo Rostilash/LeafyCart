@@ -4,30 +4,39 @@ import { collection, where, query, getDocs, addDoc, Timestamp, serverTimestamp }
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
 
-export interface OrderType {
-  id: string;
-  userId: string;
+export interface OrderFormData {
   name: string;
   email: string;
-  city: string;
   address: string;
+  city: string;
+  payment: string;
+  last_name: string;
+  mid_name: string;
+  phone_number: string;
+}
+
+export interface OrderType extends OrderFormData {
+  id: string;
+  userId: string;
   price: number;
   cartItems: CartItem[];
   paymentId: string | null;
   paymentStatus: string;
   status: string;
-  createdAt: string | Timestamp;
+  createdAt: string;
 }
 
 export interface OderState {
   loading: boolean;
   error: string | { message: string } | null;
   all_orders: OrderType[];
+  successMessage: string | null;
 }
 
 const initialState: OderState = {
   loading: false,
   error: null,
+  successMessage: "",
   all_orders: [],
 };
 
@@ -62,7 +71,12 @@ export const getOrdersByUser = createAsyncThunk<OrderType[], string, { rejectVal
 
 export const saveOrder = createAsyncThunk<
   string,
-  { name: string; email: string; address: string; city: string; price: number; cartItems: any[]; paymentId?: string; paymentStatus?: string },
+  OrderFormData & {
+    price: number;
+    cartItems: any[];
+    paymentId?: string;
+    paymentStatus?: string;
+  },
   { rejectValue: string }
 >("orders/saveOrder", async (form, thunkAPI) => {
   try {
@@ -74,6 +88,7 @@ export const saveOrder = createAsyncThunk<
       name: form.name,
       email: form.email,
       city: form.city,
+      payment: form.payment,
       address: form.address,
       price: form.price,
       cartItems: form.cartItems,
@@ -82,7 +97,7 @@ export const saveOrder = createAsyncThunk<
       status: "new",
       createdAt: serverTimestamp(),
     });
-    console.log("all saved");
+
     return "ok";
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -101,16 +116,19 @@ const orderSlice = createSlice({
       // Save order
       .addCase(saveOrder.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.successMessage = null;
       })
       .addCase(saveOrder.fulfilled, (state) => {
         state.loading = false;
+        state.successMessage = "Ваше замовлення успішно оформлене!";
       })
       .addCase(saveOrder.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || "Не вдалося зберегти замовлення";
       })
 
-      // All orders
+      // All getOrdersByUser
       .addCase(getOrdersByUser.pending, (state) => {
         state.loading = true;
         state.error = null;

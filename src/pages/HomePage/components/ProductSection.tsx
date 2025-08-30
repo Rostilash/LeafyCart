@@ -1,6 +1,6 @@
 import type React from "react";
-import { Loader } from "../../../components/Loader";
 import type { JSX } from "react";
+import { ProductSkeleton } from "../../../components/ProductSkeleton";
 
 interface PruductSectionProps {
   title: string;
@@ -16,8 +16,14 @@ export const ProductSection: React.FC<PruductSectionProps> = ({ title, products,
       {/* Recomended products */}
       <h1 className="title-xl p-4 text-left">{title}</h1>
       {loading ? (
-        <div className="flex justify-center text-center">
-          <Loader />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 justify-items-center">
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
+          <ProductSkeleton />
         </div>
       ) : error ? (
         <p className="text-center text-red-500 p-10">Помилка: {error}</p>

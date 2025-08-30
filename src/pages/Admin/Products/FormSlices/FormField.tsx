@@ -31,7 +31,7 @@ export const FormField: FC<FormFieldProps> = ({
 }) => {
   return (
     <label className="flex flex-col gap-1 text-sm text-gray-600">
-      {title}:
+      {title}*:
       {type === "textarea" ? (
         <textarea name={name} value={value} onChange={onChange} required={required} className={`${className} resize-none h-24`} />
       ) : type === "select" ? (
@@ -53,6 +53,7 @@ export const FormField: FC<FormFieldProps> = ({
             className={className}
             min={min}
             max={max}
+            placeholder={title + "..."}
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
         </>

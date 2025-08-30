@@ -41,7 +41,7 @@ export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
       <RecommendedProducts products={recommendedProducts} onSelect={(p) => dispatch(setSelectedProduct(p))} />
 
       {/* Viewed products */}
-      <div className="w-full md:col-span-full">
+      <div className="col-span-2 md:col-span-full">
         <ProductViewed visibleProducts={5} />
       </div>
 
