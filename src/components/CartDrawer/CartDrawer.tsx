@@ -6,6 +6,8 @@ import { CartItemElement } from "./CartItemElement";
 import { CartHeader } from "./CartHeader";
 import { CartTotal } from "./CartTotal";
 import { CartCheckoutButton } from "./CartCheckoutButton";
+import { Button } from "@mui/material";
+import { Trash2 } from "lucide-react";
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
@@ -37,9 +39,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
       {/* Items */}
       <div className="p-4 space-y-4 overflow-auto">
         {cartItems.length > 0 && (
-          <button className="btn-primary w-full btn_hover p-4" onClick={() => dispatch(clearCart())}>
-            Очистити Корзину
-          </button>
+          <Button fullWidth variant="outlined" color="error" startIcon={<Trash2 />} onClick={() => dispatch(clearCart())} sx={{ mb: 2 }}>
+            Очистити корзину
+          </Button>
         )}
         {cartItems.length > 0 ? (
           cartItems.map((item) => (

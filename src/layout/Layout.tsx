@@ -54,7 +54,7 @@ const Layout = () => {
       </div>
       {/* Cart confirm modal */}
       <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)}>
-        <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} onClose={() => setCheckoutModalOpen(false)} />
+        <ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />
       </Modal>
       {/* Product preview modal */}
       {selectedProduct && (

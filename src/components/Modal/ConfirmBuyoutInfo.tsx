@@ -111,13 +111,13 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       valid = false;
     }
 
-    if (formData.phone_number) {
-      const phonePattern = /^\+380\d{9}$/;
-      if (!phonePattern.test(formData.phone_number.toString())) {
-        newErrors.phone_number = "Номер телефону повинен починатися з +380 та містити 9 цифр після";
-        valid = false;
-      }
-    } else {
+    if (formData.phone_number.trim().length < 0) {
+      //   const phonePattern = /^\+380\d{9}$/;
+      //   if (!phonePattern.test(formData.phone_number.toString())) {
+      //     newErrors.phone_number = "Номер телефону повинен починатися з +380 та містити 9 цифр після";
+      //     valid = false;
+      //   }
+      // } else {
       newErrors.phone_number = "Номер телефону обов'язковий";
       valid = false;
     }

@@ -30,10 +30,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     >
       <div
         className="
-      bg-white p-1 md:p-6 md:rounded-xl shadow-xl 
+      bg-white p-1 py-10 md:py-0  md:p-6 md:rounded-xl shadow-xl 
       relative 
       w-full max-w-6xl
-      max-h-[90vh] 
+      max-h-[100vh] 
       overflow-y-auto
     "
         onClick={(e) => e.stopPropagation()}
