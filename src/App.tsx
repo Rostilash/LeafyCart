@@ -15,6 +15,7 @@ import { Settings } from "./pages/Admin/Settings/Settings";
 import AuthPage from "./components/AuthComponents/AuthPage";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
+import { MapOrdrers } from "./pages/Admin/Map/MapOrdrers";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="map_orders" element={<MapOrdrers />} />
           <Route path="testing" element={<Testing />} />
         </Route>
 

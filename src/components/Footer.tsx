@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <footer className="bg-[var(--leafy-gray)] text-gray-300 py-10 px-6 md:px-16">
+    <footer className="bg-[var(--leafy-gray)] text-gray-300 py-10 px-6 md:px-16 lg:max-w-[1570px] m-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
         {/* Logo & contact */}
         <div>

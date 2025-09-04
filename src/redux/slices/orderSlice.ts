@@ -55,7 +55,9 @@ export const getAllOrders = createAsyncThunk<OrderType[], void, { rejectValue: s
     const q = query(collection(db, "orders"));
     const querySnapshot = await getDocs(q);
 
-    return querySnapshot.docs.map((doc) => normalizeOrder(doc.id, doc.data()));
+    return querySnapshot.docs
+      .map((doc) => normalizeOrder(doc.id, doc.data()))
+      .sort((a, b) => Date.parse(b.createdAt ?? "") - Date.parse(a.createdAt ?? ""));
   } catch (error: unknown) {
     if (error instanceof Error) {
       return thunkAPI.rejectWithValue(error.message);

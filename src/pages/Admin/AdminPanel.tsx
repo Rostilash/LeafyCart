@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Database, Settings } from "lucide-react";
+import { Database, Map, Settings } from "lucide-react";
 
 export const AdminPanel = () => {
   const panels = [
@@ -17,6 +17,11 @@ export const AdminPanel = () => {
       to: "settings",
       label: "Налаштування",
       icon: <Settings className="w-6 h-6 text-[var(--leafy-green)]" />,
+    },
+    {
+      to: "map_orders",
+      label: "Мапа для замовлень",
+      icon: <Map className="w-6 h-6 text-[var(--leafy-green)]" />,
     },
   ];
 

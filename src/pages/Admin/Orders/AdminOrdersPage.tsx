@@ -3,10 +3,12 @@ import { useAppDispatch, useAppSelector } from "../../../redux/reduxTypeHook";
 import { getAllOrders, updateOrderStatus } from "../../../redux/slices/orderSlice";
 import { Breadcrumbs } from "../../Catalog/Breadcrumbs";
 import { Loader } from "../../../components/Loader";
+import { Check, X } from "lucide-react";
+import { Button } from "@mui/material";
 
 export const AdminOrdersPage = () => {
   const dispatch = useAppDispatch();
-  const orders = useAppSelector((state) => state.order.all_orders);
+  const { all_orders } = useAppSelector((state) => state.order);
   const loading = useAppSelector((state) => state.order.loading);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export const AdminOrdersPage = () => {
 
         {loading && <Loader />}
 
-        {!loading && orders.length === 0 && <p>Замовлень ще немає</p>}
+        {!loading && all_orders.length === 0 && <p>Замовлень ще немає</p>}
 
         <table className="w-full border border-gray-200 shadow-md rounded-lg">
           <thead className="bg-gray-100">
@@ -38,7 +40,7 @@ export const AdminOrdersPage = () => {
           </thead>
 
           <tbody>
-            {orders.map((order: any, index: number) => (
+            {all_orders.map((order: any, index: number) => (
               <tr key={index} className="hover:bg-gray-50">
                 <td className="p-2 border">{order.id}</td>
                 <td className="p-2 border">{order.name}</td>
@@ -60,21 +62,30 @@ export const AdminOrdersPage = () => {
                   </span>
                 </td>
                 <td className="p-2 border">{new Date(order.createdAt).toLocaleString("uk-UA")}</td>
-                <td className="p-2 border">
+                <td className="p-2 border ">
                   {order.status === "Нове замовлення" && (
-                    <button onClick={() => dispatch(updateOrderStatus({ id: order.id, status: "Прийнято" }))} className="btn-primary">
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      startIcon={<Check size={18} />}
+                      onClick={() => dispatch(updateOrderStatus({ id: order.id, status: "Прийнято" }))}
+                      className="flex gap-2"
+                    >
                       Прийняти
-                    </button>
+                    </Button>
                   )}
                 </td>
                 <td className="p-2 border">
                   {order.status === "Нове замовлення" && (
-                    <button
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      startIcon={<X size={18} />}
                       onClick={() => dispatch(updateOrderStatus({ id: order.id, status: "Відхилено" }))}
-                      className="btn-primary bg-[var(--leafy-error)]"
+                      className=" bg-[var(--leafy-error)] flex gap-2"
                     >
                       Скасувати
-                    </button>
+                    </Button>
                   )}
                 </td>
               </tr>

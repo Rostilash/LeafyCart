@@ -47,7 +47,9 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
           <Check size={20} />
         ) : (
           <span className="text-[var(--leafy-white)]">
-            <span className="hidden md:block ">Додати до кошику</span>
+            <span className="hidden md:block ">
+              <PackagePlus size={26} />
+            </span>
             {added ? <Check size={20} className="md:hidden block" /> : <PackagePlus size={20} className="md:hidden block" />}
           </span>
         )}
