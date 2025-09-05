@@ -24,7 +24,7 @@ export interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -100,9 +100,11 @@ export const loginWithGoogle = createAsyncThunk("auth/googleLogin", async (_, th
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return thunkAPI.rejectWithValue(error.message);
+      // return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue("Відбулася помилка при вході...");
     }
-    return thunkAPI.rejectWithValue(String(error));
+    // return thunkAPI.rejectWithValue(String(error));
+    return thunkAPI.rejectWithValue("Відбулася помилка при вході...");
   }
 });
 

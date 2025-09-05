@@ -9,7 +9,7 @@ import { CartCheckoutButton } from "./CartCheckoutButton";
 import { Button } from "@mui/material";
 import { Trash2 } from "lucide-react";
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, setCheckoutModalOpen, totalPrice, totalDiscount }) => {
+export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, totalPrice, totalDiscount }) => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
@@ -56,7 +56,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
       <CartTotal totalPrice={totalPrice} totalDiscount={totalDiscount} />
 
       {/* Accept button */}
-      <CartCheckoutButton cartItemsLength={cartItems.length} onCheckout={() => setCheckoutModalOpen(true)} onClose={onClose} />
+      <CartCheckoutButton cartItemsLength={cartItems.length} onClose={onClose} />
     </aside>
   );
 };

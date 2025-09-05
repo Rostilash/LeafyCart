@@ -27,8 +27,10 @@
 }
 
 .btn-primary-sm {
-  @apply px-4 py-1.5 rounded font-light
-  transition-colors cursor-pointer active:scale-95 active:opacity-80;
+  @apply px-4 py-1.5 md:min-w-[155px] md:min-h-[35px]
+  rounded font-light flex justify-center
+  transition-colors cursor-pointer 
+  active:scale-95 active:opacity-80;
   border-radius: 10px;
   background-color: var(--leafy-green);
   color: white;

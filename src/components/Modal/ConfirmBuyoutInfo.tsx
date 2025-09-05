@@ -228,7 +228,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
             grid grid-cols-1 lg:grid-cols-2 gap-8
             min-h-[screen] lg:min-h-0
             overflow-y-auto lg:overflow-visible
-            sm:pt-10
+            sm:pt-10 md:px-10
           "
       >
         {/* Left side */}

@@ -11,7 +11,6 @@ export type CartItem = {
 
 export type CartDrawerProps = {
   isCartVisible: boolean;
-  setCheckoutModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
   totalPrice: number;
   totalDiscount: number;

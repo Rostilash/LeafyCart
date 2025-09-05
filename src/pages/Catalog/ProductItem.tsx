@@ -46,7 +46,7 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
         loading="lazy"
       />
 
-      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[130px] p-2">
+      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[150px] p-2">
         <div className="flex flex-col">
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}

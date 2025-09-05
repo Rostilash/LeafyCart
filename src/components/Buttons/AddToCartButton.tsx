@@ -42,13 +42,15 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
       btn-primary-sm btn_hover transition md:mt-4 md:ml-auto
       "
         onClick={() => handleAddToCart(mapFoodProductToCartItem(product))}
+        disabled={added}
       >
         {added ? (
           <Check size={20} />
         ) : (
           <span className="text-[var(--leafy-white)]">
             <span className="hidden md:block ">
-              <PackagePlus size={26} />
+              {/* <PackagePlus size={26} /> */}
+              Додати до кошику
             </span>
             {added ? <Check size={20} className="md:hidden block" /> : <PackagePlus size={20} className="md:hidden block" />}
           </span>
