@@ -27,6 +27,8 @@ export const AdminPanel = () => {
 
   return (
     <section className="p-10">
+      <title>Панель адміністратора</title>
+
       <h3 className="title-l mb-6 text-center">Панель адміністратора</h3>
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">

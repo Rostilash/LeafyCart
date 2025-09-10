@@ -22,6 +22,7 @@ export const PersonalInfo = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6 md:px-16">
+      <title>Особистий кабінет</title>
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* User Info */}
         <Card className="col-span-1 shadow-lg rounded-2xl">

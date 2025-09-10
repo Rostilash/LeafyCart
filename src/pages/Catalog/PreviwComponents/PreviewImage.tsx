@@ -5,9 +5,9 @@ export const PreviewImage = ({ product }: { product: FoodProduct }) => {
   return (
     <div
       className="relative overflow-hidden 
-    w-[370px] sm:w-full min-w-[200px] 
+    w-[390px] sm:w-full min-w-[200px] 
     h-66 sm:h-56 md:h-64 lg:h-80
-    pt-4 sm:pt-0 px-12 sm:px-0 
+    pt-4 px-12 sm:px-0 
     "
     >
       <img

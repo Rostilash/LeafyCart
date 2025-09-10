@@ -37,6 +37,12 @@ export const CategoryPage = () => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [categoryName]);
 
+  useEffect(() => {
+    if (categoryName) {
+      document.title = `Каталог - ${categoryName} | LeafyCaty`;
+    }
+  }, [categoryName]);
+
   // Our custoom filter utils
   const subcategoryProducts = categoryName ? getProductsForSubcategory(products, categoryName.toLowerCase()) : products;
 
@@ -48,7 +54,7 @@ export const CategoryPage = () => {
   return (
     <>
       <Breadcrumbs />
-      <div ref={containerRef} className="grid md:grid-cols-[246px_1fr] gap-2 p-2">
+      <div ref={containerRef} className="grid md:grid-cols-[250px_1fr] md:max-w-[2500px] gap-2">
         <FiltersPanel filters={filters} onFilterChange={setFilters} maxCategoryPrice={maxCategoryPrice} uniqueCountries={uniqueCountries} />
 
         <CategoryProducts filteredProducts={filteredProducts} openModal={(product: FoodProduct) => dispatch(setSelectedProduct(product))} />

@@ -36,7 +36,7 @@ const Layout = () => {
       {/* SideBar */}
       <div
         className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${
-          isNavOpened ? "w-screen sm:w-64" : "w-0"
+          isNavOpened ? "w-screen sm:w-64" : "hidden"
         } overflow-visible  z-100`}
       >
         <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
