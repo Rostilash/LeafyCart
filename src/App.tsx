@@ -16,7 +16,7 @@ import AuthPage from "./components/AuthComponents/AuthPage";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
 import { MapOrdrers } from "./pages/Admin/Map/MapOrdrers";
-import { ConfirmBuyoutInfo } from "./components/Modal/ConfirmBuyoutInfo";
+import { ConfirmBuyoutInfo } from "./pages/Checkout/ConfirmBuyoutInfo";
 import { useCartTotals } from "./hook/useCartTotals";
 
 function App() {

@@ -30,7 +30,7 @@ export const FormField: FC<FormFieldProps> = ({
   error,
 }) => {
   return (
-    <label className="flex flex-col gap-1 text-sm text-gray-600">
+    <label className="flex flex-col gap-1">
       {title}*:
       {type === "textarea" ? (
         <textarea name={name} value={value} onChange={onChange} required={required} className={`${className} resize-none h-24`} />

@@ -3,11 +3,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { getOrdersByUser, saveOrder, type OrderFormData } from "../../redux/slices/orderSlice";
 import { convertMoney } from "../../utils/convertMoney";
 // import { generateDataAndSignature } from "../../utils/liqpay";
-import { FormField } from "../../pages/Admin/Products/FormSlices/FormField";
-import AuthPage from "../AuthComponents/AuthPage";
-import { Loader } from "../Loader";
+import { FormField } from "../Admin/Products/FormSlices/FormField";
+import AuthPage from "../../components/AuthComponents/AuthPage";
+import { Loader } from "../../components/Loader";
 import { clearCart } from "../../redux/slices/cartSlice";
-import { FormRadio } from "../../pages/Admin/Products/FormSlices/FormRadio";
+import { FormRadio } from "../Admin/Products/FormSlices/FormRadio";
+import { CityInput } from "./CityInput";
+import { fetchWerhouses } from "../../redux/slices/paymentSlice";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
@@ -43,7 +45,7 @@ const orderFields = [
   { name: "name", title: "Ім’я", required: true },
   { name: "last_name", title: "Призвіще", required: true },
   { name: "mid_name", title: "По батькові", required: true },
-  { name: "city", title: "Місто (українською мовою)", required: true },
+  // { name: "city", title: "Місто (українською мовою)", required: true },
   { name: "address", title: "Адреса", required: true },
   { name: "phone_number", title: "Номер телефону", inputType: "tel", required: true, className: "px-2 py-2 border border-gray-300 rounded-r flex-1" },
   { name: "email", title: "Email", inputType: "email", required: true },
@@ -54,7 +56,6 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
   const userId = useAppSelector((state) => state.auth.user?.uid);
   const cartItems = useAppSelector((state) => state.cart.items);
   const { user_orders, successMessage, error, loading } = useAppSelector((state) => state.order);
-
   const hasCartItems = cartItems.length > 0;
 
   const [formData, setFormData] = useState<OrderFormData>(initialForm);
@@ -81,6 +82,24 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       dispatch(getOrdersByUser(userId));
     }
   }, [dispatch, userId]);
+
+  // Need to end this wherehouse selection like city input
+  useEffect(() => {
+    const getWarehouses = async () => {
+      try {
+        const result = await dispatch(fetchWerhouses("e221d627-391c-11dd-90d9-001a92567626")).unwrap();
+        console.log(
+          "Warehouses:",
+          result.filter((adress: { description: string; ref: string }) => adress.description.startsWith("Відділення"))
+        );
+
+        return result.filter((adress: { description: string; ref: string }) => adress.description.startsWith("Відділення"));
+      } catch (error) {
+        console.error("Помилка завантаження відділень:", error);
+      }
+    };
+    getWarehouses();
+  }, [dispatch]);
 
   const validate = () => {
     let valid = true;
@@ -243,9 +262,14 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
             />
           ))}
 
-          <h3>Оплата</h3>
-          <FormRadio name="payment" value="cash" checked={formData.payment === "cash"} onChange={handleChange} title="У віділенні" />
-          <FormRadio name="payment" value="card" checked={formData.payment === "card"} onChange={handleChange} title="Карткою" />
+          {/* Або без FormField */}
+          <CityInput value={formData.city} onChange={(val) => setFormData({ ...formData, city: val })} />
+
+          <label htmlFor="Оберіть спосіб оплати...">
+            <span className="text-xs text-gray-500">Оберіть спосіб оплати...</span>
+            <FormRadio name="payment" value="cash" checked={formData.payment === "cash"} onChange={handleChange} title="У віділенні" />
+            <FormRadio name="payment" value="card" checked={formData.payment === "card"} onChange={handleChange} title="Карткою" />
+          </label>
 
           {loading && <Loader />}
           <div className="mb-12"></div>
