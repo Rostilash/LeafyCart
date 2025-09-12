@@ -29,6 +29,7 @@ export const CartItemElement = ({ item, onUpdateQuantity, onChangeQuantity }: Ca
             -
           </button>
           <input
+            name={item.name}
             type="number"
             min={1}
             value={item.quantity}

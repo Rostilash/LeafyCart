@@ -1,22 +1,22 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./layout/Layout";
+import AuthPage from "./components/AuthComponents/AuthPage";
 import { HomePage } from "./pages/HomePage/HomePage";
 import { Catalog } from "./pages/Catalog/Catalog";
 import { CategoryPage } from "./pages/Catalog/CategoryComponents/CategoryPage";
 import { AdminPanel } from "./pages/Admin/AdminPanel";
 import { Products } from "./pages/Admin/Products/ProductsList";
 import { AdminWrapper } from "./pages/Admin/AdminWrapper";
-import { useAppDispatch, useAppSelector } from "./redux/reduxTypeHook";
+import { useAppDispatch } from "./redux/reduxTypeHook";
 import { useEffect } from "react";
 import { checkAuth } from "./redux/slices/authSlice";
 import { Testing } from "./pages/Admin/Settings/Testing";
 import { PersonalInfo } from "./pages/PersonalInfo/PersonalInfo";
 import { Settings } from "./pages/Admin/Settings/Settings";
-import AuthPage from "./components/AuthComponents/AuthPage";
 import { NotFoundPage } from "./components/NotFoundPage";
 import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
 import { MapOrdrers } from "./pages/Admin/Map/MapOrdrers";
-import { ConfirmBuyoutInfo } from "./pages/Checkout/ConfirmBuyoutInfo";
+import { CheckoutPage } from "./pages/Checkout/CheckoutPage";
 import { useCartTotals } from "./hook/useCartTotals";
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
         <Route path="catalog/:category" element={<CategoryPage />} />
         <Route path="cart_rents" element={<PersonalInfo />} />
         <Route path="auth" element={<AuthPage />} />
-        <Route path="checkout" element={<ConfirmBuyoutInfo totalPrice={totalPrice} totalDiscount={totalDiscount} />} />
+        <Route path="checkout" element={<CheckoutPage totalPrice={totalPrice} totalDiscount={totalDiscount} />} />
 
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />

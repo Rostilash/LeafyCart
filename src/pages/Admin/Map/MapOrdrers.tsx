@@ -3,16 +3,16 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaf
 import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../redux/reduxTypeHook";
+// import { useAppSelector } from "../../../redux/reduxTypeHook";
 
 const initialPosition: LatLngExpression = [48.5173326351917, 22.310485839843754];
-const initialPosition2: LatLngExpression = [48.60952250197608, 22.27752685546875];
+// const initialPosition2: LatLngExpression = [48.60952250197608, 22.27752685546875];
 
 export const MapOrdrers = () => {
   const [position, setPosition] = useState<LatLngExpression>(initialPosition);
-  const [position2, setPosition2] = useState<LatLngExpression>(initialPosition2);
-  const { user } = useAppSelector((state) => state.auth);
-  console.log(position);
+  // const [position2, setPosition2] = useState<LatLngExpression>(initialPosition2);
+  // const { user } = useAppSelector((state) => state.auth);
+
   function ClickHandler() {
     useMapEvents({
       click(e) {
@@ -38,15 +38,6 @@ export const MapOrdrers = () => {
             <article className="flex flex-col space-y-4">
               <span>В цьому місці Зелені шляпи</span>
               <Link to="/admin"> Долучитися до розмови</Link>
-            </article>
-          </Popup>
-        </Marker>
-
-        <Marker position={position2}>
-          <Popup closeButton={true}>
-            <article className="flex flex-col space-y-4 p-4">
-              <span>В цьому місці Зелені шляпи</span>
-              <Link to="/admin">Додати коментар</Link>
             </article>
           </Popup>
         </Marker>

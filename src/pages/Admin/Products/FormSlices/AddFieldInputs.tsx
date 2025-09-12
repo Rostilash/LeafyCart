@@ -10,13 +10,13 @@ interface AddFieldInputsProps {
 }
 
 export const AddFieldInputs: React.FC<AddFieldInputsProps> = ({ keyValue, setKeyValue, value, setValue, onAdd }) => (
-  <div className="grid grid-cols-[1fr_1fr_80px] sm:grid-cols-[2fr,1fr,auto] gap-2 items-center mt-2">
+  <div className="grid grid-cols-[1fr_1fr_auto] sm:grid-cols-[2fr,1fr,auto] gap-2 items-center mt-2 md:max-w-full">
     <input
       type="text"
       placeholder="Назва"
       value={keyValue}
       onChange={(e) => setKeyValue(e.target.value)}
-      className="px-2 py-1 custum-border-outline w-full"
+      className="px-2 py-1 custum-border-outline w-full "
     />
     <input
       type={typeof value === "number" ? "number" : "text"}

@@ -14,7 +14,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-
 import { db } from "../../fireBase/config";
 
 const initialState: ProductState = {

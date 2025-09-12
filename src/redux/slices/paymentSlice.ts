@@ -1,24 +1,31 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-export interface PaymentState {
-  loading: boolean;
-  error: {} | string | null;
-  liqpayData: { data: string; signature: string } | null;
-  cities: string[];
-  nova_adress: string;
-}
 export interface PaymentProps {
   amount: number;
   name: string;
   email: string;
 }
+export interface Warehouse {
+  description: string;
+  ref: string;
+  latitude?: number;
+  longitude?: number;
+}
+export interface PaymentState {
+  loading: boolean;
+  loadingWarehouses: boolean;
+  error: {} | string | null;
+  liqpayData: { data: string; signature: string } | null;
+  cities: Warehouse[];
+  nova_adress: Warehouse[];
+}
 
 const initialState: PaymentState = {
   loading: false,
+  loadingWarehouses: false,
   error: null,
   liqpayData: null,
   cities: [],
-  nova_adress: "",
+  nova_adress: [],
 };
 
 export const fetchCities = createAsyncThunk("payment/fetchCities", async (query: string) => {
@@ -67,12 +74,12 @@ const paymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // --- обробка fetchCities ---
+      // ---  fetchCities ---
       .addCase(fetchCities.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchCities.fulfilled, (state, action: PayloadAction<string[]>) => {
+      .addCase(fetchCities.fulfilled, (state, action: PayloadAction<{ description: string; ref: string }[]>) => {
         state.loading = false;
         state.cities = action.payload;
       })
@@ -80,18 +87,18 @@ const paymentSlice = createSlice({
         state.loading = false;
         state.error = "Не вдалося завантажити міста";
       })
-
+      // ---  fetchWerhouses ---
       .addCase(fetchWerhouses.pending, (state) => {
-        state.loading = true;
+        state.loadingWarehouses = true;
         state.error = null;
       })
-      .addCase(fetchWerhouses.fulfilled, (state, action: PayloadAction<string>) => {
-        state.loading = false;
+      .addCase(fetchWerhouses.fulfilled, (state, action: PayloadAction<Warehouse[]>) => {
+        state.loadingWarehouses = false;
         state.nova_adress = action.payload;
       })
       .addCase(fetchWerhouses.rejected, (state) => {
-        state.loading = false;
-        state.error = "Не вдалося завантажити міста";
+        state.loadingWarehouses = false;
+        state.error = "Не вдалося завантажити адреси";
       });
   },
 });

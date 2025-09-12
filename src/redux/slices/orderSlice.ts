@@ -7,8 +7,9 @@ import { signInAnonymously } from "firebase/auth";
 export interface OrderFormData {
   name: string;
   email: string;
-  address: string;
+  warehouse: string;
   city: string;
+  cityRef: string;
   payment: string;
   last_name: string;
   mid_name: string;
@@ -141,7 +142,7 @@ export const saveOrder = createAsyncThunk<
       email: form.email,
       city: form.city,
       payment: form.payment,
-      address: form.address,
+      address: form.warehouse,
       price: form.price,
       cartItems: form.cartItems,
       paymentId: form.paymentId || null,

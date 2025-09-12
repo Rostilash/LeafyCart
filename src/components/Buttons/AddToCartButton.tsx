@@ -5,17 +5,13 @@ import type { FoodProduct } from "../../types/productTypes";
 import type { CartItem } from "../../types/cartTypes";
 import { mapFoodProductToCartItem } from "../../utils/mapFoodToCartItem";
 import { Check, PackagePlus } from "lucide-react";
-import { Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../../hook/useSnackbarReturn";
+import { AppSnackbar } from "../AppSnackbar";
 
 export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
   const [added, setAdded] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const handleClose = (_?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") return;
-    setOpen(false);
-  };
+  const { open, message, severity, showSnackbar, handleClose } = useSnackbar();
 
   const handleAddToCart = (product: CartItem) => {
     dispatch(
@@ -24,8 +20,8 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
         quantity: 1,
       })
     );
-    setOpen(true);
     setAdded(true);
+    showSnackbar(`✅ Ви додали до кошику - ${product.name}!`, "success");
   };
 
   useEffect(() => {
@@ -48,20 +44,13 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
           <Check size={20} />
         ) : (
           <span className="text-[var(--leafy-white)]">
-            <span className="hidden md:block ">
-              {/* <PackagePlus size={26} /> */}
-              Додати до кошику
-            </span>
+            <span className="hidden md:block ">Додати до кошику</span>
             {added ? <Check size={20} className="md:hidden block" /> : <PackagePlus size={20} className="md:hidden block" />}
           </span>
         )}
       </button>
 
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          ✅ Ви додали до кошику - {product.name}!
-        </Alert>
-      </Snackbar>
+      <AppSnackbar open={open} message={message} severity={severity} onClose={handleClose} />
     </>
   );
 };

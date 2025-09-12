@@ -9,6 +9,8 @@ import { Loader } from "../../../components/Loader";
 import { PackagePlus } from "lucide-react";
 import { Pagination } from "../../../components/Pagination";
 import { Breadcrumbs } from "../../Catalog/Breadcrumbs";
+import { useSnackbar } from "../../../hook/useSnackbarReturn";
+import { AppSnackbar } from "../../../components/AppSnackbar";
 
 export const Products = () => {
   const dispatch = useAppDispatch();
@@ -51,6 +53,13 @@ export const Products = () => {
   const filteredProducts = findProduct.trim() || selectedCategory !== "Усі" ? findProducts : allProducts;
 
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const { open, message, severity, showSnackbar, handleClose } = useSnackbar();
+
+  const handleDeleteProduct = (productID: string) => {
+    dispatch(deleteProduct(productID));
+    showSnackbar(`🗑️ Продукт "${productID}" видалено`, "error");
+  };
 
   return (
     <>
@@ -106,7 +115,7 @@ export const Products = () => {
             key={product.id}
             product={product}
             openEditModal={() => openEditModal(product)}
-            deleteRow={() => dispatch(deleteProduct(product.id))}
+            deleteRow={() => handleDeleteProduct(product.id)}
           />
         ))}
 
@@ -138,12 +147,15 @@ export const Products = () => {
               onSubmit={(newProduct) => {
                 dispatch(addProduct(newProduct as FoodProduct));
                 setAddingProduct(false);
+                showSnackbar(`✅ Продукт "${newProduct.name}" додано!`);
               }}
               submitText="Додати продукт"
               closeEditModal={closeEditModal}
             />
           )}
         </Modal>
+
+        <AppSnackbar open={open} message={message} severity={severity} onClose={handleClose} />
       </section>
     </>
   );

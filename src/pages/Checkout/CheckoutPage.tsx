@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { getOrdersByUser, saveOrder, type OrderFormData } from "../../redux/slices/orderSlice";
+import { getOrdersByUser, type OrderFormData } from "../../redux/slices/orderSlice";
 import { convertMoney } from "../../utils/convertMoney";
 // import { generateDataAndSignature } from "../../utils/liqpay";
 import { FormField } from "../Admin/Products/FormSlices/FormField";
 import AuthPage from "../../components/AuthComponents/AuthPage";
 import { Loader } from "../../components/Loader";
-import { clearCart } from "../../redux/slices/cartSlice";
+// import { clearCart } from "../../redux/slices/cartSlice";
 import { FormRadio } from "../Admin/Products/FormSlices/FormRadio";
 import { CityInput } from "./CityInput";
-import { fetchWerhouses } from "../../redux/slices/paymentSlice";
+import { WarehouseSelect } from "./WarehouseSelect";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
@@ -33,8 +33,9 @@ declare global {
 const initialForm: OrderFormData = {
   name: "",
   email: "",
-  address: "",
+  warehouse: "",
   city: "",
+  cityRef: "",
   payment: "",
   last_name: "",
   mid_name: "",
@@ -46,12 +47,12 @@ const orderFields = [
   { name: "last_name", title: "Призвіще", required: true },
   { name: "mid_name", title: "По батькові", required: true },
   // { name: "city", title: "Місто (українською мовою)", required: true },
-  { name: "address", title: "Адреса", required: true },
+  // { name: "warehouse", title: "Адреса", required: true },
   { name: "phone_number", title: "Номер телефону", inputType: "tel", required: true, className: "px-2 py-2 border border-gray-300 rounded-r flex-1" },
   { name: "email", title: "Email", inputType: "email", required: true },
 ];
 
-export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
+export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.uid);
   const cartItems = useAppSelector((state) => state.cart.items);
@@ -67,8 +68,9 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       setFormData({
         name: lastOrder?.name || "",
         email: lastOrder?.email || "",
-        address: lastOrder?.address || "",
+        warehouse: lastOrder?.warehouse || "",
         city: lastOrder?.city || "",
+        cityRef: lastOrder?.cityRef || "",
         payment: lastOrder?.payment || "",
         last_name: lastOrder?.last_name || "",
         mid_name: lastOrder?.mid_name || "",
@@ -83,27 +85,9 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     }
   }, [dispatch, userId]);
 
-  // Need to end this wherehouse selection like city input
-  useEffect(() => {
-    const getWarehouses = async () => {
-      try {
-        const result = await dispatch(fetchWerhouses("e221d627-391c-11dd-90d9-001a92567626")).unwrap();
-        console.log(
-          "Warehouses:",
-          result.filter((adress: { description: string; ref: string }) => adress.description.startsWith("Відділення"))
-        );
-
-        return result.filter((adress: { description: string; ref: string }) => adress.description.startsWith("Відділення"));
-      } catch (error) {
-        console.error("Помилка завантаження відділень:", error);
-      }
-    };
-    getWarehouses();
-  }, [dispatch]);
-
   const validate = () => {
     let valid = true;
-    const newErrors = initialForm;
+    const newErrors: Partial<Record<keyof OrderFormData, string>> = {};
 
     if (!formData.name.trim()) {
       newErrors.name = "Ім'я обов'язкове";
@@ -120,8 +104,8 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
       valid = false;
     }
 
-    if (formData.address.trim().length < 8) {
-      newErrors.address = "Адреса має бути не менше 8 символів";
+    if (formData.warehouse.trim().length < 8) {
+      newErrors.warehouse = "Адреса має бути не менше 8 символів";
       valid = false;
     }
 
@@ -162,6 +146,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
 
   const handleLiqPay = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formData);
     if (!validate()) return;
     // const privateKey = "sandbox_private_key";
     // const publicKey = "sandbox_public_key";
@@ -202,18 +187,18 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     //     };
 
     // dispatch(saveOrder(newData));
-    const result = await dispatch(
-      saveOrder({ ...formData, price: Number(total.toFixed(2)), cartItems: cartItems, paymentId: "123456", paymentStatus: "good" })
-    );
-    if (saveOrder.fulfilled.match(result) && result.payload === "ok") {
-      alert("✅ Замовлення оформлене успішно!");
-      // або відкрити модалку, або перенаправити на сторінку подяки
-    }
+    // const result = await dispatch(
+    //   saveOrder({ ...formData, price: Number(total.toFixed(2)), cartItems: cartItems, paymentId: "123456", paymentStatus: "good" })
+    // );
+    // if (saveOrder.fulfilled.match(result) && result.payload === "ok") {
+    //   alert("✅ Замовлення оформлене успішно!");
+    //   // або відкрити модалку, або перенаправити на сторінку подяки
+    // }
 
-    if (saveOrder.rejected.match(result)) {
-      alert("❌ Сталася помилка: " + result.payload);
-    }
-    setFormData(initialForm);
+    // if (saveOrder.rejected.match(result)) {
+    //   alert("❌ Сталася помилка: " + result.payload);
+    // }
+    // setFormData(initialForm);
     //   } else {
     //     console.error("Payment failed or cancelled", response);
     //   }
@@ -226,7 +211,7 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
     // liqpay.on("liqpay.close", function () {
     //   console.log("LiqPay closed");
     // });
-    dispatch(clearCart());
+    // dispatch(clearCart());
   };
 
   return (
@@ -262,8 +247,29 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
             />
           ))}
 
-          {/* Або без FormField */}
-          <CityInput value={formData.city} onChange={(val) => setFormData({ ...formData, city: val })} />
+          <CityInput
+            value={formData.city}
+            onChange={(val) =>
+              setFormData({
+                ...formData,
+                city: val,
+                cityRef: "",
+                warehouse: "",
+              })
+            }
+            onSelect={(city) =>
+              setFormData({
+                ...formData,
+                city: city.description,
+                cityRef: city.ref,
+                warehouse: "",
+              })
+            }
+          />
+
+          {/* {formData.cityRef && ( */}
+          <WarehouseSelect cityRef={formData.cityRef} value={formData.warehouse} onChange={(val) => setFormData({ ...formData, warehouse: val })} />
+          {/* )} */}
 
           <label htmlFor="Оберіть спосіб оплати...">
             <span className="text-xs text-gray-500">Оберіть спосіб оплати...</span>
@@ -272,9 +278,8 @@ export const ConfirmBuyoutInfo = ({ totalPrice, totalDiscount }: ConfirmBuyoutIn
           </label>
 
           {loading && <Loader />}
-          <div className="mb-12"></div>
 
-          <button type="submit" className="btn-primary btn_hover" disabled={!hasCartItems}>
+          <button type="submit" className="btn-primary btn_hover mt-8" disabled={!hasCartItems}>
             {formData.payment === "cash" ? "Оплатити у віділенні" : "Оплатити через LiqPay"}
           </button>
 
