@@ -20,14 +20,24 @@ interface NPRequest {
 
 export default {
 	async fetch(request: Request, env: { NP_API_KEY: string }) {
+		const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://leafycart-shop.web.app'];
+
+		const origin = request.headers.get('Origin') || '';
 		const corsHeaders = {
-			'Access-Control-Allow-Origin': '*', // for localhost
-			'Access-Control-Allow-Methods': 'POST, OPTIONS',
+			'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : '',
+			'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 			'Access-Control-Allow-Headers': 'Content-Type',
 		};
 
+		// OPTIONS preflight
 		if (request.method === 'OPTIONS') {
 			return new Response(null, { status: 204, headers: corsHeaders });
+		}
+
+		if (request.method === 'GET') {
+			return new Response('✅ Worker is running!', {
+				headers: { ...corsHeaders, 'Content-Type': 'text/plain' },
+			});
 		}
 
 		if (request.method !== 'POST') {

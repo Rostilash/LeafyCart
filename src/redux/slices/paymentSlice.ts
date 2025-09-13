@@ -28,8 +28,10 @@ const initialState: PaymentState = {
   nova_adress: [],
 };
 
+const API_BASE = import.meta.env.DEV ? "/api" : "https://nova-poshta-worker.leafy-cart.workers.dev";
+
 export const fetchCities = createAsyncThunk("payment/fetchCities", async (query: string) => {
-  const response = await fetch("/api", {
+  const response = await fetch(API_BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -48,7 +50,7 @@ export const fetchCities = createAsyncThunk("payment/fetchCities", async (query:
 
 export const fetchWerhouses = createAsyncThunk("payment/fetchWerhouses", async (cityRef: string) => {
   try {
-    const response = await fetch("/api", {
+    const response = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
