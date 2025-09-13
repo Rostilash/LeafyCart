@@ -4,10 +4,12 @@ import { Badge } from "./Badge";
 import { ProductPrice } from "./ProductPrice";
 import { useAppSelector } from "../../redux/reduxTypeHook";
 import { ProductSkeleton } from "../../components/ProductSkeleton";
+import { Heart } from "lucide-react";
+import { useState } from "react";
 
 export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClick: () => void }) => {
   const isLoading = useAppSelector((state) => state.products.loading);
-
+  const [toFavorite, setToFavorite] = useState(false);
   if (isLoading) {
     return <ProductSkeleton />;
   }
@@ -21,11 +23,12 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
 
   return (
     <article
-      className={`flex flex-col items-center justify-center 
+      className={`flex flex-col items-center justify-center
               w-full sm:w-[48%] md:w-[30%] lg:w-[20%] 
-              sm:min-w-[190px] sm:max-w-[190px]  min-w-[120px] max-w-[200px] 
+              sm:min-w-[189px] sm:max-w-[190px]  min-w-[120px] max-w-[200px] 
               bg-[var(--leafy-white)] shadow-xs hover:shadow-green-200 
-              relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}`}
+              relative overflow-hidden ${isOutOfStock ? "opacity-50" : ""}
+              `}
     >
       {/* NEW */}
       {product.isNew && <Badge position="top-2 -left-2" text="NEW" />}
@@ -34,11 +37,18 @@ export const ProductItem = ({ product, onClick }: { product: FoodProduct; onClic
       {Number(product.discountPercentage) > 0 && <Badge position="top-2 -right-2" text={`-${product.discountPercentage}%`} />}
 
       {/* 1+1 акція */}
-      {isOnePlusOne && <Badge position="top-10 -right-2" text="1+1" />}
+      {isOnePlusOne && <Badge position="top-10 -left-2" text="1+1" />}
 
       <img src={product.img} alt={product.name} className="w-full h-40 sm:h-48 object-cover cursor-pointer" onClick={onClick} loading="lazy" />
 
-      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[150px] p-2">
+      <div className="w-full bg-[var(--leafy-white)] flex flex-col  md:min-h-[150px] p-2 relative">
+        <Heart
+          className="absolute top-1 right-1 hover:scale-120 transition-all duration-200 cursor-pointer text-gray-300"
+          fill={`${toFavorite ? "red" : "white"}`}
+          size={18}
+          onClick={() => setToFavorite((prev) => !prev)}
+        />
+
         <div className="flex flex-col">
           <h3 className="text-lg truncate max-w-full" itemProp="name">
             {product.name}

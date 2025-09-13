@@ -4,6 +4,7 @@ import { collection, where, query, updateDoc, doc, getDoc, getDocs, addDoc, Time
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
 
+// ---------------- TYPES ----------------
 export interface OrderFormData {
   name: string;
   email: string;
@@ -15,7 +16,6 @@ export interface OrderFormData {
   mid_name: string;
   phone_number: string;
 }
-
 export interface OrderType extends OrderFormData {
   id: string;
   userId: string;
@@ -26,7 +26,6 @@ export interface OrderType extends OrderFormData {
   status: string;
   createdAt: string;
 }
-
 export interface OderState {
   loading: boolean;
   error: string | { message: string } | null;
@@ -35,6 +34,7 @@ export interface OderState {
   successMessage: string | null;
 }
 
+// ---------------- INITIAL STATE ----------------
 const initialState: OderState = {
   loading: false,
   error: null,
@@ -51,6 +51,7 @@ function normalizeOrder(id: string, data: any): OrderType {
   } as OrderType;
 }
 
+// ---------------- THUNKS ----------------
 export const getAllOrders = createAsyncThunk<OrderType[], void, { rejectValue: string }>("orders/getAllOrders", async (_, thunkAPI) => {
   try {
     const q = query(collection(db, "orders"));
@@ -160,6 +161,7 @@ export const saveOrder = createAsyncThunk<
   }
 });
 
+// ---------------- SLICE ----------------
 const orderSlice = createSlice({
   name: "order",
   initialState,

@@ -52,7 +52,7 @@ export const AccordionMenu: React.FC<AccordionMenuProps> = ({ closeSidebar }) =>
           {/* Subcategories maping here */}
           {openCategory === cat.title && (
             <ul
-              className="absolute right-0 lg:left-[97%] top-0 lg:ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-1/2 lg:min-w-[240px] transition-all duration-200 "
+              className="absolute right-0 lg:left-[97%] top-2 lg:ml-2 bg-[var(--leafy-bg)] shadow-lg z-10 min-w-1/2 lg:min-w-[240px] transition-all duration-200 "
               onMouseLeave={() => setOpenCategory(null)}
             >
               {cat.subcategories.map((sub) => (
