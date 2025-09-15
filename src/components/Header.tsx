@@ -5,11 +5,10 @@ import { NavigationLinks } from "./NavigationLinks";
 import { CartButton } from "./Buttons/CartButton";
 import { UserSection } from "./UserSection";
 import type { HeaderProps } from "../types/headerTypes";
+import { getUserNameFromEmail } from "../utils/getUserNameByEmail";
 
 export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, isNavOpened, quantity }) => {
   const { user } = useAppSelector((state) => state.auth);
-  const userName = user?.email?.split("@")[0].toLocaleUpperCase();
-
   return (
     <header
       className={`
@@ -33,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
         {/* Right side */}
         <div className="flex items-center gap-4">
-          <UserSection userName={userName} />
+          <UserSection userName={user ? getUserNameFromEmail(user) : "Гість"} />
           <CartButton quantity={quantity} onClick={() => setIsCartOpen((prev) => !prev)} />
         </div>
       </div>

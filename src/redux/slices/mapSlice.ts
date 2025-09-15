@@ -3,14 +3,14 @@ import { addDoc, collection, query, where, doc, getDocs, updateDoc, arrayUnion }
 import { db } from "../../fireBase/config";
 
 // ---------------- TYPES ----------------
-interface Comment {
-  author: string;
+export interface Comment {
+  author: string | null;
   text: string;
   createdAt: string;
 }
 
 interface LocationEvent {
-  id?: string;
+  id: string;
   lat: number;
   lng: number;
   text: string;
@@ -66,6 +66,21 @@ export const createLocationEvent = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  "map/comments",
+  async ({ eventId, comment }: { eventId: string; comment: Comment }, { rejectWithValue }) => {
+    try {
+      const postRef = doc(db, "events", eventId);
+
+      await updateDoc(postRef, { comments: arrayUnion(comment) });
+
+      return { eventId, comment };
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getEvents = createAsyncThunk<LocationEvent[]>("map/events", async (_, { rejectWithValue }) => {
   try {
     const snapshot = await getDocs(collection(db, "events"));
@@ -88,6 +103,7 @@ const mapSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+
       // --- createLocationPost ---
       .addCase(createLocationEvent.pending, (state) => {
         state.loadingMaps = true;
@@ -95,12 +111,14 @@ const mapSlice = createSlice({
       })
       .addCase(createLocationEvent.fulfilled, (state, action: PayloadAction<LocationEvent>) => {
         state.loadingMaps = false;
+        state.error = null;
         state.events.push(action.payload);
       })
       .addCase(createLocationEvent.rejected, (state, action) => {
         state.loadingMaps = false;
         state.error = action.payload as string;
       })
+
       // --- getEvents ---
       .addCase(getEvents.pending, (state) => {
         state.loadingMaps = true;
@@ -113,6 +131,15 @@ const mapSlice = createSlice({
       .addCase(getEvents.rejected, (state, action) => {
         state.loadingMaps = false;
         state.error = action.payload as string;
+      })
+
+      // --- addComment ---
+      .addCase(addComment.fulfilled, (state, action) => {
+        const { eventId, comment } = action.payload;
+        const event = state.events.find((e) => e.id === eventId);
+        if (event) {
+          event.comments.push(comment);
+        }
       });
   },
 });

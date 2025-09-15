@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { getOrdersByUser, type OrderFormData } from "../../redux/slices/orderSlice";
+import { getOrdersByUser, saveOrder, type OrderFormData } from "../../redux/slices/orderSlice";
 import { convertMoney } from "../../utils/convertMoney";
-// import { generateDataAndSignature } from "../../utils/liqpay";
 import { FormField } from "../Admin/Products/FormSlices/FormField";
 import AuthPage from "../../components/AuthComponents/AuthPage";
 import { Loader } from "../../components/Loader";
-// import { clearCart } from "../../redux/slices/cartSlice";
 import { FormRadio } from "../Admin/Products/FormSlices/FormRadio";
 import { CityInput } from "./CityInput";
 import { WarehouseSelect } from "./WarehouseSelect";
+import { generateDataAndSignature } from "../../utils/liqpay";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
@@ -98,6 +98,7 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
       newErrors.email = "Некоректний email";
       valid = false;
     }
+
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(formData.email)) {
       newErrors.email = "Некоректний email";
@@ -114,13 +115,7 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
       valid = false;
     }
 
-    if (formData.phone_number.trim().length < 0) {
-      //   const phonePattern = /^\+380\d{9}$/;
-      //   if (!phonePattern.test(formData.phone_number.toString())) {
-      //     newErrors.phone_number = "Номер телефону повинен починатися з +380 та містити 9 цифр після";
-      //     valid = false;
-      //   }
-      // } else {
+    if (formData.phone_number.trim().length === 0) {
       newErrors.phone_number = "Номер телефону обов'язковий";
       valid = false;
     }
@@ -146,72 +141,59 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
 
   const handleLiqPay = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
     if (!validate()) return;
-    // const privateKey = "sandbox_private_key";
-    // const publicKey = "sandbox_public_key";
 
-    // const params = {
-    //   version: "3",
-    //   action: "pay",
-    //   amount: Number(total).toFixed(2),
-    //   currency: "UAH",
-    //   description: "Тестова оплата",
-    //   order_id: `order_${Date.now()}`,
-    //   result_url: "http://localhost:3000/success",
-    //   server_url: "http://localhost:3000/callback",
-    //   sandbox: "1",
-    // };
+    const publicKey = "";
+    const privateKey = "";
 
-    // const { data, signature } = generateDataAndSignature(params, privateKey, publicKey);
+    const params = {
+      version: "3",
+      action: "pay",
+      amount: Number(total).toFixed(2),
+      currency: "UAH",
+      description: "Тестова оплата",
+      order_id: `order_${Date.now()}`,
+      result_url: "http://localhost:3000/success",
+      server_url: "http://localhost:3000/callback",
+      sandbox: "1",
+    };
 
-    // const liqpay = (window as any).LiqPayCheckout.init({
-    //   data,
-    //   signature,
-    //   embedTo: "#liqpay",
-    //   mode: "popup",
-    // });
+    const { data, signature } = generateDataAndSignature(params, privateKey, publicKey);
 
-    // liqpay.on("liqpay.callback", function (response: any) {
-    //   console.log("LiqPay callback:", response);
+    const liqpay = (window as any).LiqPayCheckout.init({
+      data,
+      signature,
+      embedTo: "#liqpay",
+      mode: "popup",
+    });
 
-    //   if (response.status === "success" || response.status === "sandbox") {
-    //     const newData = {
-    //       name: formData.name,
-    //       email: formData.email,
-    //       city: formData.city,
-    //       price: Number(total.toFixed(2)),
-    //       cartItems: cartItems,
-    //       paymentId: response.payment_id || null,
-    //       paymentStatus: response.status,
-    //     };
+    liqpay.on("liqpay.callback", function (response: any) {
+      console.log("LiqPay callback:", response);
 
-    // dispatch(saveOrder(newData));
-    // const result = await dispatch(
-    //   saveOrder({ ...formData, price: Number(total.toFixed(2)), cartItems: cartItems, paymentId: "123456", paymentStatus: "good" })
-    // );
-    // if (saveOrder.fulfilled.match(result) && result.payload === "ok") {
-    //   alert("✅ Замовлення оформлене успішно!");
-    //   // або відкрити модалку, або перенаправити на сторінку подяки
-    // }
+      if (response.status === "success" || response.status === "sandbox") {
+        const newData = {
+          ...formData,
+          price: Number(total.toFixed(2)),
+          cartItems: cartItems,
+          paymentId: response.payment_id || null,
+          paymentStatus: response.status,
+        };
 
-    // if (saveOrder.rejected.match(result)) {
-    //   alert("❌ Сталася помилка: " + result.payload);
-    // }
-    // setFormData(initialForm);
-    //   } else {
-    //     console.error("Payment failed or cancelled", response);
-    //   }
-    // });
+        dispatch(saveOrder(newData));
+        setFormData(initialForm);
+      } else {
+        console.error("Payment failed or cancelled", response);
+      }
+    });
 
-    // liqpay.on("liqpay.ready", function () {
-    //   console.log("LiqPay ready");
-    // });
+    liqpay.on("liqpay.ready", function () {
+      console.log("LiqPay ready");
+    });
 
-    // liqpay.on("liqpay.close", function () {
-    //   console.log("LiqPay closed");
-    // });
-    // dispatch(clearCart());
+    liqpay.on("liqpay.close", function () {
+      console.log("LiqPay closed");
+    });
+    dispatch(clearCart());
   };
 
   return (

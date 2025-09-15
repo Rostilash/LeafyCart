@@ -18,6 +18,7 @@ import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
 import { MapOrdrers } from "./pages/Admin/Map/MapOrdrers";
 import { CheckoutPage } from "./pages/Checkout/CheckoutPage";
 import { useCartTotals } from "./hook/useCartTotals";
+import { SuccessPage } from "./pages/Checkout/SuccessPage";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ function App() {
         <Route path="cart_rents" element={<PersonalInfo />} />
         <Route path="auth" element={<AuthPage />} />
         <Route path="checkout" element={<CheckoutPage totalPrice={totalPrice} totalDiscount={totalDiscount} />} />
+        <Route path="success" element={<SuccessPage />} />
 
         <Route path="admin" element={<AdminWrapper />}>
           <Route index element={<AdminPanel />} />
