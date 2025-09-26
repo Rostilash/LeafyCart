@@ -1,4 +1,4 @@
-import type { Filters } from "../../../utils/useCategoryFilter";
+import type { Filters } from "../../../hook/useCategoryFilter";
 import { ClearFilters } from "../FiltersComponents/ClearFilters";
 import { CountryFilterList } from "../FiltersComponents/CountryFilterList";
 import { InStockCheckbox } from "../FiltersComponents/InStockCheckbox";

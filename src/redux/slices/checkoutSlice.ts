@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
+// ---------------- TYPES ----------------
 export interface PaymentProps {
   amount: number;
   name: string;
@@ -19,6 +21,7 @@ export interface PaymentState {
   nova_adress: Warehouse[];
 }
 
+// ---------------- INITIAL STATE ----------------
 const initialState: PaymentState = {
   loading: false,
   loadingWarehouses: false,
@@ -29,7 +32,7 @@ const initialState: PaymentState = {
 };
 
 const API_BASE = import.meta.env.DEV ? "/api" : "https://nova-poshta-worker.leafy-cart.workers.dev";
-
+// ---------------- THUNKS ----------------
 export const fetchCities = createAsyncThunk("payment/fetchCities", async (query: string) => {
   const response = await fetch(API_BASE, {
     method: "POST",
@@ -70,6 +73,7 @@ export const fetchWerhouses = createAsyncThunk("payment/fetchWerhouses", async (
   }
 });
 
+// ---------------- SLICE ----------------
 const paymentSlice = createSlice({
   name: "payment",
   initialState,

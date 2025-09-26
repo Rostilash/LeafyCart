@@ -3,6 +3,7 @@ import { auth, db } from "../../fireBase/config";
 import { collection, where, query, updateDoc, doc, getDoc, getDocs, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
+import { generateDataAndSignature, liqPayPromise } from "../../utils/liqpay";
 
 // ---------------- TYPES ----------------
 export interface OrderFormData {
@@ -16,6 +17,7 @@ export interface OrderFormData {
   mid_name: string;
   phone_number: string;
 }
+
 export interface OrderType extends OrderFormData {
   id: string;
   userId: string;
@@ -50,6 +52,10 @@ function normalizeOrder(id: string, data: any): OrderType {
     createdAt: data.createdAt?.toDate?.().toISOString() ?? null,
   } as OrderType;
 }
+
+const LIQPAY_PUBLIC = "";
+const LIQPAY_PRIVATE = "";
+const BASE_URL = process.env.NODE_ENV === "production" ? "https://leafycart-shop.web.app/" : "http://localhost:3000";
 
 // ---------------- THUNKS ----------------
 export const getAllOrders = createAsyncThunk<OrderType[], void, { rejectValue: string }>("orders/getAllOrders", async (_, thunkAPI) => {
@@ -135,17 +141,8 @@ export const saveOrder = createAsyncThunk<
     if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
 
     await addDoc(collection(db, "orders"), {
+      ...form,
       userId: user.uid,
-      name: form.name,
-      last_name: form.last_name,
-      mid_name: form.mid_name,
-      phone_number: form.phone_number,
-      email: form.email,
-      city: form.city,
-      payment: form.payment,
-      address: form.warehouse,
-      price: form.price,
-      cartItems: form.cartItems,
       paymentId: form.paymentId || null,
       paymentStatus: form.paymentStatus || "pending",
       status: "Нове замовлення",
@@ -158,6 +155,44 @@ export const saveOrder = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.message);
     }
     return thunkAPI.rejectWithValue(String(error));
+  }
+});
+
+export const processLiqPay = createAsyncThunk<
+  OrderType,
+  { formData: OrderFormData; cartItems: CartItem[]; totalSummary: number },
+  { rejectValue: string }
+>("orders/processLiqPay", async ({ formData, cartItems, totalSummary }, thunkAPI) => {
+  try {
+    const params = {
+      version: "3",
+      action: "pay",
+      amount: Number(totalSummary).toFixed(2),
+      currency: "UAH",
+      description: "Тестова оплата",
+      order_id: `order_${Date.now()}`,
+      result_url: `${BASE_URL}/success`,
+      server_url: `${BASE_URL}/callback`,
+      sandbox: "1",
+    };
+
+    const { data, signature } = generateDataAndSignature(params, LIQPAY_PRIVATE, LIQPAY_PUBLIC);
+
+    const response = await liqPayPromise(data, signature);
+
+    const newOrder = {
+      ...formData,
+      cartItems,
+      price: totalSummary,
+      paymentId: response.payment_id || null,
+      paymentStatus: response.status,
+      paymentMethod: "liqpay",
+    };
+
+    const docRef = await addDoc(collection(db, "orders"), newOrder);
+    return normalizeOrder(docRef.id, newOrder);
+  } catch (err) {
+    return thunkAPI.rejectWithValue("LiqPay payment failed");
   }
 });
 

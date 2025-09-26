@@ -1,5 +1,5 @@
 import React from "react";
-import type { Filters } from "../../../utils/useCategoryFilter";
+import type { Filters } from "../../../hook/useCategoryFilter";
 
 type ClearFiltersProps = {
   onFilterChange: React.Dispatch<React.SetStateAction<Filters>>;

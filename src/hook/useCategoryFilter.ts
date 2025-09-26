@@ -1,6 +1,6 @@
 import type { FoodProduct } from "../types/productTypes";
 import { useMemo } from "react";
-import { getMaxPrice, getUniqueCountries } from "./filters";
+import { getMaxPrice, getUniqueCountries } from "../utils/filters";
 
 export interface Filters {
   minPrice: string;

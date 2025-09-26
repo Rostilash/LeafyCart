@@ -1,5 +1,5 @@
-import type { FoodProduct } from "../types/productTypes";
-import type { CartItem } from "../types/cartTypes";
+import type { FoodProduct } from "./productTypes";
+import type { CartItem } from "./cartTypes";
 
 export const mapFoodProductToCartItem = (product: FoodProduct): CartItem => ({
   id: product.id,

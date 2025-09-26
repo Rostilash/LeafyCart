@@ -1,14 +1,15 @@
-import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
+import { useAppDispatch, useAppSelector } from "../../../redux/reduxTypeHook";
 import { useEffect, useMemo } from "react";
-import { fetchWerhouses } from "../../redux/slices/paymentSlice";
+import { fetchWerhouses } from "../../../redux/slices/checkoutSlice";
 
 interface WarehouseSelectProps {
   cityRef: string;
   value: string;
+  error: string;
   onChange: (value: string) => void;
 }
 
-export const WarehouseSelect = ({ cityRef, value, onChange }: WarehouseSelectProps) => {
+export const WarehouseSelect = ({ cityRef, value, onChange, error }: WarehouseSelectProps) => {
   const dispatch = useAppDispatch();
   const warehouses = useAppSelector((state) => state.payment.nova_adress);
   const loadingWarehouses = useAppSelector((state) => state.payment.loadingWarehouses);
@@ -39,7 +40,7 @@ export const WarehouseSelect = ({ cityRef, value, onChange }: WarehouseSelectPro
   const hasWarehouses = filteredWarehouses.length > 0;
 
   return (
-    <label htmlFor="" className={`${cityRef ? "block" : "hidden"}`}>
+    <label htmlFor="" className={`${cityRef ? "block" : "hidden"} block w-full`}>
       Оберіть відділення
       {loadingWarehouses && <p className="text-sm text-gray-500">Завантаження відділень...</p>}
       {hasWarehouses ? (
@@ -54,6 +55,7 @@ export const WarehouseSelect = ({ cityRef, value, onChange }: WarehouseSelectPro
       ) : !loadingWarehouses ? (
         <p>Відділення не знайдено для цього міста</p>
       ) : null}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </label>
   );
 };

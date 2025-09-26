@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as crypto from "crypto";
-import type { PaymentProps } from "./redux/slices/paymentSlice";
+import type { PaymentProps } from "./redux/slices/checkoutSlice";
 
 admin.initializeApp();
 

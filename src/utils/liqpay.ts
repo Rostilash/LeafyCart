@@ -12,3 +12,24 @@ export const generateDataAndSignature = (params: Record<string, any>, privateKey
 
   return { data, signature };
 };
+
+export function liqPayPromise(data: string, signature: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const liqpay = (window as any).LiqPayCheckout.init({
+      data,
+      signature,
+      embedTo: "#liqpay",
+      mode: "popup",
+    });
+
+    liqpay.on("liqpay.callback", (response: any) => {
+      if (response.status === "success" || response.status === "sandbox") {
+        resolve(response);
+      } else {
+        reject(new Error("Payment failed or cancelled"));
+      }
+    });
+
+    liqpay.on("liqpay.close", () => reject(new Error("Payment window closed")));
+  });
+}

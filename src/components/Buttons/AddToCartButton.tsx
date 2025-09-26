@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../redux/reduxTypeHook";
 import { addToCart } from "../../redux/slices/cartSlice";
 import type { FoodProduct } from "../../types/productTypes";
 import type { CartItem } from "../../types/cartTypes";
-import { mapFoodProductToCartItem } from "../../utils/mapFoodToCartItem";
+import { mapFoodProductToCartItem } from "../../types/mapFoodToCartItem";
 import { Check, PackagePlus } from "lucide-react";
 import { useSnackbar } from "../../hook/useSnackbarReturn";
 import { AppSnackbar } from "../AppSnackbar";

@@ -6,7 +6,7 @@ import { Breadcrumbs } from "../Breadcrumbs";
 import { FiltersPanel } from "./FiltersPanel";
 import type { FoodProduct } from "../../../types/productTypes";
 import { CategoryProducts } from "./CategoryProducts";
-import { useCategoryFilter } from "../../../utils/useCategoryFilter";
+import { useCategoryFilter } from "../../../hook/useCategoryFilter";
 import { getProductsForSubcategory } from "../../../utils/filters";
 
 export const CategoryPage = () => {

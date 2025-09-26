@@ -9,6 +9,7 @@ import { getUserNameFromEmail } from "../utils/getUserNameByEmail";
 
 export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, isNavOpened, quantity }) => {
   const { user } = useAppSelector((state) => state.auth);
+
   return (
     <header
       className={`
@@ -32,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
 
         {/* Right side */}
         <div className="flex items-center gap-4">
-          <UserSection userName={user ? getUserNameFromEmail(user) : "Гість"} />
+          <UserSection userName={user ? getUserNameFromEmail(user) : ""} />
           <CartButton quantity={quantity} onClick={() => setIsCartOpen((prev) => !prev)} />
         </div>
       </div>

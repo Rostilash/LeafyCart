@@ -18,7 +18,7 @@ import { AdminOrdersPage } from "./pages/Admin/Orders/AdminOrdersPage";
 import { MapOrdrers } from "./pages/Admin/Map/MapOrdrers";
 import { CheckoutPage } from "./pages/Checkout/CheckoutPage";
 import { useCartTotals } from "./hook/useCartTotals";
-import { SuccessPage } from "./pages/Checkout/SuccessPage";
+import { SuccessPage } from "./pages/Checkout/components/SuccessPage";
 
 function App() {
   const dispatch = useAppDispatch();

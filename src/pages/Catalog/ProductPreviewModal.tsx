@@ -8,7 +8,7 @@ import { PreviewInfo } from "./PreviwComponents/PreviewInfo";
 import { PreviewFooter } from "./PreviwComponents/PreviewFooter";
 import { RecommendedProducts } from "./PreviwComponents/RecommendedProducts";
 import { getRecommendedProducts } from "../../utils/getRecommendedProducts";
-import { useProductRating } from "../../utils/useProductRating";
+import { useProductRating } from "../../hook/useProductRating";
 
 export const ProductPreviewModal = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
