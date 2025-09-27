@@ -4,28 +4,15 @@ import { getOrdersByUser, processLiqPay, saveOrder, type OrderFormData } from ".
 import AuthPage from "../../components/AuthComponents/AuthPage";
 import { CheckoutForm } from "./components/CheckoutForm";
 import { CheckoutSummary } from "./components/CheckoutSummary";
-import { clearCart } from "../../redux/slices/cartSlice";
-import { validateOrderForm } from "../../utils/validateOrderForm";
-import { useNavigate } from "react-router-dom";
+import { formatPhone, validateOrderForm } from "../../utils/validateOrderForm";
+import { useSnackbar } from "../../hook/useSnackbarReturn";
+import { AppSnackbar } from "../../components/AppSnackbar";
+import { useOrderLoaders } from "../../hook/useOrderLoaders";
 
 type ConfirmBuyoutInfoProps = {
   totalPrice: number;
   totalDiscount?: number;
 };
-interface LiqPayResponse {
-  status: string;
-  [key: string]: unknown;
-}
-interface LiqPayCheckoutInstance {
-  init: (config: { data: string; signature: string; embedTo?: string; mode?: string }) => {
-    on: (event: string, callback: (response: LiqPayResponse) => void) => void;
-  };
-}
-declare global {
-  interface Window {
-    LiqPayCheckout: LiqPayCheckoutInstance;
-  }
-}
 
 const initialForm: OrderFormData = {
   name: "",
@@ -41,23 +28,20 @@ const initialForm: OrderFormData = {
 
 export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoProps) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { successMessage } = useAppSelector((state) => state.order);
-  const userId = useAppSelector((state) => state.auth.user?.uid);
-  const cartItems = useAppSelector((state) => state.cart.items);
-  const { user_orders } = useAppSelector((state) => state.order);
-  const [formData, setFormData] = useState<OrderFormData>(initialForm);
-  const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
 
-  // Watching for success message to redireact on success page.
-  useEffect(() => {
-    if (successMessage) {
-      const timeout = setTimeout(() => {
-        navigate("/success");
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [successMessage, navigate]);
+  const userId = useAppSelector((state) => state.auth.user?.uid);
+  const { user_orders } = useAppSelector((state) => state.order);
+
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  const [formData, setFormData] = useState<OrderFormData>(initialForm);
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
+
+  // Custum hook for popup message
+  const { open, message, severity, showSnackbar, handleClose } = useSnackbar();
+
+  // Watching for success or error message to redireact on success page.
+  useOrderLoaders({ setFormData, showSnackbar, initialForm });
 
   // Get the last order from FB and set into formData if user is log in
   useEffect(() => {
@@ -85,14 +69,11 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
   }, [dispatch, userId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    let { name, value } = e.target;
-
-    if (name === "phone_number") {
-      value = value.replace(/\D/g, "");
-      if (value.length > 9) value = value.slice(0, 9);
-    }
-
-    setFormData({ ...formData, [e.target.name]: value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "phone_number" ? formatPhone(value) : value,
+    });
   };
 
   const discount = (totalDiscount ?? 0) / 100;
@@ -101,16 +82,15 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
 
   const handleLiqPay = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { valid, errors } = validateOrderForm(formData);
-    setErrors(errors);
 
     // Check if there an errors will return
+    const { valid, errors } = validateOrderForm(formData);
+    setFormErrors(errors);
     if (!valid) return;
 
     // Choose the payment for sending.
     if (formData.payment === "liqpay") {
       dispatch(processLiqPay({ formData, cartItems, totalSummary }));
-      console.log("Liqpay order sended!");
     } else if (formData.payment === "cod") {
       dispatch(
         saveOrder({
@@ -120,10 +100,7 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
           paymentStatus: "pending",
         })
       );
-      console.log("Cod order sended!");
     }
-    setFormData(initialForm);
-    dispatch(clearCart());
   };
 
   const hasCartItems = cartItems.length > 0;
@@ -155,11 +132,14 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
           setFormData={setFormData}
           formData={formData}
           hasCartItems={hasCartItems}
-          errors={errors}
+          errors={formErrors}
         />
 
         {/* Right side */}
         <CheckoutSummary delivery={delivery} discount={discount} totalPrice={totalPrice} totalSummary={totalSummary} />
+
+        {/* Initial state message (error&succes) */}
+        <AppSnackbar open={open} message={message} severity={severity} onClose={handleClose} />
       </div>
     </>
   );

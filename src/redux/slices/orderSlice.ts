@@ -4,8 +4,26 @@ import { collection, where, query, updateDoc, doc, getDoc, getDocs, addDoc, Time
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
 import { generateDataAndSignature, liqPayPromise } from "../../utils/liqpay";
+import { sanitizeFirestoreData } from "../../utils/validateOrderForm";
+import { clearCart } from "./cartSlice";
 
 // ---------------- TYPES ----------------
+// liq pay
+interface LiqPayResponse {
+  status: string;
+  [key: string]: unknown;
+}
+interface LiqPayCheckoutInstance {
+  init: (config: { data: string; signature: string; embedTo?: string; mode?: string }) => {
+    on: (event: string, callback: (response: LiqPayResponse) => void) => void;
+  };
+}
+declare global {
+  interface Window {
+    LiqPayCheckout: LiqPayCheckoutInstance;
+  }
+}
+// orders
 export interface OrderFormData {
   name: string;
   email: string;
@@ -140,14 +158,18 @@ export const saveOrder = createAsyncThunk<
     const user = auth.currentUser || (await signInAnonymously(auth)).user;
     if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
 
+    const newForm = sanitizeFirestoreData(form);
+
     await addDoc(collection(db, "orders"), {
-      ...form,
+      ...newForm,
       userId: user.uid,
       paymentId: form.paymentId || null,
       paymentStatus: form.paymentStatus || "pending",
       status: "Нове замовлення",
       createdAt: serverTimestamp(),
     });
+
+    thunkAPI.dispatch(clearCart());
 
     return "ok";
   } catch (error: unknown) {
@@ -180,8 +202,14 @@ export const processLiqPay = createAsyncThunk<
 
     const response = await liqPayPromise(data, signature);
 
+    if (response.status !== "success") {
+      return thunkAPI.rejectWithValue(`Оплата не пройшла. Статус: ${response.status}`);
+    }
+
+    const newForm = sanitizeFirestoreData(formData);
+
     const newOrder = {
-      ...formData,
+      ...newForm,
       cartItems,
       price: totalSummary,
       paymentId: response.payment_id || null,
@@ -190,6 +218,9 @@ export const processLiqPay = createAsyncThunk<
     };
 
     const docRef = await addDoc(collection(db, "orders"), newOrder);
+
+    thunkAPI.dispatch(clearCart());
+
     return normalizeOrder(docRef.id, newOrder);
   } catch (err) {
     return thunkAPI.rejectWithValue("LiqPay payment failed");
@@ -200,7 +231,11 @@ export const processLiqPay = createAsyncThunk<
 const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSuccessMessage: (state) => {
+      state.successMessage = null;
+    },
+  },
   extraReducers(builder) {
     builder
       // Save order
@@ -216,6 +251,21 @@ const orderSlice = createSlice({
       .addCase(saveOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Не вдалося зберегти замовлення";
+      })
+
+      // LiqPay
+      .addCase(processLiqPay.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(processLiqPay.fulfilled, (state) => {
+        state.loading = false;
+        state.successMessage = "Ваше замовлення успішно оформлене та оплачено!";
+      })
+      .addCase(processLiqPay.rejected, (state) => {
+        state.loading = false;
+        state.error = "Помилка оформлення оплати...";
       })
 
       // All getOrdersByUser
@@ -254,5 +304,7 @@ const orderSlice = createSlice({
       });
   },
 });
+
+export const { clearSuccessMessage } = orderSlice.actions;
 
 export default orderSlice.reducer;

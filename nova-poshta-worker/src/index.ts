@@ -19,9 +19,10 @@ interface NPRequest {
 }
 
 export default {
-	async fetch(request: Request, env: { NP_API_KEY: string }) {
+	async fetch(request: Request, env: { NP_API_KEY: string; LIQPAY_PUBLIC: string; LIQPAY_PRIVATE: string }) {
 		const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://leafycart-shop.web.app'];
 
+		//givess permition for this url's
 		const origin = request.headers.get('Origin') || '';
 		const corsHeaders = {
 			'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : '',
@@ -47,6 +48,12 @@ export default {
 		const body: NPRequest = await request.json();
 		body.apiKey = env.NP_API_KEY;
 
+		//LiqPay
+		const liqpayKeys = {
+			public: env.LIQPAY_PUBLIC || '',
+			private: env.LIQPAY_PRIVATE || '',
+		};
+
 		const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -55,6 +62,8 @@ export default {
 
 		const text = await response.text();
 
-		return new Response(text, { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+		return new Response(JSON.stringify({ np: JSON.parse(text), liqpay: liqpayKeys }), {
+			headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+		});
 	},
 };

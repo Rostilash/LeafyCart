@@ -25,7 +25,7 @@ const orderFields = [
 ];
 
 export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData, hasCartItems, errors }: CheckoutFormProps) => {
-  const { successMessage, error: errorOrder, loading } = useAppSelector((state) => state.order);
+  const { loading } = useAppSelector((state) => state.order);
 
   return (
     <form onSubmit={handleLiqPay} className="flex flex-col gap-4">
@@ -93,15 +93,9 @@ export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData
         />
       </div>
 
-      {loading && <Loader />}
-
-      <button type="submit" className="btn-primary btn_hover mt-8" disabled={!hasCartItems || !!successMessage}>
-        {formData.payment === "cod" ? "Оплатити у віділенні" : "Оплатити через LiqPay"}
+      <button type="submit" className="btn-primary btn_hover mt-8" disabled={!hasCartItems || !!loading}>
+        {formData.payment === "cod" ? "Оплатити у віділенні" : "Оплатити через LiqPay"} {loading && <Loader />}
       </button>
-
-      {/* Succes message and Error */}
-      {successMessage && <p className="text-green-600">{successMessage}</p>}
-      {errorOrder && <p className="text-red-600">{String(errorOrder)}</p>}
     </form>
   );
 };

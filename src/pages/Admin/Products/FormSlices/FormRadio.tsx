@@ -13,7 +13,7 @@ interface FormRadioProps {
 export const FormRadio: FC<FormRadioProps> = ({ name, value, onChange, checked, title, img, size }) => {
   return (
     <label className="flex gap-2 items-center">
-      {img && <img src={img} alt={img} className={`w-[${size}px], h-[${size}px] `} />}
+      {img && <img src={img} alt={img} style={{ width: size, height: size }} className="object-contain" />}
       <input type="radio" name={name} value={value} checked={checked} onChange={onChange} />
       <span>{title}</span>
     </label>
