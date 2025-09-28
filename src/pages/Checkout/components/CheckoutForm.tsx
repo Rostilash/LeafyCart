@@ -92,10 +92,10 @@ export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData
           size={40}
         />
       </div>
-
       <button type="submit" className="btn-primary btn_hover mt-8" disabled={!hasCartItems || !!loading}>
-        {formData.payment === "cod" ? "Оплатити у віділенні" : "Оплатити через LiqPay"} {loading && <Loader />}
+        {formData.payment === "cod" ? "Оплатити у віділенні" : "Оплатити через LiqPay"}
       </button>
+      {loading && <Loader />}
     </form>
   );
 };

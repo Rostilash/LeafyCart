@@ -51,6 +51,11 @@ export const validateOrderForm = (formData: OrderFormData) => {
 
 export const formatPhone = (value: string) => value.replace(/\D/g, "").slice(0, 9);
 
-export function sanitizeFirestoreData<T extends Record<string, any>>(obj: T): T {
-  return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v === undefined ? null : v])) as T;
+export function sanitizeFirestoreData(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(sanitizeFirestoreData);
+  } else if (obj !== null && typeof obj === "object") {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, sanitizeFirestoreData(v === undefined ? null : v)]));
+  }
+  return obj;
 }

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAppDispatch } from "../../redux/reduxTypeHook";
 import { addToCart } from "../../redux/slices/cartSlice";
-import type { FoodProduct } from "../../types/productTypes";
-import type { CartItem } from "../../types/cartTypes";
 import { mapFoodProductToCartItem } from "../../types/mapFoodToCartItem";
 import { Check, PackagePlus } from "lucide-react";
 import { useSnackbar } from "../../hook/useSnackbarReturn";
 import { AppSnackbar } from "../AppSnackbar";
+import type { FoodProduct } from "../../types/productTypes";
+import type { CartItem } from "../../types/cartTypes";
 
 export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
       })
     );
     setAdded(true);
-    showSnackbar(`✅ Ви додали до кошику - ${product.name}!`, "success");
+    showSnackbar(`Ви додали до кошику - ${product.name}! `, "success");
   };
 
   useEffect(() => {
@@ -49,7 +49,6 @@ export const AddToCartButton = ({ product }: { product: FoodProduct }) => {
           </span>
         )}
       </button>
-
       <AppSnackbar open={open} message={message} severity={severity} onClose={handleClose} />
     </>
   );

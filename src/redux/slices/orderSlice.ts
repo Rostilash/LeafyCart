@@ -1,6 +1,21 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { auth, db } from "../../fireBase/config";
-import { collection, where, query, updateDoc, doc, getDoc, getDocs, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  where,
+  query,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  Timestamp,
+  serverTimestamp,
+  orderBy,
+  onSnapshot,
+  type Unsubscribe,
+} from "firebase/firestore";
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
 import { generateDataAndSignature, liqPayPromise } from "../../utils/liqpay";
@@ -23,7 +38,8 @@ declare global {
     LiqPayCheckout: LiqPayCheckoutInstance;
   }
 }
-// orders
+
+// Orders
 export interface OrderFormData {
   name: string;
   email: string;
@@ -144,6 +160,18 @@ export const updateOrderStatus = createAsyncThunk<OrderType, { id: string; statu
   }
 );
 
+export const deleteOrder = createAsyncThunk<string, { id: string }, { rejectValue: string }>("orders/deleteOrder", async ({ id }, thunkAPI) => {
+  try {
+    await deleteDoc(doc(db, "orders", id));
+    return id;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+    return thunkAPI.rejectWithValue("Не вдалося видалити замовлення");
+  }
+});
+
 export const saveOrder = createAsyncThunk<
   string,
   OrderFormData & {
@@ -227,6 +255,40 @@ export const processLiqPay = createAsyncThunk<
   }
 });
 
+// For subscribe the added orders... need to change it letter.
+let unsubscribe: Unsubscribe | null = null;
+export const subscribeNewOrders = createAsyncThunk<void, void, { rejectValue: string }>("orders/subscribeNewOrders", async (_, thunkAPI) => {
+  try {
+    let firstLoad = true;
+
+    const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+
+    unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          if (firstLoad) return;
+          const data = change.doc.data();
+          const order = normalizeOrder(change.doc.id, data);
+          thunkAPI.dispatch(orderSlice.actions.addNewOrderNotification(order));
+        }
+        if (change.type === "removed") {
+          if (firstLoad) return;
+          const data = change.doc.data();
+          const order = normalizeOrder(change.doc.id, data);
+          thunkAPI.dispatch(orderSlice.actions.removeOrderNotification(order));
+        }
+      });
+      firstLoad = false;
+    });
+  } catch (err) {
+    return thunkAPI.rejectWithValue("Не вдалося підписатися на замовлення");
+  }
+});
+
+export const unsubscribeNewOrders = () => {
+  if (unsubscribe) unsubscribe();
+};
+
 // ---------------- SLICE ----------------
 const orderSlice = createSlice({
   name: "order",
@@ -234,6 +296,12 @@ const orderSlice = createSlice({
   reducers: {
     clearSuccessMessage: (state) => {
       state.successMessage = null;
+    },
+    addNewOrderNotification: (state, action: PayloadAction<OrderType>) => {
+      state.successMessage = `Нове замовлення від: ${action.payload.name} на ${action.payload.price.toFixed(2)} грн`;
+    },
+    removeOrderNotification: (state, action: PayloadAction<OrderType>) => {
+      state.successMessage = `Замовлення ${action.payload.id} на ${action.payload.price} грн було видалено`;
     },
   },
   extraReducers(builder) {
@@ -301,6 +369,14 @@ const orderSlice = createSlice({
         const updatedOrder = action.payload;
         state.all_orders = state.all_orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order));
         state.user_orders = state.user_orders.map((order) => (order.id === updatedOrder.id ? updatedOrder : order));
+      })
+      //Delete order (for admin)
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.all_orders = state.all_orders.filter((order) => order.id !== action.payload);
+        state.user_orders = state.user_orders.filter((order) => order.id !== action.payload);
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.error = action.payload ?? "Помилка при видаленні замовлення";
       });
   },
 });
