@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -9,8 +9,12 @@ export default defineConfig({
       "/api": {
         target: "https://nova-poshta-worker.leafy-cart.workers.dev",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path,
       },
     },
   },
-});
+  test: {
+    globals: true,
+    environment: "jsdom",
+  },
+} as UserConfig);

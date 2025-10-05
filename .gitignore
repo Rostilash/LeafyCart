@@ -25,4 +25,10 @@ dist-ssr
 
 
 # Environment variables
-.env.local
+.env.local;
+
+# .env
+VITE_API_BASE=/api/liqpay
+
+# .env.production
+VITE_API_BASE=https://nova-poshta-worker.leafy-cart.workers.dev/api/liqpay

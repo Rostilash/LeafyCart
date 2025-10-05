@@ -18,7 +18,7 @@ export function liqPayPromise(data: string, signature: string): Promise<any> {
     const liqpay = (window as any).LiqPayCheckout.init({
       data,
       signature,
-      embedTo: "#liqpay",
+      embedTo: "#liqpay_checkout",
       mode: "popup",
     });
 

@@ -12,7 +12,7 @@ const AuthPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && currentUser) {
+    if (!loading && currentUser?.email) {
       navigate("/");
     }
   }, [currentUser, loading, navigate]);

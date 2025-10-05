@@ -18,12 +18,12 @@ import {
 } from "firebase/firestore";
 import type { CartItem } from "../../types/cartTypes";
 import { signInAnonymously } from "firebase/auth";
-import { generateDataAndSignature, liqPayPromise } from "../../utils/liqpay";
+import { liqPayPromise } from "../../utils/liqpay";
 import { sanitizeFirestoreData } from "../../utils/validateOrderForm";
 import { clearCart } from "./cartSlice";
 
 // ---------------- TYPES ----------------
-// liq pay
+// Liqpay
 interface LiqPayResponse {
   status: string;
   [key: string]: unknown;
@@ -87,8 +87,7 @@ function normalizeOrder(id: string, data: any): OrderType {
   } as OrderType;
 }
 
-const LIQPAY_PUBLIC = "";
-const LIQPAY_PRIVATE = "";
+const API_BASE = import.meta.env.DEV ? "/api/liqpay" : "https://nova-poshta-worker.leafy-cart.workers.dev/api/liqpay";
 const BASE_URL = process.env.NODE_ENV === "production" ? "https://leafycart-shop.web.app/" : "http://localhost:3000";
 
 // ---------------- THUNKS ----------------
@@ -219,23 +218,34 @@ export const processLiqPay = createAsyncThunk<
       action: "pay",
       amount: Number(totalSummary).toFixed(2),
       currency: "UAH",
-      description: "Тестова оплата",
+      description: "Test",
       order_id: `order_${Date.now()}`,
       result_url: `${BASE_URL}/success`,
       server_url: `${BASE_URL}/callback`,
       sandbox: "1",
     };
 
-    const { data, signature } = generateDataAndSignature(params, LIQPAY_PRIVATE, LIQPAY_PUBLIC);
+    const res = await fetch(`${API_BASE}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
 
+    if (!res.ok) {
+      return thunkAPI.rejectWithValue("Не вдалося отримати data/signature з воркера");
+    }
+
+    const { data, signature } = await res.json();
+
+    // 3. Виклик LiqPay через обгортку liqPayPromise
     const response = await liqPayPromise(data, signature);
 
+    // 4. Перевірка статусу
     if (response.status !== "success") {
       return thunkAPI.rejectWithValue(`Оплата не пройшла. Статус: ${response.status}`);
     }
 
     const newForm = sanitizeFirestoreData(formData);
-
     const newOrder = {
       ...newForm,
       cartItems,

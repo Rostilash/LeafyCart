@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Activity } from "react";
 
 interface Tab {
   label: string;
@@ -32,7 +32,13 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTab }) => {
       </nav>
 
       {/* Content */}
-      <div className="p-4">{tabs.map((tab) => activeTab === tab.value && <div key={tab.value}>{tab.content}</div>)}</div>
+      <div className="p-4">
+        {tabs.map((tab) => (
+          <Activity key={tab.value} mode={activeTab === tab.value ? "visible" : "hidden"}>
+            {tab.content}
+          </Activity>
+        ))}
+      </div>
     </div>
   );
 };

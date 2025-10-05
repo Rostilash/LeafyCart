@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import { auth, db } from "../../fireBase/config";
 import {
   createUserWithEmailAndPassword,
@@ -150,7 +150,14 @@ export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
+  },
   extraReducers(builder) {
     builder
       // register
@@ -218,5 +225,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const { setError, clearError } = authSlice.actions;
 
 export default authSlice.reducer;

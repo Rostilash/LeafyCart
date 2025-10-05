@@ -31,10 +31,11 @@ const initialState: PaymentState = {
   nova_adress: [],
 };
 
-const API_BASE = import.meta.env.DEV ? "/api" : "https://nova-poshta-worker.leafy-cart.workers.dev";
+const API_BASE = import.meta.env.DEV ? "/api/np" : "https://nova-poshta-worker.leafy-cart.workers.dev/api/np";
+
 // ---------------- THUNKS ----------------
 export const fetchCities = createAsyncThunk("payment/fetchCities", async (query: string) => {
-  const response = await fetch(API_BASE, {
+  const response = await fetch(`${API_BASE}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -44,7 +45,6 @@ export const fetchCities = createAsyncThunk("payment/fetchCities", async (query:
     }),
   });
   const data = await response.json();
-
   return data.data.map((city: any) => ({
     description: city.Description,
     ref: city.Ref,
@@ -53,7 +53,7 @@ export const fetchCities = createAsyncThunk("payment/fetchCities", async (query:
 
 export const fetchWerhouses = createAsyncThunk("payment/fetchWerhouses", async (cityRef: string) => {
   try {
-    const response = await fetch(API_BASE, {
+    const response = await fetch(`${API_BASE}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -63,7 +63,6 @@ export const fetchWerhouses = createAsyncThunk("payment/fetchWerhouses", async (
       }),
     });
     const data = await response.json();
-
     return data.data.map((wh: any) => ({
       description: wh.Description,
       ref: wh.Ref,

@@ -16,7 +16,7 @@ export const UserOrders = ({ orders }: UserOrdersProps) => {
               <div key={order.id} className="p-4 border rounded-xl bg-white shadow-sm hover:shadow-md transition-all">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700 font-medium">Замовлення #{index + 1}</span>
-                  <span className="text-lg font-bold">{order.price} грн</span>
+                  <span className="text-lg font-bold">{order.price.toFixed(2)} грн</span>
                 </div>
 
                 <p

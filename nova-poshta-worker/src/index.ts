@@ -1,16 +1,4 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
+import CryptoJS from 'crypto-js';
 interface NPRequest {
 	modelName: string;
 	calledMethod: string;
@@ -18,11 +6,36 @@ interface NPRequest {
 	apiKey?: string;
 }
 
+interface LiqPayRequest {
+	amount: number;
+	currency: string;
+	description: string;
+	order_id: string;
+	result_url: string;
+	server_url: string;
+	sandbox?: '1' | '0';
+}
+
+async function generateLiqPaySignature(privateKey: string, data: string): Promise<string> {
+	const encoder = new TextEncoder();
+	const str = privateKey + data + privateKey;
+
+	const buffer = encoder.encode(str);
+	const hash = await crypto.subtle.digest('SHA-1', buffer);
+
+	// Перетворюємо ArrayBuffer → Base64
+	const bytes = new Uint8Array(hash);
+	let binary = '';
+	for (let i = 0; i < bytes.byteLength; i++) {
+		binary += String.fromCharCode(bytes[i]);
+	}
+	return btoa(binary);
+}
+
 export default {
 	async fetch(request: Request, env: { NP_API_KEY: string; LIQPAY_PUBLIC: string; LIQPAY_PRIVATE: string }) {
 		const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://leafycart-shop.web.app'];
 
-		//givess permition for this url's
 		const origin = request.headers.get('Origin') || '';
 		const corsHeaders = {
 			'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : '',
@@ -30,11 +43,13 @@ export default {
 			'Access-Control-Allow-Headers': 'Content-Type',
 		};
 
-		// OPTIONS preflight
 		if (request.method === 'OPTIONS') {
 			return new Response(null, { status: 204, headers: corsHeaders });
 		}
 
+		const url = new URL(request.url);
+
+		// --- ROUTE: Health check ---
 		if (request.method === 'GET') {
 			return new Response('✅ Worker is running!', {
 				headers: { ...corsHeaders, 'Content-Type': 'text/plain' },
@@ -45,25 +60,51 @@ export default {
 			return new Response('Only POST allowed', { status: 405, headers: corsHeaders });
 		}
 
-		const body: NPRequest = await request.json();
-		body.apiKey = env.NP_API_KEY;
+		try {
+			// --- ROUTE: Nova Poshta ---
+			if (url.pathname === '/api/np') {
+				const body: NPRequest = await request.json();
+				body.apiKey = env.NP_API_KEY;
 
-		//LiqPay
-		const liqpayKeys = {
-			public: env.LIQPAY_PUBLIC || '',
-			private: env.LIQPAY_PRIVATE || '',
-		};
+				const npResponse = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(body),
+				});
+				return new Response(npResponse.body, {
+					headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+					status: npResponse.status,
+				});
+			}
 
-		const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(body),
-		});
+			// --- ROUTE: LiqPay ---
+			if (url.pathname === '/api/liqpay') {
+				const params: LiqPayRequest = await request.json();
 
-		const text = await response.text();
+				const dataToSign = {
+					...params,
+					public_key: env.LIQPAY_PUBLIC,
+				};
 
-		return new Response(JSON.stringify({ np: JSON.parse(text), liqpay: liqpayKeys }), {
-			headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-		});
+				const jsonString = JSON.stringify(dataToSign);
+				const data = btoa(unescape(encodeURIComponent(jsonString)));
+				const signature = CryptoJS.SHA1(env.LIQPAY_PRIVATE + data + env.LIQPAY_PRIVATE).toString(CryptoJS.enc.Base64);
+
+				return new Response(JSON.stringify({ data, signature }), {
+					headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+				});
+			}
+
+			// --- ROUTE not found ---
+			return new Response(JSON.stringify({ error: 'Route not found' }), {
+				status: 404,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
+		} catch (err: any) {
+			return new Response(JSON.stringify({ error: err.message || 'Server error' }), {
+				status: 500,
+				headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+			});
+		}
 	},
 };

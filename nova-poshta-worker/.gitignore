@@ -165,3 +165,14 @@ dist
 .env*
 !.env.example
 .wrangler/
+
+# Firebase / Env
+.env
+.env.local
+.env.*.local
+
+# .env
+VITE_API_BASE=/api/liqpay
+
+# .env.production
+VITE_API_BASE=https://nova-poshta-worker.leafy-cart.workers.dev/api/liqpay
