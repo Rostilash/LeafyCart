@@ -44,7 +44,7 @@ export const WarehouseSelect = ({ cityRef, value, onChange, error }: WarehouseSe
       Оберіть відділення
       {loadingWarehouses && <p className="text-sm text-gray-500">Завантаження відділень...</p>}
       {hasWarehouses ? (
-        <select value={value} onChange={(e) => onChange(e.target.value)} className="px-2 py-2 border rounded w-full border-gray-300">
+        <select value={value} onChange={(e) => onChange(e.target.value)} className="py-2 rounded w-full custum-border-outline">
           <option value="">{loadingWarehouses ? "Завантаження " : "Оберіть відділення"}</option>
           {filteredWarehouses.map((wh) => (
             <option key={wh.ref} value={wh.description}>
@@ -53,7 +53,7 @@ export const WarehouseSelect = ({ cityRef, value, onChange, error }: WarehouseSe
           ))}
         </select>
       ) : !loadingWarehouses ? (
-        <p>Відділення не знайдено для цього міста</p>
+        <p className="text-red-300 text-sm">Нажаль відділення для цього міста не знайдено. Спробуйте ввести інше місто.</p>
       ) : null}
       {error && <p className="text-red-500 text-sm">{error}</p>}
     </label>

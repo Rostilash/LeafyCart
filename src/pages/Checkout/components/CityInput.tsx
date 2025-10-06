@@ -15,7 +15,7 @@ interface CityInputProps {
   onSelect: (value: City) => void;
 }
 
-export const CityInput = ({ value, onChange, onSelect, error, сityRef }: CityInputProps) => {
+export const CityInput = ({ value, onChange, onSelect, error, сityRef, debounceMs = 650 }: CityInputProps & { debounceMs?: number }) => {
   const dispatch = useAppDispatch();
   const [suggestions, setSuggestions] = useState<{ description: string; ref: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ export const CityInput = ({ value, onChange, onSelect, error, сityRef }: CityIn
       } finally {
         setLoading(false);
       }
-    }, 500);
+    }, debounceMs);
 
     return () => clearTimeout(timeout);
   }, [value, dispatch]);
@@ -51,9 +51,9 @@ export const CityInput = ({ value, onChange, onSelect, error, сityRef }: CityIn
   const isCityLoaded = сityRef.length > 0;
 
   return (
-    <label className="relative block w-full">
+    <label className="block w-full relative">
       Місто (українською мовою)*
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-red-500 text-sm absolute -bottom-5 left-2">{error}</p>}
       <input
         type="text"
         value={value}
@@ -62,11 +62,15 @@ export const CityInput = ({ value, onChange, onSelect, error, сityRef }: CityIn
           setSelected(null);
         }}
         placeholder="Введіть місто"
-        className="px-2 py-2 border w-full border-gray-300 rounded-r flex-1"
+        className="px-2 py-2 pr-10 w-full rounded-r custum-border-outline"
       />
-      {loading && <Loader />}
+      {loading && (
+        <div className="absolute right-0 top-6">
+          <Loader />
+        </div>
+      )}
       {isSuggestionsVisible && !isCityLoaded && (
-        <ul className="absolute top-full left-0 w-full bg-white border rounded z-10 max-h-60 overflow-y-auto ">
+        <ul role="list" className="absolute top-full left-0 w-full bg-white border rounded z-10 max-h-60 overflow-y-auto ">
           {suggestions.map((city) => (
             <li key={city.ref} className="px-2 py-1 hover:bg-gray-100 cursor-pointer" onClick={() => handleSelect(city)}>
               {city.description}

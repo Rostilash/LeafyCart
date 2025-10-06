@@ -1,5 +1,5 @@
 import type { OrderFormData } from "../../../redux/slices/orderSlice";
-import type { ChangeEvent } from "react";
+import React, { type ChangeEvent } from "react";
 import { FormField } from "../../Admin/Products/FormSlices/FormField";
 import { CityInput } from "./CityInput";
 import { WarehouseSelect } from "./WarehouseSelect";
@@ -9,7 +9,7 @@ import { useAppSelector } from "../../../redux/reduxTypeHook";
 
 interface CheckoutFormProps {
   handleLiqPay: (e: React.FormEvent) => void;
-  setFormData: (data: OrderFormData) => void;
+  setFormData: React.Dispatch<React.SetStateAction<OrderFormData>>;
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   formData: OrderFormData;
   hasCartItems: boolean;
@@ -26,6 +26,13 @@ const orderFields = [
 
 export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData, hasCartItems, errors }: CheckoutFormProps) => {
   const { loading } = useAppSelector((state) => state.order);
+
+  const handleWarehouseChange = React.useCallback(
+    (val: string) => {
+      setFormData((prev) => ({ ...prev, warehouse: val }));
+    },
+    [setFormData]
+  );
 
   return (
     <form onSubmit={handleLiqPay} className="flex flex-col gap-4">
@@ -61,12 +68,7 @@ export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData
         error={errors.city as string}
       />
 
-      <WarehouseSelect
-        cityRef={formData.cityRef}
-        value={formData.warehouse}
-        onChange={(val) => setFormData({ ...formData, warehouse: val })}
-        error={errors.warehouse as string}
-      />
+      <WarehouseSelect cityRef={formData.cityRef} value={formData.warehouse} onChange={handleWarehouseChange} error={errors.warehouse as string} />
 
       <div className="flex flex-col gap-2">
         <span className="text-x">Оберіть спосіб оплати</span>

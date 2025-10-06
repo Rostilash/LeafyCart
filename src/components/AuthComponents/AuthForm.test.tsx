@@ -96,11 +96,15 @@ describe("AuthForm component", () => {
 
   it("shows error when email is already taken", async () => {
     const user = userEvent.setup();
+
     vi.spyOn(authThunks, "registerUser").mockImplementation((data: any) => {
       const thunk: any = async (dispatch: any) => {
         dispatch({ type: "auth/register/pending" });
-        await new Promise((r) => setTimeout(r, 10));
-        const result = { type: "auth/register/rejected", payload: "Email вже використовується" };
+        await new Promise((r) => setTimeout(r, 50));
+        const result = {
+          type: "auth/register/rejected",
+          payload: "Email вже використовується",
+        };
         dispatch(result);
         return result;
       };
@@ -118,7 +122,7 @@ describe("AuthForm component", () => {
     await user.type(screen.getByPlaceholderText(/Password/i), "Aa1!abcd");
     await user.click(screen.getByRole("button", { name: /Зареєструватися/i }));
 
-    expect(await screen.findByText("Email вже використовується")).toBeInTheDocument();
+    await screen.findByText((content) => content.includes("Email вже використовується"));
   });
 
   it("shows error for invalid password", async () => {
