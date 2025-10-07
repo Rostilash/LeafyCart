@@ -17,11 +17,17 @@ interface CheckoutFormProps {
 }
 
 const orderFields = [
-  { name: "name", title: "Ім’я", required: true },
-  { name: "last_name", title: "Призвіще", required: true },
-  { name: "mid_name", title: "По батькові", required: true },
-  { name: "phone_number", title: "Номер телефону", inputType: "tel", required: true, className: "px-2 py-2 border border-gray-300 rounded-r flex-1" },
-  { name: "email", title: "Email", inputType: "email", required: true },
+  { name: "name", title: "Ім’я", required: false },
+  { name: "last_name", title: "Призвіще", required: false },
+  { name: "mid_name", title: "По батькові", required: false },
+  {
+    name: "phone_number",
+    title: "Номер телефону",
+    inputType: "tel",
+    required: false,
+    className: "pl-1 py-2 custum-border-outline flex-1",
+  },
+  { name: "email", title: "Email", inputType: "email", required: false },
 ];
 
 export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData, hasCartItems, errors }: CheckoutFormProps) => {
@@ -35,7 +41,7 @@ export const CheckoutForm = ({ handleLiqPay, handleChange, setFormData, formData
   );
 
   return (
-    <form onSubmit={handleLiqPay} className="flex flex-col gap-4">
+    <form onSubmit={handleLiqPay} data-testid="checkout-form" className="flex flex-col gap-4">
       {orderFields.map((o) => (
         <FormField
           key={o.name}

@@ -47,16 +47,11 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
   useEffect(() => {
     if (user_orders && user_orders.length > 0) {
       const lastOrder = user_orders.at(-1);
-      setFormData({
-        name: lastOrder?.name || "",
-        email: lastOrder?.email || "",
-        warehouse: lastOrder?.warehouse || "",
-        city: lastOrder?.city || "",
-        cityRef: lastOrder?.cityRef || "",
-        payment: lastOrder?.payment || "",
-        last_name: lastOrder?.last_name || "",
-        mid_name: lastOrder?.mid_name || "",
-        phone_number: lastOrder?.phone_number || "",
+      if (!lastOrder) return;
+      setFormData((prev) => {
+        const isEqual = Object.keys(lastOrder ?? {}).every((key) => prev[key as keyof typeof prev] === lastOrder[key as keyof typeof lastOrder]);
+        if (isEqual) return prev;
+        return { ...lastOrder };
       });
     }
   }, [user_orders]);
@@ -108,7 +103,7 @@ export const CheckoutPage = ({ totalPrice, totalDiscount }: ConfirmBuyoutInfoPro
   return (
     <>
       {!userId && (
-        <div className="max-w-140">
+        <div className="max-w-140 " data-testid="auth-page">
           <AuthPage />
           <p className="text-xs text-gray-500 text-center">
             Для збареження інформаці та отримання данних, що до вашого замовлення ви повинні зарєструватися, або увійти у свій кабінет. Після
