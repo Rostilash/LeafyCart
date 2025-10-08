@@ -16,22 +16,13 @@ export interface FormFieldProps {
 }
 
 export const FormField: React.FC<FormFieldProps> = React.memo(
-  ({
-    title,
-    value,
-    onChange,
-    type = "input",
-    name,
-    required = false,
-    className = "custum-border-outline px-1 py-2",
-    options,
-    inputType,
-    min,
-    max,
-    error,
-  }) => {
+  ({ title, value, onChange, type = "input", name, required = false, className, options, inputType, min, max, error }) => {
+    // for avoid the bag with custum-border-outline
+    const inputClass = error
+      ? "px-1 py-2 border-b-2  border-red-400 focus:outline-none focus:border-green-500 transition duration-200"
+      : "custum-border-outline px-1 py-2";
     return (
-      <label className="flex flex-col gap-1">
+      <label className="flex flex-col gap-1 relative">
         {title}*:
         {type === "textarea" ? (
           <textarea name={name} value={value} onChange={onChange} required={required} className={`${className} resize-none h-24`} />
@@ -66,13 +57,13 @@ export const FormField: React.FC<FormFieldProps> = React.memo(
             value={value}
             onChange={onChange}
             required={required}
-            className={className}
+            className={inputClass}
             min={min}
             max={max}
             placeholder={title + "..."}
           />
         )}
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-xs absolute -bottom-4">{error}</p>}
       </label>
     );
   }

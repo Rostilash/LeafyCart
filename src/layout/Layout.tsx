@@ -12,11 +12,12 @@ import { useCartTotals } from "../hook/useCartTotals";
 import { Loader } from "../components/Loader";
 
 const Layout = () => {
-  const [isNavOpened, setIsNavOpened] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
   const selectedProduct = useAppSelector((state) => state.products.selectedProduct);
+
+  const [isNavOpened, setIsNavOpened] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // localStorage Hook set Products
   useRecentProducts();

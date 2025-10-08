@@ -2,13 +2,17 @@ import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/tool
 import { auth, db } from "../../fireBase/config";
 import {
   createUserWithEmailAndPassword,
+  reauthenticateWithCredential,
+  updatePassword,
   signInWithEmailAndPassword,
   signOut,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
+  EmailAuthProvider,
 } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
+import { validatePassword } from "../../utils/validateOrderForm";
 
 export interface AuthUser {
   uid: string;
@@ -31,10 +35,6 @@ const initialState: AuthState = {
 // Registration
 export const registerUser = createAsyncThunk("auth/register", async ({ email, password }: { email: string; password: string }, thunkAPI) => {
   try {
-    if (password.length < 6) {
-      return thunkAPI.rejectWithValue("Password must be at least 6 characters");
-    }
-
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     const newObj = {
@@ -49,8 +49,19 @@ export const registerUser = createAsyncThunk("auth/register", async ({ email, pa
     return { user: newObj };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue("Цей email вже використовується");
     }
+
+    if (error === "auth/email-already-in-use") {
+      return thunkAPI.rejectWithValue("Цей email вже використовується");
+    }
+    if (error === "auth/invalid-email") {
+      return thunkAPI.rejectWithValue("Некоректний формат email");
+    }
+    if (error === "auth/weak-password") {
+      return thunkAPI.rejectWithValue("Занадто слабкий пароль");
+    }
+
     return thunkAPI.rejectWithValue(String(error));
   }
 });
@@ -73,10 +84,19 @@ export const loginUser = createAsyncThunk("auth/login", async ({ email, password
       },
     };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      return thunkAPI.rejectWithValue(error.message);
+    const firebaseError = error as { code?: string; message?: string };
+
+    if (firebaseError.code === "auth/wrong-password") {
+      return thunkAPI.rejectWithValue("Невірний пароль");
     }
-    return thunkAPI.rejectWithValue(String(error));
+    if (firebaseError.code === "auth/user-not-found") {
+      return thunkAPI.rejectWithValue("Користувач не знайдений");
+    }
+    if (firebaseError.code === "auth/invalid-credential") {
+      return thunkAPI.rejectWithValue("Невірний пароль");
+    }
+
+    return thunkAPI.rejectWithValue(firebaseError.message || "Сталася помилка");
   }
 });
 
@@ -107,6 +127,26 @@ export const loginWithGoogle = createAsyncThunk("auth/googleLogin", async (_, th
     return thunkAPI.rejectWithValue("Відбулася помилка при вході...");
   }
 });
+
+// Сange password
+export const changeUserPassword = createAsyncThunk<string, { oldPassword: string; newPassword: string }, { rejectValue: string }>(
+  "auth/changeUserPassword",
+  async ({ oldPassword, newPassword }, thunkAPI) => {
+    try {
+      const user = auth.currentUser;
+      if (!user || !user.email) throw new Error("Користувач не знайдений");
+
+      const credential = EmailAuthProvider.credential(user.email, oldPassword);
+      await reauthenticateWithCredential(user, credential);
+
+      await updatePassword(user, newPassword);
+
+      return "Пароль успішно змінено ✅";
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 
 // 🔴 Exit
 export const logoutUser = createAsyncThunk("auth/logout", async (_, thunkAPI) => {

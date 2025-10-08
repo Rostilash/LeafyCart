@@ -59,3 +59,60 @@ export function sanitizeFirestoreData(obj: any): any {
   }
   return obj;
 }
+
+export const validateEmail = (email: string): string | null => {
+  if (!email.trim()) return "Email обов'язковий";
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) return "Некоректний формат email";
+  return null;
+};
+
+export const validatePassword = (password: string, options?: { minLength?: number; strict?: boolean }): string | null => {
+  const { minLength = 8, strict = true } = options || {};
+
+  if (!password.trim()) return "Пароль обов'язковий";
+  if (password.length < minLength) return `Пароль має бути не коротше ${minLength} символів`;
+  if (password.length > 30) return `Пароль має бути не більше 30 символів`;
+
+  if (strict) {
+    if (!/[A-ZА-ЯЁІЇЄҐ]/.test(password)) return "Пароль має містити хоча б одну велику літеру";
+    if (!/[a-zа-яёіїєґ]/.test(password)) return "Пароль має містити хоча б одну маленьку літеру";
+    if (!/\d/.test(password)) return "Пароль має містити хоча б одну цифру";
+    if (!/[!@#$%^&*]/.test(password)) return "Пароль має містити хоча б один спецсимвол";
+  }
+
+  return null;
+};
+
+export interface AuthFormData {
+  email: string;
+  password: string;
+}
+
+export const validateAuthForm = (data: AuthFormData, mode: "login" | "register") => {
+  const errors: Partial<AuthFormData> = {};
+
+  const emailError = validateEmail(data.email);
+  if (emailError) errors.email = emailError;
+
+  const passwordError = validatePassword(data.password, { strict: mode === "register" });
+  if (passwordError) errors.password = passwordError;
+
+  return null;
+};
+
+export const calculatePasswordStrength = (password: string) => {
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/[A-ZА-ЯЁІЇЄҐ]/.test(password)) score++;
+  if (/[a-zа-яёіїєґ]/.test(password)) score++;
+  if (/\d/.test(password)) score++;
+  if (/[!@#$%^&*]/.test(password)) score++;
+  return score;
+};
+
+export const getStrengthLabel = (score: number) => {
+  if (score <= 2) return "Слабкий";
+  if (score === 3 || score === 4) return "Середній";
+  return "Сильний";
+};
