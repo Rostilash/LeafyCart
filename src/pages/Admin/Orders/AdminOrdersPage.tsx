@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import { Check, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Loader } from "../../../components/Loader";
 import { Modal } from "../../../components/Modal";
 import { useAppDispatch, useAppSelector } from "../../../redux/reduxTypeHook";
 import { deleteOrder, getAllOrders, updateOrderStatus } from "../../../redux/slices/orderSlice";
 import { Breadcrumbs } from "../../Catalog/Breadcrumbs";
 import { OrdersListener } from "./OrdersListener";
+import { OrderRow } from "./OrderRow";
 
 export const AdminOrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -14,11 +15,32 @@ export const AdminOrdersPage = () => {
   const loading = useAppSelector((state) => state.order.loading);
 
   const [openConfirmModal, setOpenConfirmModal] = useState("");
-
+  console.log(all_orders);
   useEffect(() => {
     dispatch(getAllOrders());
   }, [dispatch]);
-  console.log(all_orders.find((order) => order.id === "4ZmXFxPLia0lDfv4remS")?.price);
+
+  const handleApprove = useCallback(
+    (id: string) => {
+      dispatch(updateOrderStatus({ id, status: "Прийнято" }));
+    },
+    [dispatch]
+  );
+
+  const handleReject = useCallback(
+    (id: string) => {
+      dispatch(updateOrderStatus({ id, status: "Відхилено" }));
+    },
+    [dispatch]
+  );
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      dispatch(deleteOrder({ id }));
+    },
+    [dispatch]
+  );
+
   return (
     <>
       <OrdersListener />
@@ -26,14 +48,10 @@ export const AdminOrdersPage = () => {
       <Breadcrumbs />
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Замовлення</h1>
-        <Button onClick={() => dispatch(getAllOrders())} className="block mb-10">
+        <Button onClick={() => dispatch(getAllOrders())} style={{ padding: "10px", display: "flex", justifyContent: "center", width: "100%" }}>
           Оновити список
         </Button>
-
-        {loading && <Loader />}
-
-        {!loading && all_orders.length === 0 && <p>Замовлень ще немає</p>}
-
+        {loading && <Loader />} {!loading && all_orders.length === 0 && <p>Замовлень ще немає</p>}
         <table className="w-full border border-gray-200 shadow-md rounded-lg">
           <thead className="bg-gray-100">
             <tr>
@@ -50,65 +68,8 @@ export const AdminOrdersPage = () => {
           </thead>
 
           <tbody>
-            {all_orders.map((order: any, index: number) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="p-2 border">{order.id}</td>
-                <td className="p-2 border">{order.name}</td>
-                <td className="p-2 border">{order.email}</td>
-                <td className="p-2 border">{order.price.toFixed(2)} грн</td>
-                <td className="p-2 border">
-                  <span
-                    className={`px-2 py-1 rounded text-white ${
-                      order.status === "Нове замовлення"
-                        ? "bg-blue-400"
-                        : order.status === "Прийнято"
-                        ? "bg-green-400"
-                        : order.status === "Відхилено"
-                        ? "bg-red-400"
-                        : "bg-gray-400"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-                <td className="p-2 border">{new Date(order.createdAt).toLocaleString("uk-UA")}</td>
-                <td className="p-2 border ">
-                  {order.status === "Нове замовлення" && (
-                    <Button
-                      variant="outlined"
-                      color="success"
-                      startIcon={<Check size={18} />}
-                      onClick={() => dispatch(updateOrderStatus({ id: order.id, status: "Прийнято" }))}
-                      className="flex gap-2"
-                    >
-                      Прийняти
-                    </Button>
-                  )}
-                </td>
-                <td className="p-2 border">
-                  {order.status === "Нове замовлення" && (
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      startIcon={<X size={18} />}
-                      onClick={() => dispatch(updateOrderStatus({ id: order.id, status: "Відхилено" }))}
-                      className=" bg-[var(--leafy-error)] flex gap-2"
-                    >
-                      Скасувати
-                    </Button>
-                  )}
-                </td>
-                <td className="p-2 border">
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => setOpenConfirmModal(order.id)}
-                    className=" bg-[var(--leafy-error)] flex gap-2 w-2"
-                  >
-                    <X size={18} />
-                  </Button>
-                </td>
-              </tr>
+            {all_orders.map((order) => (
+              <OrderRow key={order.id} order={order} handleApprove={handleApprove} handleReject={handleReject} onDelete={handleDelete} />
             ))}
           </tbody>
         </table>

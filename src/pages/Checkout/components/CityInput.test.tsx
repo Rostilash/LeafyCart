@@ -84,9 +84,7 @@ describe("CityInput", () => {
   });
 
   it("does not show tooltip if selected is already selected", async () => {
-    renderWithState(({ city }, setCity) => (
-      <CityInput value="Київ" error="" сityRef="kyiv123" debounceMs={0} onChange={setCity} onSelect={mockOnSelect} />
-    ));
+    renderWithState((_, setCity) => <CityInput value="Київ" error="" сityRef="kyiv123" debounceMs={0} onChange={setCity} onSelect={mockOnSelect} />);
 
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });

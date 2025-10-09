@@ -97,7 +97,7 @@ describe("AuthForm component", () => {
   it("shows error when email is already taken", async () => {
     const user = userEvent.setup();
 
-    vi.spyOn(authThunks, "registerUser").mockImplementation((data: any) => {
+    vi.spyOn(authThunks, "registerUser").mockImplementation(() => {
       const thunk: any = async (dispatch: any) => {
         dispatch({ type: "auth/register/pending" });
         await new Promise((r) => setTimeout(r, 50));

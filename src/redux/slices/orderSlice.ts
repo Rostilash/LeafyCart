@@ -160,6 +160,7 @@ export const updateOrderStatus = createAsyncThunk<OrderType, { id: string; statu
 );
 
 export const deleteOrder = createAsyncThunk<string, { id: string }, { rejectValue: string }>("orders/deleteOrder", async ({ id }, thunkAPI) => {
+  console.log(id);
   try {
     await deleteDoc(doc(db, "orders", id));
     return id;
@@ -185,10 +186,10 @@ export const saveOrder = createAsyncThunk<
     const user = auth.currentUser || (await signInAnonymously(auth)).user;
     if (!user) return thunkAPI.rejectWithValue("Користувач не авторизований");
 
-    const newForm = sanitizeFirestoreData(form);
+    const { id, ...cleanForm } = sanitizeFirestoreData(form);
 
-    await addDoc(collection(db, "orders"), {
-      ...newForm,
+    const docRef = await addDoc(collection(db, "orders"), {
+      ...cleanForm,
       userId: user.uid,
       paymentId: form.paymentId || null,
       paymentStatus: form.paymentStatus || "pending",
@@ -198,7 +199,7 @@ export const saveOrder = createAsyncThunk<
 
     thunkAPI.dispatch(clearCart());
 
-    return "ok";
+    return docRef.id;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return thunkAPI.rejectWithValue(error.message);

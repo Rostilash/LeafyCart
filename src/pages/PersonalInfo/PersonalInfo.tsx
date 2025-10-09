@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
 import { getOrdersByUser } from "../../redux/slices/orderSlice";
 import { AboutUser } from "./components/AboutUser";
@@ -6,6 +6,7 @@ import { UserOrders } from "./components/UserOrders";
 import Tabs from "../../components/Tabs";
 import { changeUserPassword } from "../../redux/slices/authSlice";
 import { FormField } from "../Admin/Products/FormSlices/FormField";
+import { validatePassword } from "../../utils/validateOrderForm";
 
 export const ChangePassword = () => {
   const dispatch = useAppDispatch();
@@ -23,13 +24,16 @@ export const ChangePassword = () => {
 
     const newErrors = { oldPassword: "", newPassword: "" };
 
-    if (changePassword.oldPassword.length < 6) newErrors.oldPassword = "Має бути більше ніж 6 символів";
-    if (changePassword.newPassword.length < 6) newErrors.newPassword = "Має бути більше ніж 6 символів";
+    // Checking old password
+    const oldPassError = validatePassword(changePassword.oldPassword, { minLength: 8, strict: false });
+    if (oldPassError) newErrors.oldPassword = oldPassError;
 
-    if (!changePassword.oldPassword) newErrors.oldPassword = "Поле не має бути пустим";
-    if (!changePassword.newPassword) newErrors.newPassword = "Поле не має бути пустим";
+    // Checking new password
+    const newPassError = validatePassword(changePassword.newPassword, { minLength: 8, strict: true });
+    if (newPassError) newErrors.newPassword = newPassError;
 
-    if (changePassword.oldPassword === changePassword.newPassword) {
+    // looking if the passwords os not the same
+    if (changePassword.oldPassword && changePassword.newPassword && changePassword.oldPassword === changePassword.newPassword) {
       newErrors.oldPassword = "Однакові паролі";
       newErrors.newPassword = "Однакові паролі";
     }
@@ -49,8 +53,8 @@ export const ChangePassword = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <form onSubmit={handleClick} className="flex flex-col space-y-2">
+    <div className="flex flex-col items-center justify-center w-full">
+      <form onSubmit={handleClick} className="flex flex-col border p-4 space-y-6 w-xl">
         <FormField
           value={changePassword.oldPassword}
           onChange={handleChange}
@@ -58,7 +62,7 @@ export const ChangePassword = () => {
           name="oldPassword"
           title="Старий пароль"
           required={false}
-          inputType="text"
+          inputType="password"
         />
 
         <FormField
@@ -68,10 +72,12 @@ export const ChangePassword = () => {
           name="newPassword"
           title="Новий пароль"
           required={false}
-          inputType="text"
+          inputType="password"
         />
 
-        <button type="submit">Змінити</button>
+        <button type="submit" className="bg-green-600 p-2 rounded text-white cursor-pointer">
+          Змінити
+        </button>
       </form>
       {success && <p className="text-green-200">{success}</p>}
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/reduxTypeHook";
-import { registerUser, loginUser, setError, clearError } from "../../redux/slices/authSlice";
+import { registerUser, loginUser, clearError } from "../../redux/slices/authSlice";
 import { validateEmail, validatePassword } from "../../utils/validateOrderForm";
 import { PasswordStrengthBar } from "./PasswordStrengthBar";
 import { FormField } from "../../pages/Admin/Products/FormSlices/FormField";

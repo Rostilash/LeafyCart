@@ -12,7 +12,6 @@ import {
   EmailAuthProvider,
 } from "firebase/auth";
 import { getDoc, doc, setDoc } from "firebase/firestore";
-import { validatePassword } from "../../utils/validateOrderForm";
 
 export interface AuthUser {
   uid: string;
