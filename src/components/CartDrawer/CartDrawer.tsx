@@ -27,36 +27,36 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isCartVisible, onClose, 
   const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <aside
-      className={` fixed top-0 right-0 h-full w-screen lg:w-100 bg-[var(--leafy-bg)] shadow-2xl border-[var(--leafy-moss)] 
-    transform transition-transform duration-300 ease-in-out z-100 ${
-      isCartVisible ? "translate-x-0" : "translate-x-full"
-    } overflow-y-scroll scrollbar-hide`}
-    >
-      {/* Header */}
-      <CartHeader totalQuantity={totalQuantity} onClose={onClose} />
-
-      {/* Items */}
-      <div className="p-4 space-y-4 overflow-auto">
-        {cartItems.length > 0 && (
-          <Button fullWidth variant="outlined" color="error" startIcon={<Trash2 />} onClick={() => dispatch(clearCart())} sx={{ mb: 2 }}>
-            Очистити корзину
-          </Button>
-        )}
-        {cartItems.length > 0 ? (
-          cartItems.map((item) => (
-            <CartItemElement key={item.id} item={item} onUpdateQuantity={onUpdateQuantity} onChangeQuantity={handleChangeQuanity} />
-          ))
-        ) : (
-          <span className="text-[var(--leafy-gray)] flex justify-center">Кошик порожній...</span>
-        )}
-      </div>
-
-      {/* Total Price */}
-      <CartTotal totalPrice={totalPrice} totalDiscount={totalDiscount} />
-
-      {/* Accept button */}
-      <CartCheckoutButton cartItemsLength={cartItems.length} onClose={onClose} />
-    </aside>
+    <>
+      {isCartVisible && <div className="fixed inset-0 bg-black/10" onClick={onClose}></div>}
+      <aside
+        className={`fixed top-0 right-0 h-full w-screen lg:w-100 bg-(--leafy-bg) border-(--leafy-moss)
+          shadow-2xl transition-all duration-300 ease-in-out overflow-y-auto transform z-100 ${
+            isCartVisible ? "translate-x-0" : "translate-x-full"
+          } overflow-y-scroll scrollbar-hide`}
+      >
+        {/* Header */}
+        <CartHeader totalQuantity={totalQuantity} onClose={onClose} />
+        {/* Items */}
+        <div className="p-4 space-y-4 overflow-auto">
+          {cartItems.length > 0 && (
+            <Button fullWidth variant="outlined" color="error" startIcon={<Trash2 />} onClick={() => dispatch(clearCart())} sx={{ mb: 2 }}>
+              Очистити корзину
+            </Button>
+          )}
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <CartItemElement key={item.id} item={item} onUpdateQuantity={onUpdateQuantity} onChangeQuantity={handleChangeQuanity} />
+            ))
+          ) : (
+            <span className="text-[var(--leafy-gray)] flex justify-center">Кошик порожній...</span>
+          )}
+        </div>
+        {/* Total Price */}
+        <CartTotal totalPrice={totalPrice} totalDiscount={totalDiscount} />
+        {/* Accept button */}
+        <CartCheckoutButton cartItemsLength={cartItems.length} onClose={onClose} />
+      </aside>
+    </>
   );
 };

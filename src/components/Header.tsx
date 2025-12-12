@@ -7,7 +7,7 @@ import { UserSection } from "./UserSection";
 import type { HeaderProps } from "../types/headerTypes";
 import { getUserNameFromEmail } from "../utils/getUserNameByEmail";
 
-export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, isNavOpened, quantity }) => {
+export const Header: React.FC<HeaderProps> = ({ setIsNavOpened, setIsCartOpen, isNavOpened, quantity }) => {
   const { user } = useAppSelector((state) => state.auth);
 
   return (
@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ setIsNavOpend, setIsCartOpen, is
           <Menu
             onClick={(e) => {
               e.stopPropagation();
-              setIsNavOpend((prev) => !prev);
+              setIsNavOpened((prev) => !prev);
             }}
             className="cursor-pointer hover:scale-110"
           />

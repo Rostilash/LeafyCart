@@ -26,7 +26,7 @@ dist-ssr
 
 # Environment variables
 .env.local;
-
+.env.local
 # .env
 VITE_API_BASE=/api/liqpay
 

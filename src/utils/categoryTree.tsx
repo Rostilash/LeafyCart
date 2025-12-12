@@ -28,17 +28,17 @@ export const categoryTree = [
     subcategories: [
       { name: "Знижки", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzgiT2ItgY0KwK-oTNGORcgg_7y9TnKKwQZg&s" },
       { name: "1+1", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_06EFn9o9WkIYp9cn5i-ylcjLYcWkvpJ4og&s" },
-      { name: "Святкові/сезонні пропозиції", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlnp3bqY6OiBfS7HekpY8JPXZJU5ftCEUljA&s" },
+      // { name: "Святкові/сезонні пропозиції", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlnp3bqY6OiBfS7HekpY8JPXZJU5ftCEUljA&s" },
     ],
   },
-  {
-    title: "Раціони",
-    icon: <Coffee size={16} />,
-    subcategories: [
-      { name: "На день", img: "" },
-      { name: "Дієтичні програми", img: "" },
-      { name: "Калорійні набори", img: "" },
-      { name: "Інтервальне харчування", img: "" },
-    ],
-  },
+  // {
+  //   title: "Раціони",
+  //   icon: <Coffee size={16} />,
+  //   subcategories: [
+  //     { name: "На день", img: "" },
+  //     { name: "Дієтичні програми", img: "" },
+  //     { name: "Калорійні набори", img: "" },
+  //     { name: "Інтервальне харчування", img: "" },
+  //   ],
+  // },
 ];

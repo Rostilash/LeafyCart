@@ -32,27 +32,20 @@ const Layout = () => {
       </div>
     );
   }
+
   return (
     <div className=" h-screen sm:min-h-screen flex bg-[var(--leafy-light)]">
       {/* SideBar */}
-      <div
-        className={`transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg ${
-          isNavOpened ? "w-screen sm:w-64" : "hidden"
-        } overflow-visible  z-100`}
-      >
-        <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
-      </div>
+      <Sidebar isVisible={isNavOpened} onClose={() => setIsNavOpened(false)} />
 
       {/* Main menu */}
       <main className="flex-1 bg-[var(--leafy-bg)] md:pt-[100px] lg:pt-[80px] overflow-auto px-2 sm:px-0">
-        <Header setIsNavOpend={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
+        <Header setIsNavOpened={setIsNavOpened} isNavOpened={isNavOpened} setIsCartOpen={setIsCartOpen} quantity={totalQuantity} />
         <Outlet />
       </main>
 
       {/* Cart drawer */}
-      <div className="transition-all duration-300 ease-in-out bg-[var(--leafy-moss)] shadow-lg overflow-y-auto">
-        <CartDrawer isCartVisible={isCartOpen} onClose={() => setIsCartOpen(false)} totalPrice={totalPrice} totalDiscount={totalDiscount} />
-      </div>
+      <CartDrawer isCartVisible={isCartOpen} onClose={() => setIsCartOpen(false)} totalPrice={totalPrice} totalDiscount={totalDiscount} />
 
       {/* Product preview modal */}
       {selectedProduct && (
